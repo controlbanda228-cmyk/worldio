@@ -1,4 +1,4 @@
-const CACHE_NAME = "worldio-v4";
+const CACHE_NAME = "worldio-v5";
 const CORE = [
   "./",
   "./index.html",
