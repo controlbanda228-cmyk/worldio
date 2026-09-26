@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worldio</title>
 
-    <script type="text/javascript" src="https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=7ri36z25Lu9koerMCdXwYMM-NLF7AdjRX48rjGXeqbT_fUIziVG44pUzEI5gDHJiv3NxvIs0aCF8QB4pVz37mwzCaX8yX8_o0tep46Xt6p4ILHHQv_A04oTqHhkLFYj3lxt5LzcKOeyEDZHj2ztjH20MyQIt-FQIdDUfOlWMxtjrlbs5KwAHishi6JaaUHHDmOVahEI-krs_zSmf5JR2Ev-pMOR3b7NcVlg2qSFT_7bMBHwnIMM5CrRBNWyZibKCrbfFvDgwXqgtErO0HmYXyhB5BLMSyUYT_HPl2a6P83quDzAmOv0TrCVBDliLJXgZ" charset="UTF-8"></script><style>
+    <script type="text/javascript" src="https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=8gFbg4kSKWNIryINZq4w2ajrC1Xs4pp43wNFC26XE5JJdQt7Zw6YaDjUzymT7CNICUV8sDRqRQcG7FAb1giNtYzAVgRvaL6dbr_ILZR2bmGTwq2GyeJhrkl78QXpBrYQclvxIpTiW8WCLAZgKUldWUGY0xumvNncyoS9Ejtbtl2wxnmaErzutMUOjiVEW4vMAV7snwsPe3RnxHMKU5YHND_qk2tQnqHnrnw-82QmsarCEFK67PzRA0DzyMCQOGZbISLG2fity0C2Ee62PtOisqe1stQ0GwqruYOanVPIGkuqKJANIPOZgqqW4rL5tkC2" charset="UTF-8"></script><style>
         * {
             box-sizing: border-box;
         }
@@ -627,6 +627,15 @@
             margin-top: 3px;
         }
 
+        .header-chat-info { flex: 1; min-width: 0; }
+        .header-actions { margin-left: auto; display: flex; gap: 6px; }
+        .header-action {
+            width: 38px; height: 38px; border: 1px solid #263044; border-radius: 11px;
+            background: #151d2a; color: #aeb8ca; cursor: pointer; font-size: 18px;
+            transition: .2s ease;
+        }
+        .header-action:hover { color: white; border-color: #3b82f6; background: #1a2740; transform: translateY(-1px); }
+
         /* MESSAGES */
 
         .messages {
@@ -767,6 +776,8 @@
             .chat-header {
                 padding: 0 15px;
             }
+
+            .header-actions { display: none; }
 
             .messages {
                 padding: 15px;
@@ -941,20 +952,16 @@
 
         <header class="chat-header">
 
-            <div class="header-avatar">
-                🌎
+            <div class="header-avatar" id="headerAvatar">🌎</div>
+
+            <div class="header-chat-info">
+                <div class="header-name" id="headerName">Общий чат</div>
+                <div class="header-status" id="headerStatus">● 12 участников онлайн</div>
             </div>
 
-            <div>
-
-                <div class="header-name">
-                    Общий чат
-                </div>
-
-                <div class="header-status">
-                    ● онлайн
-                </div>
-
+            <div class="header-actions">
+                <button class="header-action" title="Поиск">⌕</button>
+                <button class="header-action" title="Информация">ⓘ</button>
             </div>
 
         </header>
@@ -1135,73 +1142,94 @@
     }
 
 
-    function sendMessage() {
+    // Демо-данные чатов. Позже их заменим на реальные сообщения Supabase.
+    const chatData = {
+        "Общий чат": { avatar: "🌎", status: "● 12 участников онлайн", messages: [
+            {name: "Worldio", text: "🌎 Добро пожаловать в Worldio!", me: false},
+            {name: "Алекс", text: "Всем привет 👋", me: false},
+            {name: "Марина", text: "Как вам новый Worldio?", me: false}
+        ]},
+        "Друзья": { avatar: "👥", status: "● 4 участника онлайн", messages: [
+            {name: "Даня", text: "Кто сегодня в игре?", me: false},
+            {name: "Катя", text: "Я после 20:00", me: false},
+            {name: "Я", text: "Я тоже залечу 😎", me: true}
+        ]},
+        "Игровая комната": { avatar: "🎮", status: "● 7 участников онлайн", messages: [
+            {name: "Алекс", text: "Залетаем через 10 минут", me: false},
+            {name: "Серёга", text: "Я готов 🔥", me: false}
+        ]},
+        "Worldio Team": { avatar: "W", status: "● 3 участника онлайн", messages: [
+            {name: "Worldio Team", text: "Добро пожаловать 👋", me: false},
+            {name: "Worldio Team", text: "Здесь будут новости проекта.", me: false}
+        ]}
+    };
 
-        const input =
-            document.getElementById("messageInput");
+    let currentChatName = "Общий чат";
 
-        const messages =
-            document.getElementById("messages");
+    function renderMessages() {
+        const messages = document.getElementById("messages");
+        messages.innerHTML = "";
+        const data = chatData[currentChatName];
 
-        const text = input.value.trim();
+        data.messages.forEach(item => {
+            const row = document.createElement("div");
+            row.className = "message-row" + (item.me ? " me" : "");
 
-        if (text === "") {
-            return;
-        }
+            const content = document.createElement("div");
+            content.className = "message-content";
 
+            const sender = document.createElement("div");
+            sender.className = "sender";
+            sender.textContent = item.me ? username : item.name;
 
-        const row =
-            document.createElement("div");
+            const message = document.createElement("div");
+            message.className = "message";
+            message.textContent = item.text;
 
-        row.className = "message-row me";
+            content.appendChild(sender);
+            content.appendChild(message);
+            row.appendChild(content);
+            messages.appendChild(row);
+        });
 
-
-        const content =
-            document.createElement("div");
-
-        content.className = "message-content";
-
-
-        const sender =
-            document.createElement("div");
-
-        sender.className = "sender";
-
-        sender.textContent = username;
-
-
-        const message =
-            document.createElement("div");
-
-        message.className = "message";
-
-        message.textContent = text;
-
-
-        content.appendChild(sender);
-
-        content.appendChild(message);
-
-        row.appendChild(content);
-
-        messages.appendChild(row);
-
-
-        input.value = "";
-
-        messages.scrollTop =
-            messages.scrollHeight;
-
-
-        document.getElementById("preview").textContent =
-            text;
-
+        messages.scrollTop = messages.scrollHeight;
     }
-
 
     function selectChat(chat) {
         document.querySelectorAll(".chat-item").forEach(item => item.classList.remove("active"));
         chat.classList.add("active");
+
+        currentChatName = chat.dataset.name || "Общий чат";
+        const data = chatData[currentChatName] || chatData["Общий чат"];
+
+        document.getElementById("headerName").textContent = currentChatName;
+        document.getElementById("headerStatus").textContent = data.status;
+        document.getElementById("headerAvatar").textContent = data.avatar;
+        renderMessages();
+
+        // Убираем счётчик непрочитанных при открытии чата.
+        const badge = chat.querySelector(".unread-badge");
+        if (badge) badge.remove();
+    }
+
+    function sendMessage() {
+        const input = document.getElementById("messageInput");
+        const text = input.value.trim();
+        if (!text) return;
+
+        if (!chatData[currentChatName]) {
+            chatData[currentChatName] = { avatar: "💬", status: "● онлайн", messages: [] };
+        }
+
+        chatData[currentChatName].messages.push({ name: username, text, me: true });
+        input.value = "";
+        renderMessages();
+
+        const activeChat = document.querySelector('.chat-item.active');
+        const preview = activeChat?.querySelector('.chat-preview');
+        if (preview) preview.textContent = text;
+        const time = activeChat?.querySelector('.chat-time');
+        if (time) time.textContent = "сейчас";
     }
 
     function searchChats() {
