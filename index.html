@@ -13,10 +13,12 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
     <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-    <script type="text/javascript" src="https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=n-B7BcAYbvrJRh7e9753s2cICirDcjhNd3MFLjduTYcmLm1-4CyIWcae1ioCQMI0Mjz7b--UxSsPzUeTrrciMr4LSvBMblozK2HTsXHGjOa6hVoSAwmeF9mvZfCKYJigEvZjL7-blRWg3B3RKU7JbcVWvrlJBKFBKPuNnqdpK2kMPlE13HwjkYlwQUS-NQ4ne-nGNoZx0GW6s0hUu3EOYjV6GswHDvIoenRsOeYTI7DGsHJ7QLl5DrRWs_i2MGpKg4oymX0wS6pQfCrh2cH_hwqKeqOVYzE_dKxwEhI9vZylg6Tdfl6UJcNeG2aKAuGa" charset="UTF-8"></script><style>
+    <style>
         * {
             box-sizing: border-box;
         }
+
+        html, body { overflow-x: hidden; }
 
         body {
             margin: 0;
@@ -887,17 +889,19 @@
         #worldioSplash {
             position: fixed;
             inset: 0;
-            z-index: 99999;
+            z-index: 2147483647;
             display: grid;
             place-items: center;
             overflow: hidden;
             background:
-                radial-gradient(circle at 50% 42%, rgba(59,130,246,.20), transparent 27%),
-                radial-gradient(circle at 58% 54%, rgba(124,58,237,.18), transparent 30%),
+                radial-gradient(circle at 50% 42%, rgba(59,130,246,.24), transparent 27%),
+                radial-gradient(circle at 58% 54%, rgba(124,58,237,.20), transparent 30%),
                 #060a12;
             opacity: 1;
             visibility: visible;
-            transition: opacity .55s ease, visibility .55s ease;
+            pointer-events: auto;
+            transition: opacity .7s ease, visibility .7s ease;
+            isolation: isolate;
         }
         #worldioSplash.hide {
             opacity: 0;
@@ -1055,14 +1059,14 @@
         const splash = document.getElementById('worldioSplash');
         const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const hideSplash = () => {
-            if (!splash) return;
+            if (!splash || splash.dataset.hidden) return;
+            splash.dataset.hidden = "1";
             splash.classList.add('hide');
-            setTimeout(() => splash.remove(), reduceMotion ? 180 : 700);
+            setTimeout(() => splash.remove(), reduceMotion ? 180 : 800);
         };
-        window.addEventListener('load', () => {
-            setTimeout(hideSplash, reduceMotion ? 350 : 1750);
-        }, { once: true });
-        setTimeout(hideSplash, reduceMotion ? 900 : 2600);
+        // Keep the launch animation visible long enough to actually be seen.
+        const duration = reduceMotion ? 450 : 3000;
+        window.setTimeout(hideSplash, duration);
     })();
 </script>
 
@@ -1454,12 +1458,55 @@
 
     function enterWorld() { registerUser(); }
 
+    function normalizeStoredImage(value){
+        if(!value) return "";
+        value = String(value).trim();
+        if(/^data:image\//i.test(value)) return value;
+
+        // Older Worldio versions could save a raw base64 image without the data: prefix.
+        // Recover only real PNG/JPEG data; everything else is treated as invalid.
+        if(/^[A-Za-z0-9+/=_-]{80,}$/.test(value)){
+            try{
+                const normalized = value.replace(/-/g,"+").replace(/_/g,"/");
+                const padded = normalized + "=".repeat((4 - normalized.length % 4) % 4);
+                const bytes = atob(padded);
+                if(bytes.length >= 3 &&
+                   bytes.charCodeAt(0) === 0xFF &&
+                   bytes.charCodeAt(1) === 0xD8 &&
+                   bytes.charCodeAt(2) === 0xFF){
+                    return "data:image/jpeg;base64," + value;
+                }
+                if(bytes.length >= 8 &&
+                   bytes.charCodeAt(0) === 0x89 &&
+                   bytes.charCodeAt(1) === 0x50 &&
+                   bytes.charCodeAt(2) === 0x4E &&
+                   bytes.charCodeAt(3) === 0x47){
+                    return "data:image/png;base64," + value;
+                }
+            }catch(_){}
+        }
+        return "";
+    }
+
     function getAvatarData() {
+        const rawAvatar = localStorage.getItem("worldio_avatar") || "";
+        const rawBanner = localStorage.getItem("worldio_banner") || "";
+        const avatarImage = normalizeStoredImage(rawAvatar);
+        const bannerImage = normalizeStoredImage(rawBanner);
+
+        // Prevent corrupted/legacy values from ever appearing as giant text on screen.
+        if(rawAvatar && !avatarImage && rawAvatar.length > 80){
+            localStorage.removeItem("worldio_avatar");
+        }
+        if(rawBanner && !bannerImage && rawBanner.length > 80){
+            localStorage.removeItem("worldio_banner");
+        }
+
         return {
-            avatar: localStorage.getItem("worldio_avatar") || "🌎",
+            avatar: avatarImage || (rawAvatar.length <= 20 ? rawAvatar : "🌎"),
             color: localStorage.getItem("worldio_avatar_color") || "linear-gradient(135deg,#2563eb,#7c3aed)",
             bio: localStorage.getItem("worldio_bio") || "",
-            banner: localStorage.getItem("worldio_banner") || ""
+            banner: bannerImage
         };
     }
 
@@ -1476,6 +1523,7 @@
 
     function setVisual(el, image, fallback) {
         if (!el) return;
+        image = normalizeStoredImage(image) || (String(image || "").length <= 20 ? String(image || "") : "");
         if (image && image.startsWith("data:image")) {
             el.style.backgroundImage = `url("${image}")`;
             el.style.background = `url("${image}") center/cover no-repeat`;
@@ -1649,8 +1697,9 @@
         document.getElementById("profileBioInput").value=localStorage.getItem("worldio_bio")||"";
         const a=getAvatarData();
         const av=document.getElementById("profileModalAvatar");
-        if(a.avatar?.startsWith("data:image")){av.style.background=`url("${a.avatar}") center/cover no-repeat`;av.textContent="";}
-        else {av.style.background=a.color;av.textContent=a.avatar;}
+        const modalAvatar = normalizeStoredImage(a.avatar);
+        if(modalAvatar){av.style.background=`url("${modalAvatar}") center/cover no-repeat`;av.textContent="";}
+        else {av.style.background=a.color;av.textContent=(String(a.avatar||"").length<=20?a.avatar:"🌎");}
         document.getElementById("profileBannerPreview").style.background=a.banner ? `url("${a.banner}") center/cover no-repeat` : a.color;
         document.getElementById("profileModalName").textContent=username||"Пользователь";
         document.getElementById("profileModalHandle").textContent=getHandle();
@@ -1760,9 +1809,18 @@
 
             const avatar = document.createElement("div");
             avatar.className = "message-avatar";
-            const avatarData = item.user_id === currentUserId ? getAvatarData() : { avatar: item.profiles?.avatar || "🌎", color: item.profiles?.avatar_color || "linear-gradient(135deg,#2563eb,#7c3aed)" };
-            avatar.textContent = avatarData.avatar;
-            avatar.style.background = avatarData.color;
+            const remoteAvatar = normalizeStoredImage(item.profiles?.avatar || "");
+            const avatarData = item.user_id === currentUserId ? getAvatarData() : {
+                avatar: remoteAvatar || (String(item.profiles?.avatar || "").length <= 20 ? (item.profiles?.avatar || "🌎") : "🌎"),
+                color: item.profiles?.avatar_color || "linear-gradient(135deg,#2563eb,#7c3aed)"
+            };
+            if(remoteAvatar){
+                avatar.style.background = `url("${remoteAvatar}") center/cover no-repeat`;
+                avatar.textContent = "";
+            }else{
+                avatar.textContent = avatarData.avatar;
+                avatar.style.background = avatarData.color;
+            }
 
             const content = document.createElement("div");
             content.className = "message-content";
@@ -2007,7 +2065,9 @@
 
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
-            navigator.serviceWorker.register("./sw.js").catch(err => console.warn("Worldio SW:", err));
+            navigator.serviceWorker.register("./sw.js?v=worldio-v4", { updateViaCache: "none" })
+                .then(reg => reg.update())
+                .catch(err => console.warn("Worldio SW:", err));
         });
     }
 
