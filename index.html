@@ -430,6 +430,7 @@
         .global-search-result-info{min-width:0;flex:1}
         .global-search-result-title{font-weight:800;color:#edf3ff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .global-search-result-sub{color:#72819a;font-size:11px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .global-search-result-bio{margin-top:3px;font-size:11px;color:#71809a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px;}
         .global-search-result-type{font-size:10px;color:#7790b1;background:#111c2d;border:1px solid #23324a;padding:5px 7px;border-radius:8px}
         .global-search-shortcut{padding:10px 16px;color:#5f6f87;font-size:10px;border-top:1px solid #202d42;text-align:right}
         @keyframes globalSearchIn{from{opacity:0;transform:translateY(-12px) scale(.97)}to{opacity:1;transform:none}}
@@ -1855,11 +1856,11 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
             <button class="nav-item" type="button" onclick="openGlobalSearch(); setGlobalSearchType('channels')"><span class="nav-ico">#</span><span>Каналы</span></button>
             <button class="nav-item" type="button" onclick="openCreateChatModal(); setTimeout(()=>setCreateChatType('group'),20)"><span class="nav-ico">👥</span><span>Группы</span></button>
             <button class="nav-item" type="button" onclick="openGlobalSearch(); setGlobalSearchType('users')"><span class="nav-ico">◉</span><span>Друзья</span></button>
-            <button class="nav-item" type="button" onclick="openSettings(event)"><span class="nav-ico">⚙</span><span>Настройки</span></button>
             <div class="nav-divider"></div>
             <div class="nav-label">Быстрый доступ</div>
             <button class="nav-item" type="button" onclick="openCreateChatModal(); setTimeout(()=>setCreateChatType('channel'),20)"><span class="nav-ico">＋</span><span>Создать канал</span></button>
             <button class="nav-item" type="button" onclick="openCreateChatModal(); setTimeout(()=>setCreateChatType('group'),20)"><span class="nav-ico">✦</span><span>Создать группу</span></button>
+            <button class="nav-item" type="button" onclick="openSettings(event)"><span class="nav-ico">⚙</span><span>Настройки</span></button>
             <div class="nav-bottom">
               <div class="nav-divider"></div>
               <button class="nav-item" type="button" onclick="openProfile(event)"><span class="nav-ico">👤</span><span>Мой профиль</span></button>
@@ -3317,6 +3318,55 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         return `<div class="global-search-result" data-action="${encodeURIComponent(onClick || "")}"><div class="global-search-result-avatar">${avatarHtml}</div><div class="global-search-result-info"><div class="global-search-result-title">${safeTitle}</div><div class="global-search-result-sub">${safeSub}</div></div><div class="global-search-result-type">${escapeText(type || "")}</div></div>`;
     }
 
+    function normalizeWorldioUsernameSearch(value) {
+        return String(value || "")
+            .trim()
+            .replace(/^@+/, "")
+            .toLowerCase()
+            .replace(/\s+/g, "")
+            .replace(/[^a-z0-9а-яё_]/gi, "");
+    }
+
+    async function searchWorldioProfiles(query) {
+        const raw = String(query || "").trim();
+        const normalized = normalizeWorldioUsernameSearch(raw);
+        if (!normalized) return [];
+
+        // Prefer the server-side normalized search RPC. It is designed for @username
+        // lookup even when an existing profile contains spaces/punctuation.
+        try {
+            const { data, error } = await supabaseClient.rpc("worldio_search_profiles", { p_query: raw });
+            if (!error && Array.isArray(data)) return data;
+            if (error) console.warn("worldio_search_profiles RPC:", error);
+        } catch (e) {
+            console.warn("worldio_search_profiles unavailable, using fallback:", e);
+        }
+
+        const patterns = [...new Set([
+            `%${normalized}%`,
+            `%${raw.replace(/^@+/, "")}%`
+        ])];
+        const merged = new Map();
+
+        for (const pattern of patterns) {
+            const { data, error } = await supabaseClient
+                .from("profiles")
+                .select("id,username,avatar,avatar_color,bio")
+                .ilike("username", pattern)
+                .limit(25);
+            if (error) throw error;
+            for (const row of data || []) merged.set(row.id, row);
+        }
+
+        return [...merged.values()].sort((a, b) => {
+            const an = normalizeWorldioUsernameSearch(a.username);
+            const bn = normalizeWorldioUsernameSearch(b.username);
+            const ae = an === normalized ? 0 : an.startsWith(normalized) ? 1 : 2;
+            const be = bn === normalized ? 0 : bn.startsWith(normalized) ? 1 : 2;
+            return ae - be || an.localeCompare(bn, "ru");
+        }).slice(0, 25);
+    }
+
     async function runGlobalSearch() {
         const input = document.getElementById("globalSearchInput");
         const box = document.getElementById("globalSearchResults");
@@ -3327,77 +3377,90 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         renderGlobalSearchEmpty("Ищем...");
         globalSearchTimer = setTimeout(async () => {
             const results = [];
+            try {
+                if (globalSearchType === "all" || globalSearchType === "users") {
+                    const users = await searchWorldioProfiles(q);
+                    (users || []).forEach(user => {
+                        results.push({
+                            kind:"user",
+                            id:user.id,
+                            title:user.username || "Пользователь",
+                            sub:user.id === currentUserId ? "Это ты · профиль" : getHandle(user.username),
+                            type:"Пользователь",
+                            avatar:user.avatar || "👤",
+                            avatar_color:user.avatar_color,
+                            bio:user.bio || ""
+                        });
+                    });
+                }
 
-            if (globalSearchType === "all" || globalSearchType === "users") {
-                const normalized = q.replace(/^@/, "");
-                const { data: users } = await supabaseClient
-                    .from("profiles")
-                    .select("id,username,avatar,avatar_color")
-                    .ilike("username", `%${normalized}%`)
-                    .limit(20);
-                (users || []).forEach(user => {
-                    results.push({kind:"user", id:user.id, title:user.username || "Пользователь", sub:user.id === currentUserId ? "Это ты · профиль" : getHandle(user.username), type:"Пользователь", avatar:user.avatar || "👤", avatar_color:user.avatar_color});
+                if (globalSearchType === "all" || globalSearchType === "chats") {
+                    const { data: chats, error: chatsError } = await supabaseClient
+                        .from("chats")
+                        .select("id,name,type,owner_id,avatar,avatar_color,description")
+                        .ilike("name", `%${q.replace(/%/g, "\\%").replace(/_/g, "\\_")}%`)
+                        .in("type", ["group","direct"])
+                        .limit(20);
+                    if (chatsError) throw chatsError;
+                    for (const chat of chats || []) {
+                        if (chat.type === "direct") {
+                            const hydrated = await hydrateChat(chat);
+                            results.push({kind:"chat", id:chat.id, title:hydrated.display_name, sub:getHandle(hydrated.peer_username || "user"), type:"Личная переписка", avatar:hydrated.avatar, avatar_color:hydrated.avatar_color});
+                        } else {
+                            results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Группа", type:"Группа", avatar:chat.avatar || "👥", avatar_color:chat.avatar_color || "linear-gradient(135deg,#2563eb,#7c3aed)"});
+                        }
+                    }
+                }
+
+                if (globalSearchType === "all" || globalSearchType === "channels") {
+                    const { data: channels, error: channelError } = await supabaseClient
+                        .from("chats")
+                        .select("id,name,type,owner_id,avatar,avatar_color,description")
+                        .eq("type", "channel")
+                        .ilike("name", `%${q.replace(/%/g, "\\%").replace(/_/g, "\\_")}%`)
+                        .limit(20);
+                    if (channelError) throw channelError;
+                    (channels || []).forEach(chat => results.push({kind:"chat", id:chat.id, title:chat.name, sub:chat.description || "Публичный канал", type:"Канал", avatar:chat.avatar || "📡", avatar_color:chat.avatar_color || "linear-gradient(135deg,#21caff,#7b4dff)"}));
+                }
+
+                if (!results.length) { renderGlobalSearchEmpty("Ничего не найдено. Проверь @username."); return; }
+
+                const groups = {};
+                results.forEach(r => {
+                    const key = r.kind === "user" ? "Пользователи" : (r.type === "Канал" ? "Каналы" : "Чаты");
+                    (groups[key] ||= []).push(r);
                 });
-            }
 
-            if (globalSearchType === "all" || globalSearchType === "chats") {
-                const { data: chats } = await supabaseClient
-                    .from("chats")
-                    .select("id,name,type,owner_id")
-                    .ilike("name", `%${q}%`)
-                    .in("type", ["group","direct"])
-                    .limit(20);
-                for (const chat of chats || []) {
-                    if (chat.type === "direct") {
-                        const hydrated = await hydrateChat(chat);
-                        results.push({kind:"chat", id:chat.id, title:hydrated.display_name, sub:getHandle(hydrated.peer_username || "user"), type:"Личная переписка", avatar:hydrated.avatar, avatar_color:hydrated.avatar_color});
-                    } else {
-                        results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Группа", type:"Группа", avatar:"👥", avatar_color:"linear-gradient(135deg,#2563eb,#7c3aed)"});
+                box.innerHTML = Object.entries(groups).map(([label, items]) => `<div class="global-search-section">${escapeText(label)}</div>` + items.map(r => {
+                    const avatarHtml = r.avatar?.startsWith?.("data:image") ? `<img src="${r.avatar}" alt="" class="worldio-result-avatar-img">` : escapeText(r.avatar || "💬");
+                    return `<div class="global-search-result" data-result-kind="${r.kind}" data-result-id="${r.id}"><div class="global-search-result-avatar" style="background:${r.avatar_color || "linear-gradient(135deg,#1f2937,#334155)"}">${avatarHtml}</div><div class="global-search-result-info"><div class="global-search-result-title">${escapeText(r.title)}</div><div class="global-search-result-sub">${escapeText(r.sub)}</div>${r.bio ? `<div class="global-search-result-bio">${escapeText(r.bio)}</div>` : ""}</div><div class="global-search-result-type">${escapeText(r.type)}</div></div>`;
+                }).join("" )).join("");
+
+                box.querySelectorAll(".global-search-result").forEach(item => item.addEventListener("click", async () => {
+                    const kind = item.dataset.resultKind;
+                    if (kind === "chat") {
+                        const chatId = item.dataset.resultId;
+                        const { data: foundChat, error: foundChatError } = await supabaseClient.from("chats").select("id,name,type,owner_id,created_at,avatar,avatar_color,description").eq("id", chatId).maybeSingle();
+                        if (foundChatError) { console.error(foundChatError); return; }
+                        if (!foundChat) return;
+                        if (foundChat.type === "channel") {
+                            const { error } = await supabaseClient.from("chat_members").upsert({ chat_id: chatId, user_id: currentUserId }, { onConflict: "chat_id,user_id", ignoreDuplicates: true });
+                            if (error) console.warn("channel membership:", error);
+                        }
+                        closeGlobalSearch();
+                        await loadChatsFromSupabase();
+                        await selectChatById(chatId);
+                    } else if (kind === "user") {
+                        const { data: user, error } = await supabaseClient.from("profiles").select("id,username,avatar,avatar_color,bio").eq("id", item.dataset.resultId).maybeSingle();
+                        if (error) { console.error(error); renderGlobalSearchEmpty("Не удалось открыть пользователя"); return; }
+                        if (user) await openDirectChatWithUser(user);
                     }
-                }
+                }));
+            } catch (error) {
+                console.error("Worldio global search:", error);
+                renderGlobalSearchEmpty("Поиск временно недоступен. Проверь подключение к Supabase.");
             }
-
-            if (globalSearchType === "all" || globalSearchType === "channels") {
-                const { data: channels } = await supabaseClient
-                    .from("chats")
-                    .select("id,name,type,owner_id,avatar,avatar_color,description")
-                    .eq("type", "channel")
-                    .ilike("name", `%${q}%`)
-                    .limit(20);
-                (channels || []).forEach(chat => results.push({kind:"chat", id:chat.id, title:chat.name, sub:chat.description || "Публичный канал", type:"Канал", avatar:chat.avatar || "📡", avatar_color:chat.avatar_color || "linear-gradient(135deg,#21caff,#7b4dff)"}));
-            }
-
-            if (!results.length) { renderGlobalSearchEmpty("Ничего не найдено"); return; }
-
-            const groups = {};
-            results.forEach(r => {
-                const key = r.kind === "user" ? "Пользователи" : (r.type === "Канал" ? "Каналы" : "Чаты");
-                (groups[key] ||= []).push(r);
-            });
-
-            box.innerHTML = Object.entries(groups).map(([label, items]) => `<div class="global-search-section">${escapeText(label)}</div>` + items.map(r => {
-                const avatarHtml = r.avatar?.startsWith?.("data:image") ? `<img src="${r.avatar}" alt="" class="worldio-result-avatar-img">` : escapeText(r.avatar || "💬");
-                return `<div class="global-search-result" data-result-kind="${r.kind}" data-result-id="${r.id}"><div class="global-search-result-avatar" style="background:${r.avatar_color || "linear-gradient(135deg,#1f2937,#334155)"}">${avatarHtml}</div><div class="global-search-result-info"><div class="global-search-result-title">${escapeText(r.title)}</div><div class="global-search-result-sub">${escapeText(r.sub)}</div></div><div class="global-search-result-type">${escapeText(r.type)}</div></div>`;
-            }).join("" )).join("");
-
-            box.querySelectorAll(".global-search-result").forEach(item => item.addEventListener("click", async () => {
-                const kind = item.dataset.resultKind;
-                if (kind === "chat") {
-                    const chatId = item.dataset.resultId;
-                    const { data: foundChat } = await supabaseClient.from("chats").select("id,name,type,owner_id,created_at").eq("id", chatId).maybeSingle();
-                    if (!foundChat) return;
-                    if (foundChat.type === "channel") {
-                        await supabaseClient.from("chat_members").upsert({ chat_id: chatId, user_id: currentUserId }, { onConflict: "chat_id,user_id", ignoreDuplicates: true });
-                    }
-                    closeGlobalSearch();
-                    await loadChatsFromSupabase();
-                    await selectChatById(chatId);
-                } else if (kind === "user") {
-                    const { data: user } = await supabaseClient.from("profiles").select("id,username,avatar,avatar_color").eq("id", item.dataset.resultId).maybeSingle();
-                    if (user) await openDirectChatWithUser(user);
-                }
-            }));
-        }, 180);
+        }, 120);
     }
 
     document.getElementById("globalSearchInput")?.addEventListener("input", runGlobalSearch);
@@ -3805,6 +3868,251 @@ document.getElementById('channelPanelDescription')?.addEventListener('input',ren
     applyChatSettings();
     applyPrivacyVisibility();
 
+</script>
+
+
+
+<style id="worldio-v10-noir-overhaul">
+/* ==================== WORLDIO V10 — NOIR / MINIMAL ==================== */
+:root{--noir-bg:#070707;--noir-panel:#0d0d0d;--noir-panel-2:#121212;--noir-soft:#181818;--noir-line:#242424;--noir-line-2:#303030;--noir-text:#f5f5f5;--noir-muted:#8c8c8c;--noir-dim:#5f5f5f;}
+body.worldio-mono{background:#050505!important;color:var(--noir-text)!important;}
+body.worldio-mono .app{background:#050505!important;}
+body.worldio-mono .app,.worldio-mono .worldio-modal-backdrop,.worldio-mono .global-search-backdrop{filter:grayscale(1)!important;}
+body.worldio-mono .worldio-nav{background:linear-gradient(180deg,#0a0a0a,#080808)!important;border-right-color:#1f1f1f!important;box-shadow:inset -1px 0 #111;}
+body.worldio-mono .worldio-nav .nav-brand-mark{background:#f2f2f2!important;color:#0a0a0a!important;box-shadow:0 7px 24px rgba(255,255,255,.07),inset 0 1px 0 rgba(255,255,255,.75)!important;}
+body.worldio-mono .worldio-nav .nav-brand{color:#f7f7f7!important;}
+body.worldio-mono .nav-item{color:#a2a2a2!important;border-color:transparent!important;background:transparent!important;}
+body.worldio-mono .nav-item .nav-ico{background:#151515!important;color:#d8d8d8!important;border:1px solid #242424!important;}
+body.worldio-mono .nav-item:hover{background:#141414!important;border-color:#282828!important;color:#fff!important;transform:translateX(2px);}
+body.worldio-mono .nav-item.active{background:#f1f1f1!important;color:#090909!important;border-color:#fff!important;box-shadow:0 10px 26px rgba(255,255,255,.08)!important;}
+body.worldio-mono .nav-item.active .nav-ico{background:#dedede!important;color:#050505!important;border-color:#cfcfcf!important;}
+body.worldio-mono .nav-label{color:#707070!important;}
+body.worldio-mono .nav-divider{background:#1f1f1f!important;}
+body.worldio-mono .sidebar-top{background:#080808!important;}
+body.worldio-mono .search{background:#111!important;border-color:#282828!important;color:#f4f4f4!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;}
+body.worldio-mono .search:focus{border-color:#8b8b8b!important;box-shadow:0 0 0 3px rgba(255,255,255,.06)!important;}
+body.worldio-mono .global-search-btn,body.worldio-mono .top-settings-btn{background:#121212!important;border-color:#2b2b2b!important;color:#ddd!important;box-shadow:none!important;}
+body.worldio-mono .global-search-btn:hover,body.worldio-mono .top-settings-btn:hover{background:#1b1b1b!important;border-color:#555!important;color:#fff!important;}
+body.worldio-mono .worldio-chats-heading{background:#101010!important;border-color:#262626!important;}
+body.worldio-mono .chats-heading-icon{background:#181818!important;box-shadow:none!important;color:#fff!important;}
+body.worldio-mono .chats-heading-main div span{color:#f2f2f2!important;}
+body.worldio-mono .chats-heading-main div small{color:#727272!important;}
+body.worldio-mono .worldio-create-chat-btn{background:#151515!important;border-color:#292929!important;color:#ddd!important;}
+body.worldio-mono .worldio-create-chat-btn:hover{background:#202020!important;border-color:#555!important;color:#fff!important;}
+body.worldio-mono .chat-list{padding-right:2px!important;}
+body.worldio-mono .chat-item{background:#0b0b0b!important;border:1px solid #171717!important;border-radius:15px!important;box-shadow:0 4px 16px rgba(0,0,0,.18)!important;}
+body.worldio-mono .chat-item:hover{background:#141414!important;border-color:#2a2a2a!important;}
+body.worldio-mono .chat-item.active{background:#181818!important;border-color:#3b3b3b!important;box-shadow:inset 3px 0 #fff,0 10px 26px rgba(0,0,0,.3)!important;}
+body.worldio-mono .chat-name{color:#f4f4f4!important;font-weight:800!important;}
+body.worldio-mono .chat-preview,body.worldio-mono .chat-time{color:#777!important;}
+body.worldio-mono .chat-item.active .chat-time{color:#bdbdbd!important;}
+body.worldio-mono .chat-item .avatar{border:1px solid #2a2a2a!important;box-shadow:none!important;}
+body.worldio-mono .chat-tabs .chat-tab{color:#777!important;background:transparent!important;border-color:transparent!important;}
+body.worldio-mono .chat-tabs .chat-tab.active{color:#050505!important;background:#ededed!important;border-color:#fff!important;}
+body.worldio-mono .chat{background:#070707!important;}
+body.worldio-mono .chat-header{background:#0b0b0b!important;border-color:#202020!important;}
+body.worldio-mono .header-name{color:#f5f5f5!important;}
+body.worldio-mono .header-status{color:#898989!important;}
+body.worldio-mono .header-avatar{background:#202020!important;box-shadow:none!important;border:1px solid #383838!important;}
+body.worldio-mono .header-actions .header-action{background:#121212!important;border-color:#292929!important;color:#ddd!important;}
+body.worldio-mono .messages{background:#060606!important;}
+body.worldio-mono .message{background:#121212!important;border-color:#252525!important;color:#eee!important;}
+body.worldio-mono .message-row.me .message{background:#f0f0f0!important;color:#080808!important;border:0!important;}
+body.worldio-mono .sender{color:#858585!important;}
+body.worldio-mono .input-area{background:#080808!important;border-top-color:#171717!important;}
+body.worldio-mono .message-input{background:#111!important;border-color:#292929!important;color:#fff!important;}
+body.worldio-mono .message-input:focus{border-color:#8a8a8a!important;box-shadow:0 0 0 3px rgba(255,255,255,.05)!important;}
+body.worldio-mono .send{background:#f0f0f0!important;color:#060606!important;box-shadow:0 10px 24px rgba(255,255,255,.06)!important;}
+body.worldio-mono .send:hover{background:#fff!important;}
+body.worldio-mono .worldio-empty-workspace::before{background:radial-gradient(ellipse,rgba(255,255,255,.06),transparent 66%)!important;}
+body.worldio-mono .empty-copy h2{color:#f3f3f3!important;}
+body.worldio-mono .empty-copy p,.worldio-mono .empty-eyebrow{color:#747474!important;}
+body.worldio-mono .empty-action{background:#111!important;border-color:#2d2d2d!important;color:#ddd!important;box-shadow:none!important;}
+body.worldio-mono .empty-action.primary{background:#efefef!important;border-color:#fff!important;color:#090909!important;}
+body.worldio-mono .empty-profile-mini{background:#0e0e0e!important;border-color:#282828!important;box-shadow:0 16px 38px rgba(0,0,0,.28)!important;}
+body.worldio-mono .empty-profile-name{color:#f4f4f4!important;}
+body.worldio-mono .empty-profile-online{background:#151515!important;color:#bdbdbd!important;border-color:#333!important;}
+
+/* Profile modal */
+body.worldio-mono #profileModal .worldio-modal{background:#0a0a0a!important;border-color:#292929!important;box-shadow:0 30px 90px rgba(0,0,0,.55)!important;}
+body.worldio-mono #profileModal .modal-top{background:#0a0a0a!important;border-color:#1f1f1f!important;}
+body.worldio-mono #profileModal .worldio-tabs{background:#111!important;border-color:#292929!important;}
+body.worldio-mono #profileModal .worldio-tab{color:#777!important;}
+body.worldio-mono #profileModal .worldio-tab.active{background:#efefef!important;color:#090909!important;}
+body.worldio-mono #profileModal .tg-upload-btn,body.worldio-mono #profileModal .worldio-item-card,body.worldio-mono #profileModal .worldio-field{background:#111!important;border-color:#292929!important;color:#eee!important;}
+body.worldio-mono #profileModal .tg-upload-btn:hover,body.worldio-mono #profileModal .worldio-item-card:hover{background:#171717!important;border-color:#4a4a4a!important;}
+body.worldio-mono #profileModal .worldio-item-card.equipped{background:#efefef!important;color:#090909!important;border-color:#fff!important;box-shadow:0 14px 34px rgba(255,255,255,.08)!important;}
+body.worldio-mono #profileModal .worldio-item-card.equipped .worldio-item-title,body.worldio-mono #profileModal .worldio-item-card.equipped .worldio-item-rarity{color:#090909!important;}
+body.worldio-mono #profileModal .worldio-item-icon{background:#1b1b1b!important;border-color:#333!important;}
+body.worldio-mono #profileModal .worldio-item-card.equipped .worldio-item-icon{background:#fff!important;color:#060606!important;box-shadow:none!important;border-color:#d4d4d4!important;}
+body.worldio-mono #profileModal .worldio-item-check{background:#151515!important;color:#ddd!important;}
+body.worldio-mono #profileModal .worldio-item-card.equipped .worldio-item-check{background:#090909!important;color:#fff!important;}
+body.worldio-mono #profileModal .modal-button.secondary{background:#151515!important;border-color:#2d2d2d!important;color:#ddd!important;}
+body.worldio-mono #profileModal .modal-button.primary{background:#f1f1f1!important;color:#050505!important;box-shadow:none!important;}
+body.worldio-mono #profileModal .worldio-save-bar{background:linear-gradient(180deg,rgba(10,10,10,0),#0a0a0a 32%)!important;}
+
+/* More chat polish */
+body.worldio-mono .chat-item{position:relative;overflow:hidden;}
+body.worldio-mono .chat-item::after{content:"";position:absolute;left:74px;right:12px;bottom:0;height:1px;background:#171717;opacity:.9;}
+body.worldio-mono .chat-item.active::after{left:0;background:#2f2f2f;}
+body.worldio-mono .chat-preview{max-width:calc(100% - 22px)!important;}
+body.worldio-mono .chats-count{color:#8d8d8d!important;}
+
+/* Collectibles: single equipped slot + original monochrome art */
+body.worldio-mono .worldio-item-art{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;position:relative;overflow:hidden;background:#161616;border:1px solid #333;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);}
+body.worldio-mono .worldio-item-art::before,body.worldio-mono .worldio-item-art::after{content:"";position:absolute;}
+body.worldio-mono .item-art-crown::before{width:22px;height:15px;border:2px solid #eee;border-top:0;clip-path:polygon(0 70%,18% 10%,38% 66%,50% 0,64% 66%,85% 8%,100% 70%,88% 100%,12% 100%);background:#eee;}
+body.worldio-mono .item-art-ghoul::before{width:24px;height:28px;border-radius:45% 45% 52% 52%;background:linear-gradient(180deg,#ededed 0 58%,#1a1a1a 58%);box-shadow:0 0 0 2px #3a3a3a;}
+body.worldio-mono .item-art-ghoul::after{width:18px;height:5px;border-top:2px solid #080808;border-bottom:2px solid #080808;top:18px;box-shadow:5px -9px 0 -1px #fff,-5px -9px 0 -1px #fff;}
+body.worldio-mono .item-art-halo::before{width:24px;height:24px;border:3px solid #e8e8e8;border-radius:50%;box-shadow:0 0 0 3px #222;}
+body.worldio-mono .item-art-ring::before{width:25px;height:25px;border:5px solid #eee;border-radius:50%;box-shadow:inset 0 0 0 3px #444;}
+body.worldio-mono .item-art-wings::before{width:28px;height:18px;background:linear-gradient(135deg,transparent 38%,#eee 40% 58%,transparent 60%),linear-gradient(45deg,transparent 38%,#aaa 40% 58%,transparent 60%);transform:scaleX(1.25);}
+body.worldio-mono .item-art-sigil::before{width:22px;height:22px;border:2px solid #eee;transform:rotate(45deg);box-shadow:inset 0 0 0 4px #1b1b1b;}
+body.worldio-mono .worldio-profile-items-inline .worldio-item-badge,body.worldio-mono .top-profile-items .worldio-item-badge,body.worldio-mono .header-items .worldio-item-badge,body.worldio-mono .empty-profile-items .worldio-item-badge{width:20px;height:20px!important;border-radius:6px!important;display:inline-grid!important;place-items:center!important;font-size:0!important;background:#151515!important;border:1px solid #363636!important;position:relative!important;vertical-align:middle!important;}
+body.worldio-mono .worldio-profile-items-inline .worldio-item-badge::after,body.worldio-mono .top-profile-items .worldio-item-badge::after,body.worldio-mono .header-items .worldio-item-badge::after,body.worldio-mono .empty-profile-items .worldio-item-badge::after{content:"✦";font-size:10px;color:#eee;}
+body.worldio-mono .worldio-profile-items-inline{display:inline-flex!important;gap:5px!important;align-items:center!important;}
+
+/* smooth interactions */
+body.worldio-mono button,.worldio-mono input,.worldio-mono textarea,.worldio-mono select{transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease,box-shadow .18s ease,opacity .18s ease!important;}
+body.worldio-mono button:active{transform:translateY(1px) scale(.985)!important;}
+body.worldio-mono .worldio-item-card.equipped{animation:noirEquip .24s ease both;}
+@keyframes noirEquip{0%{transform:scale(.98);opacity:.75}70%{transform:scale(1.02)}100%{transform:scale(1);opacity:1}}
+
+@media(max-width:960px){body.worldio-mono .sidebar{width:420px;max-width:420px!important;}}
+</style>
+
+<script id="worldio-v10-noir-logic">
+(function(){
+  // Monochrome interface
+  document.body.classList.add('worldio-mono');
+
+  // --- Single collectible slot. Last selected replaces previous. ---
+  const V10_ITEMS = [
+    {id:'crown',name:'Noir Crown',rarity:'Легендарный',art:'crown'},
+    {id:'ghoul',name:'Ghoul Visor',rarity:'Аниме-артефакт',art:'ghoul'},
+    {id:'halo',name:'Void Halo',rarity:'Эпический',art:'halo'},
+    {id:'ring',name:'Black Ring',rarity:'Редкий',art:'ring'},
+    {id:'wings',name:'Noir Wings',rarity:'Эпический',art:'wings'},
+    {id:'sigil',name:'Silver Sigil',rarity:'Мистический',art:'sigil'}
+  ];
+  window.WORLDIO_COLLECTIBLES_V10 = V10_ITEMS;
+
+  window.getWorldioItems = function(){
+    try{
+      const v=JSON.parse(localStorage.getItem('worldio_items')||'[]');
+      return Array.isArray(v)&&v.length ? [v[0]] : [];
+    }catch(_){ return []; }
+  };
+  window.setWorldioItems = function(items){
+    const next=Array.isArray(items)&&items.length?[items[0]]:[];
+    localStorage.setItem('worldio_items',JSON.stringify(next));
+    if(window.applyEquippedItemsUI) window.applyEquippedItemsUI();
+  };
+  window.collectibleById = function(id){return V10_ITEMS.find(x=>x.id===id)||null;};
+  window.renderCollectibleGrid = function(){
+    const grid=document.getElementById('worldioItemGrid'); if(!grid)return;
+    const equipped=window.getWorldioItems()[0]||null;
+    grid.innerHTML=V10_ITEMS.map(item=>{
+      const on=equipped===item.id;
+      return `<button type="button" class="worldio-item-card ${on?'equipped':''}" onclick="toggleWorldioCollectible('${item.id}')">
+        <span class="worldio-item-art item-art-${item.art}" aria-hidden="true"></span>
+        <span class="worldio-item-copy"><span class="worldio-item-title">${item.name}</span><span class="worldio-item-rarity">${item.rarity}</span></span>
+        <span class="worldio-item-check">${on?'✓':'+'}</span>
+      </button>`;
+    }).join('');
+  };
+  window.collectibleMarkup = function(id){
+    const item=window.collectibleById(id); if(!item)return '';
+    return `<span class="worldio-item-badge" title="${item.name}" aria-label="${item.name}"></span>`;
+  };
+  window.equippedMarkup = function(){
+    const item=window.getWorldioItems()[0]; return item?window.collectibleMarkup(item):'';
+  };
+  window.applyEquippedItemsUI = function(){
+    ['profileModalItems','topProfileItems','headerItems','emptyProfileItems'].forEach(id=>{
+      const el=document.getElementById(id); if(el)el.innerHTML=window.equippedMarkup();
+    });
+  };
+  window.toggleWorldioCollectible = function(id){
+    const current=window.getWorldioItems()[0]||null;
+    const next=current===id?[]:[id];
+    window.setWorldioItems(next);
+    window.renderCollectibleGrid();
+    const s=document.getElementById('profileSaveStatus'); if(s)s.textContent=next.length?'Предмет установлен ✓':'Предмет снят ✓';
+    clearTimeout(window.__wiItemSaveTimer);
+    window.__wiItemSaveTimer=setTimeout(async()=>{
+      try{
+        const {data:{user}}=await supabaseClient.auth.getUser();
+        if(user) await supabaseClient.auth.updateUser({data:{worldio_items:window.getWorldioItems()}});
+      }catch(e){console.warn('Worldio item sync',e);}
+    },180);
+  };
+
+  // --- Reliable banner: save a compressed data URL directly into profiles.banner. ---
+  window.handleBannerUpload = async function(input){
+    const file=input?.files?.[0]; if(!file)return;
+    const status=document.getElementById('imageUploadStatus');
+    if(!file.type.startsWith('image/')){ if(status)status.textContent='Выбери изображение'; input.value=''; return; }
+    if(file.size>6*1024*1024){ if(status)status.textContent='Баннер слишком большой — максимум 6 МБ'; input.value=''; return; }
+    if(status)status.textContent='Подготавливаем баннер…';
+    try{
+      let data;
+      if(file.type==='image/gif'){
+        if(file.size>2*1024*1024) throw new Error('GIF больше 2 МБ');
+        data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});
+      }else{
+        data=await compressBannerImage(file,1200,450,.72);
+      }
+      const color=localStorage.getItem('worldio_banner_color')||WORLDIO_COVER_COLORS[0];
+      localStorage.setItem('worldio_banner',data);
+      localStorage.setItem('worldio_banner_color',color);
+      applyBannerVisual(color,data);
+      if(status)status.textContent='Баннер выбран · сохраняем…';
+      const {data:{user}}=await supabaseClient.auth.getUser();
+      if(!user) throw new Error('Сессия пользователя не найдена');
+      const payload={
+        id:user.id,
+        username:username||user.user_metadata?.username||user.email?.split('@')[0]||'Пользователь',
+        bio:localStorage.getItem('worldio_bio')||'',
+        avatar:localStorage.getItem('worldio_avatar')||'🌎',
+        avatar_color:localStorage.getItem('worldio_avatar_color')||'linear-gradient(135deg,#2563eb,#7c3aed)',
+        banner:data,
+        banner_color:color
+      };
+      const {error}=await supabaseClient.from('profiles').upsert(payload,{onConflict:'id'});
+      if(error)throw error;
+      if(status)status.textContent='Баннер установлен и сохранён ✓';
+    }catch(e){
+      console.error('Worldio banner v10',e);
+      if(status)status.textContent='Баннер показан локально. Для синхронизации исправь RLS profiles.';
+    }finally{input.value='';}
+  };
+
+  window.removeProfileBanner = async function(){
+    const color=localStorage.getItem('worldio_banner_color')||WORLDIO_COVER_COLORS[0];
+    localStorage.removeItem('worldio_banner');
+    localStorage.setItem('worldio_banner_color',color);
+    applyBannerVisual(color,'');
+    const status=document.getElementById('imageUploadStatus'); if(status)status.textContent='Удаляем баннер…';
+    try{
+      const {data:{user}}=await supabaseClient.auth.getUser();
+      if(user){const {error}=await supabaseClient.from('profiles').update({banner:'',banner_color:color}).eq('id',user.id);if(error)throw error;}
+      if(status)status.textContent='Баннер удалён ✓';
+    }catch(e){console.warn('Worldio banner remove',e);if(status)status.textContent='Баннер убран с устройства';}
+  };
+
+  // Immediate preview also works if the remote profile is temporarily unavailable.
+  const originalOpenProfile=window.openProfile;
+  window.openProfile=function(event){
+    if(typeof originalOpenProfile==='function') originalOpenProfile(event);
+    setTimeout(()=>{try{const a=getAvatarData();applyBannerVisual(a.bannerColor,a.banner);window.renderCollectibleGrid();window.applyEquippedItemsUI();}catch(_){}} ,20);
+  };
+
+  // Keep stored state at one slot on every startup.
+  const initial=window.getWorldioItems();
+  if(initial.length>1)localStorage.setItem('worldio_items',JSON.stringify(initial));
+  setTimeout(()=>{try{window.renderCollectibleGrid();window.applyEquippedItemsUI();}catch(_){}} ,80);
+})();
 </script>
 
 </body>
