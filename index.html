@@ -1749,33 +1749,33 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
 
 <body class="worldio-glass-ui">
 
-<!-- WORLDIO 3D LAUNCH SPLASH -->
+<!-- WORLDIO 3D LAUNCH SPLASH v12 -->
 <div id="worldioSplash" aria-hidden="true">
-    <div class="worldio-splash-noise"></div>
-    <div class="worldio-splash-glow"></div>
-    <span class="worldio-splash-particle p1"></span>
-    <span class="worldio-splash-particle p2"></span>
-    <span class="worldio-splash-particle p3"></span>
-    <span class="worldio-splash-particle p4"></span>
-    <span class="worldio-splash-particle p5"></span>
-    <span class="worldio-splash-particle p6"></span>
-    <div class="worldio-splash-stage">
-        <div class="worldio-orbit"></div>
-        <div class="worldio-orbit o2"></div>
-        <div class="worldio-globe">
-            <div class="worldio-globe-grid">
-                <span class="worldio-meridian"></span>
-                <span class="worldio-meridian m2"></span>
-                <span class="worldio-meridian m3"></span>
-                <span class="worldio-meridian m4"></span>
-                <span class="worldio-latitude"></span>
-                <span class="worldio-latitude l2"></span>
-                <span class="worldio-latitude l3"></span>
+    <div class="worldio-splash-scene" aria-hidden="true">
+        <div class="worldio-splash-haze"></div>
+        <span class="worldio-splash-dot sd1"></span>
+        <span class="worldio-splash-dot sd2"></span>
+        <span class="worldio-splash-dot sd3"></span>
+        <span class="worldio-splash-dot sd4"></span>
+
+        <div class="worldio-3d-mark">
+            <div class="worldio-3d-orbit orbit-a"><span></span></div>
+            <div class="worldio-3d-orbit orbit-b"><span></span></div>
+            <div class="worldio-3d-cube">
+                <div class="cube-face cube-front"><span>W</span></div>
+                <div class="cube-face cube-right"></div>
+                <div class="cube-face cube-top"></div>
+                <div class="cube-face cube-bottom"></div>
+                <div class="cube-face cube-left"></div>
+                <div class="cube-face cube-back"></div>
             </div>
-            <div class="worldio-globe-core">W</div>
+            <div class="worldio-3d-shadow"></div>
         </div>
+
         <div class="worldio-splash-copy">
+            <div class="worldio-splash-kicker">WORLDIO</div>
             <h1 class="worldio-splash-title">Worldio</h1>
+            <div class="worldio-splash-sub">Открываем твой мир...</div>
             <div class="worldio-splash-loader"><span></span></div>
         </div>
     </div>
@@ -1790,10 +1790,10 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         if (hidden) return;
         hidden = true;
         splash.classList.add('hide');
-        setTimeout(() => splash.remove(), reduce ? 160 : 760);
+        setTimeout(() => splash.remove(), reduce ? 180 : 760);
     };
-    // Give the 3D entrance time to play even when the app loads from cache.
-    setTimeout(hide, reduce ? 450 : 3150);
+    window.addEventListener('load', () => setTimeout(hide, reduce ? 500 : 2450), { once: true });
+    setTimeout(hide, reduce ? 850 : 3600);
 })();
 </script>
 
@@ -3007,18 +3007,27 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         return (data || []).map(x => x.chat_id);
     }
 
-    async function hydrateChat(chat) {
-        const row = { ...chat, display_name: chat.name, avatar: chat.type === "direct" ? "👤" : (chat.type === "channel" ? "📡" : "👥"), avatar_color: chat.type === "channel" ? "linear-gradient(135deg,#0f766e,#0891b2)" : "linear-gradient(135deg,#2563eb,#7c3aed)" };
+    async function hydrateChat(chat, memberMap = null, profileMap = null) {
+        const row = { ...chat, display_name: chat.name, avatar: chat.avatar || (chat.type === "direct" ? "👤" : (chat.type === "channel" ? "📡" : "👥")), avatar_color: chat.avatar_color || (chat.type === "channel" ? "linear-gradient(135deg,#0f766e,#0891b2)" : "linear-gradient(135deg,#2563eb,#7c3aed)") };
         if (chat.type === "direct") {
-            const { data: members } = await supabaseClient.from("chat_members").select("user_id").eq("chat_id", chat.id);
-            const peerId = (members || []).map(m => m.user_id).find(id => id !== currentUserId);
+            let members = memberMap?.get(chat.id);
+            if (!members) {
+                const result = await supabaseClient.from("chat_members").select("user_id").eq("chat_id", chat.id);
+                members = result.data || [];
+            }
+            const peerId = members.map(m => m.user_id).find(id => id !== currentUserId);
             if (peerId) {
-                const { data: peer } = await supabaseClient.from("profiles").select("username,avatar,avatar_color").eq("id", peerId).maybeSingle();
+                let peer = profileMap?.get(peerId);
+                if (!peer) {
+                    const result = await supabaseClient.from("profiles").select("id,username,avatar,avatar_color,bio").eq("id", peerId).maybeSingle();
+                    peer = result.data;
+                }
                 row.peer_id = peerId;
                 row.peer_username = peer?.username || "Пользователь";
                 row.display_name = row.peer_username;
                 row.avatar = peer?.avatar || "👤";
                 row.avatar_color = peer?.avatar_color || row.avatar_color;
+                row.peer_profile = peer || null;
             }
         }
         return row;
@@ -3065,8 +3074,34 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
             for (const msg of recentMessages || []) if (!lastMessages.has(msg.chat_id)) lastMessages.set(msg.chat_id, msg);
         }
 
+        // Hydrate all direct-chat members/profiles in batches instead of one request per chat.
+        // This fixes slow/empty profile rendering when several personal chats are present.
+        const memberMap = new Map();
+        const profileMap = new Map();
+        const directIds = visibleChats.filter(c => c.type === "direct").map(c => c.id);
+        if (directIds.length) {
+            const { data: allMembers, error: membersError } = await supabaseClient
+                .from("chat_members")
+                .select("chat_id,user_id")
+                .in("chat_id", directIds);
+            if (!membersError) {
+                for (const m of allMembers || []) {
+                    if (!memberMap.has(m.chat_id)) memberMap.set(m.chat_id, []);
+                    memberMap.get(m.chat_id).push(m);
+                }
+                const peerIds = [...new Set((allMembers || []).map(m => m.user_id).filter(id => id && id !== currentUserId))];
+                if (peerIds.length) {
+                    const { data: profiles } = await supabaseClient
+                        .from("profiles")
+                        .select("id,username,avatar,avatar_color,bio")
+                        .in("id", peerIds);
+                    for (const profile of profiles || []) profileMap.set(profile.id, profile);
+                }
+            }
+        }
+
         for (const chat of visibleChats) {
-            const hydrated = await hydrateChat(chat);
+            const hydrated = await hydrateChat(chat, memberMap, profileMap);
             const last = lastMessages.get(chat.id);
             hydrated.last_message = last?.content || "";
             hydrated.last_message_at = last?.created_at || null;
@@ -3087,11 +3122,24 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         if (!chatId) return;
         const { data, error } = await supabaseClient
             .from("messages")
-            .select("id,chat_id,user_id,content,created_at,profiles(username,avatar,avatar_color)")
+            .select("id,chat_id,user_id,content,created_at")
             .eq("chat_id", chatId)
             .order("created_at", { ascending: true });
         if (error) { console.error("loadMessages", error); return; }
-        messageCache[chatId] = data || [];
+
+        // Fetch sender profiles separately so message loading does not depend on a
+        // PostgREST embedded-relation/RLS join being available.
+        const rows = data || [];
+        const senderIds = [...new Set(rows.map(m => m.user_id).filter(Boolean))];
+        const profileMap = new Map();
+        if (senderIds.length) {
+            const { data: profiles } = await supabaseClient
+                .from("profiles")
+                .select("id,username,avatar,avatar_color,bio")
+                .in("id", senderIds);
+            for (const profile of profiles || []) profileMap.set(profile.id, profile);
+        }
+        messageCache[chatId] = rows.map(m => ({ ...m, profiles: profileMap.get(m.user_id) || null }));
         const last = messageCache[chatId].at(-1);
         if (last) updateChatPreview(chatId, last.content, formatTime(last.created_at), last.created_at);
     }
@@ -3128,27 +3176,108 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         if (id) await selectChatById(id);
     }
 
+    const worldioPendingSends = new Set();
+
+    function setComposerBusyState() {
+        const input = document.getElementById("messageInput");
+        const send = document.querySelector(".send");
+        const pending = worldioPendingSends.size;
+        if (send) {
+            send.classList.toggle("sending", pending > 0);
+            send.setAttribute("aria-busy", pending > 0 ? "true" : "false");
+        }
+        if (input && !currentChatId) {
+            input.disabled = true;
+            input.placeholder = "Сначала выбери чат...";
+        }
+    }
+
+    function addLocalMessageOptimistic(chatId, text) {
+        if (!messageCache[chatId]) messageCache[chatId] = [];
+        const localId = `local-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+        const item = {
+            id: localId,
+            chat_id: chatId,
+            user_id: currentUserId,
+            content: text,
+            created_at: new Date().toISOString(),
+            profiles: {
+                username: username || "Вы",
+                avatar: localStorage.getItem("worldio_avatar") || "👤",
+                avatar_color: localStorage.getItem("worldio_avatar_color") || "linear-gradient(135deg,#111,#444)"
+            },
+            __pending: true
+        };
+        messageCache[chatId].push(item);
+        return item;
+    }
+
+    function replaceOptimisticMessage(chatId, localId, serverMessage) {
+        const list = messageCache[chatId] || [];
+        const index = list.findIndex(m => m.id === localId);
+        if (index >= 0) list[index] = serverMessage;
+        else if (!list.some(m => m.id === serverMessage.id)) list.push(serverMessage);
+    }
+
+    function markOptimisticMessageFailed(chatId, localId) {
+        const list = messageCache[chatId] || [];
+        const item = list.find(m => m.id === localId);
+        if (item) {
+            item.__pending = false;
+            item.__failed = true;
+        }
+    }
+
     async function sendMessage() {
         const input = document.getElementById("messageInput");
+        if (!input || !supabaseClient || !currentChatId || !currentUserId) return;
+
         const text = input.value.trim();
-        if (!text || !currentChatId || !currentUserId) return;
-        input.disabled = true;
-        const { data, error } = await supabaseClient
-            .from("messages")
-            .insert({ chat_id: currentChatId, user_id: currentUserId, content: text })
-            .select("id,chat_id,user_id,content,created_at,profiles(username,avatar,avatar_color)")
-            .single();
-        input.disabled = false;
-        if (error) {
-            console.error(error);
-            alert("Не удалось отправить сообщение. Проверь RLS в Supabase.");
-            return;
-        }
+        if (!text) return;
+
+        // One click: put the message on screen immediately. Network work happens in
+        // the background and never blocks the composer.
+        const chatId = currentChatId;
         input.value = "";
-        if (!messageCache[currentChatId]) messageCache[currentChatId] = [];
-        if (!messageCache[currentChatId].some(m => m.id === data.id)) messageCache[currentChatId].push(data);
-        updateChatPreview(currentChatId, text, "сейчас", data.created_at);
+        input.focus();
+        const optimistic = addLocalMessageOptimistic(chatId, text);
+        worldioPendingSends.add(optimistic.id);
+        setComposerBusyState();
         renderMessages();
+        updateChatPreview(chatId, text, "сейчас", optimistic.created_at);
+
+        try {
+            // Do NOT request an embedded profiles relation here. A successful INSERT
+            // must not be treated as failed just because a SELECT/RLS join is denied.
+            const { data, error } = await supabaseClient
+                .from("messages")
+                .insert({ chat_id: chatId, user_id: currentUserId, content: text })
+                .select("id,chat_id,user_id,content,created_at")
+                .single();
+
+            if (error) throw error;
+
+            const localProfile = {
+                username: username || "Вы",
+                avatar: localStorage.getItem("worldio_avatar") || "👤",
+                avatar_color: localStorage.getItem("worldio_avatar_color") || "linear-gradient(135deg,#111,#444)"
+            };
+            replaceOptimisticMessage(chatId, optimistic.id, { ...data, profiles: localProfile, __pending: false });
+        } catch (error) {
+            console.error("Worldio sendMessage:", error);
+            markOptimisticMessageFailed(chatId, optimistic.id);
+            if (currentChatId === chatId) {
+                const status = document.getElementById("imageUploadStatus");
+                if (status) {
+                    status.textContent = "Не удалось отправить. Проверь соединение.";
+                    setTimeout(() => { if (status.textContent.includes("Не удалось отправить")) status.textContent = ""; }, 2500);
+                }
+                renderMessages();
+            }
+        } finally {
+            worldioPendingSends.delete(optimistic.id);
+            setComposerBusyState();
+        }
     }
 
     function subscribeToMessages() {
@@ -3159,16 +3288,45 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
                 const row = payload.new;
                 const chat = chatStore.get(row.chat_id);
                 if (!chat) return;
-                const { data: fullMessage } = await supabaseClient
-                    .from("messages")
-                    .select("id,chat_id,user_id,content,created_at,profiles(username,avatar,avatar_color)")
-                    .eq("id", row.id)
-                    .single();
-                if (!fullMessage) return;
+
                 if (!messageCache[row.chat_id]) messageCache[row.chat_id] = [];
-                if (!messageCache[row.chat_id].some(m => m.id === row.id)) messageCache[row.chat_id].push(fullMessage);
-                updateChatPreview(row.chat_id, fullMessage.content, formatTime(fullMessage.created_at), fullMessage.created_at);
+                // Reconcile realtime delivery with an optimistic local message.
+                const list = messageCache[row.chat_id] || (messageCache[row.chat_id] = []);
+                const exact = list.find(m => m.id === row.id);
+                if (exact) {
+                    exact.__pending = false;
+                } else {
+                    // If the INSERT returned after realtime, match the optimistic row
+                    // by sender + content + a short time window to avoid duplicates.
+                    const optimistic = list.find(m => m.__pending && m.user_id === row.user_id && m.content === row.content && Math.abs(new Date(m.created_at) - new Date(row.created_at)) < 15000);
+                    if (optimistic) {
+                        const index = list.indexOf(optimistic);
+                        list[index] = { ...row, profiles: optimistic.profiles, __pending: false };
+                    } else {
+                        list.push({ ...row, profiles: null });
+                    }
+                }
                 if (row.chat_id === currentChatId) renderMessages();
+
+                // Sender profile is hydrated independently so message delivery is never
+                // delayed by a profile lookup.
+                if (row.user_id !== currentUserId) {
+                    supabaseClient
+                        .from("profiles")
+                        .select("id,username,avatar,avatar_color,bio")
+                        .eq("id", row.user_id)
+                        .maybeSingle()
+                        .then(({ data: profile }) => {
+                            const currentList = messageCache[row.chat_id] || [];
+                            const msg = currentList.find(m => m.id === row.id);
+                            if (!msg || !profile) return;
+                            msg.profiles = profile;
+                            if (row.chat_id === currentChatId) renderMessages();
+                        })
+                        .catch(() => {});
+                }
+
+                updateChatPreview(row.chat_id, row.content, formatTime(row.created_at), row.created_at);
             })
             .subscribe(status => console.log("Worldio realtime:", status));
     }
@@ -3979,6 +4137,198 @@ body.worldio-mono .worldio-item-card.equipped{animation:noirEquip .24s ease both
 @keyframes noirEquip{0%{transform:scale(.98);opacity:.75}70%{transform:scale(1.02)}100%{transform:scale(1);opacity:1}}
 
 @media(max-width:960px){body.worldio-mono .sidebar{width:420px;max-width:420px!important;}}
+
+/* ===== WORLDIO v12 — MINIMAL 3D + CHAT PERFORMANCE ===== */
+#worldioSplash{
+    background:
+      radial-gradient(circle at 50% 44%, rgba(255,255,255,.075), transparent 20%),
+      radial-gradient(circle at 50% 72%, rgba(255,255,255,.035), transparent 35%),
+      #05070a !important;
+}
+.worldio-splash-scene{
+    position:relative;
+    width:100%;height:100%;
+    display:grid;place-items:center;
+    perspective:1200px;
+    overflow:hidden;
+}
+.worldio-splash-haze{
+    position:absolute;
+    width:620px;height:620px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.09),transparent 66%);
+    filter:blur(18px);
+    animation: v12Haze 4s ease-in-out infinite;
+}
+.worldio-splash-dot{
+    position:absolute;width:3px;height:3px;border-radius:50%;
+    background:#fff;opacity:.32;
+    box-shadow:0 0 12px rgba(255,255,255,.55);
+    animation:v12Dot 3.4s ease-in-out infinite;
+}
+.sd1{left:27%;top:25%}.sd2{right:22%;top:30%;animation-delay:-1.1s}.sd3{left:21%;bottom:27%;animation-delay:-2s}.sd4{right:28%;bottom:22%;animation-delay:-.5s}
+.worldio-3d-mark{
+    position:relative;
+    width:320px;height:320px;
+    transform-style:preserve-3d;
+    display:grid;place-items:center;
+    animation:v12StageIn 1s cubic-bezier(.16,1,.3,1) both;
+}
+.worldio-3d-cube{
+    position:relative;
+    width:142px;height:142px;
+    transform-style:preserve-3d;
+    transform:rotateX(-8deg) rotateY(-24deg) rotateZ(-2deg);
+    animation:v12CubeFloat 4.8s ease-in-out .65s infinite;
+}
+.cube-face{
+    position:absolute;inset:0;
+    border:1px solid rgba(255,255,255,.14);
+    background:linear-gradient(145deg,#f6f7f9 0%,#cfd3d9 46%,#727984 100%);
+    box-shadow:inset -18px -20px 34px rgba(0,0,0,.2),inset 10px 12px 22px rgba(255,255,255,.45);
+    backface-visibility:hidden;
+}
+.cube-front{
+    display:grid;place-items:center;
+    transform:translateZ(71px);
+    border-radius:28px;
+}
+.cube-front span{
+    display:grid;place-items:center;
+    width:74px;height:74px;border-radius:12px;
+    background:linear-gradient(145deg,#ffffff,#d7dbe1);
+    color:#101317;font-size:64px;line-height:1;font-weight:1000;
+    letter-spacing:-6px;
+    text-shadow:0 2px 0 rgba(255,255,255,.7);
+    box-shadow:0 10px 22px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.8);
+    transform:translateZ(5px);
+}
+.cube-right{transform:rotateY(90deg) translateZ(71px);background:linear-gradient(160deg,#7b8089,#272c34)}
+.cube-left{transform:rotateY(-90deg) translateZ(71px);background:linear-gradient(140deg,#e8eaed,#7a7f87)}
+.cube-top{transform:rotateX(90deg) translateZ(71px);background:linear-gradient(140deg,#fff,#afb5bf)}
+.cube-bottom{transform:rotateX(-90deg) translateZ(71px);background:linear-gradient(145deg,#4c525b,#11151b)}
+.cube-back{transform:rotateY(180deg) translateZ(71px);background:linear-gradient(145deg,#b7bbc2,#545a64)}
+.worldio-3d-orbit{
+    position:absolute;
+    width:245px;height:92px;border:1px solid rgba(255,255,255,.18);
+    border-radius:50%;transform:rotate(-18deg);
+    animation:v12OrbitA 6s linear infinite;
+}
+.worldio-3d-orbit::after{
+    content:"";position:absolute;width:8px;height:8px;border-radius:50%;
+    background:#fff;box-shadow:0 0 14px rgba(255,255,255,.85);right:16px;top:16px;
+}
+.worldio-3d-orbit.orbit-b{
+    width:202px;height:202px;transform:rotate(55deg);
+    border-color:rgba(255,255,255,.10);
+    animation:v12OrbitB 8s linear infinite;
+}
+.worldio-3d-orbit.orbit-b::after{right:auto;left:20px;top:16px;opacity:.7}
+.worldio-3d-shadow{
+    position:absolute;bottom:22px;width:132px;height:28px;
+    border-radius:50%;background:rgba(255,255,255,.12);
+    filter:blur(16px);animation:v12Shadow 4.8s ease-in-out infinite;
+}
+.worldio-splash-copy{
+    position:absolute;left:50%;top:calc(50% + 155px);
+    transform:translateX(-50%);text-align:center;
+    white-space:nowrap;animation:v12CopyIn .7s .28s both;
+}
+.worldio-splash-kicker{font-size:10px;letter-spacing:4px;color:#8f969e;margin-bottom:9px}
+.worldio-splash-title{
+    margin:0;font-size:44px;line-height:1;font-weight:900;letter-spacing:-2.5px;color:#f3f5f7;
+}
+.worldio-splash-sub{margin-top:10px;color:#898f97;font-size:12px}
+.worldio-splash-loader{
+    width:150px;height:3px;margin:16px auto 0;border-radius:999px;
+    background:rgba(255,255,255,.08);overflow:hidden;
+}
+.worldio-splash-loader span{
+    display:block;width:42%;height:100%;
+    background:linear-gradient(90deg,#fff,#9da3ab,#fff);
+    box-shadow:0 0 14px rgba(255,255,255,.34);
+    animation:v12Loader 1.4s cubic-bezier(.4,0,.2,1) infinite;
+}
+@keyframes v12StageIn{0%{opacity:0;transform:scale(.72) translateY(18px)}100%{opacity:1;transform:none}}
+@keyframes v12CubeFloat{0%,100%{transform:rotateX(-8deg) rotateY(-24deg) rotateZ(-2deg) translateY(0)}50%{transform:rotateX(-3deg) rotateY(10deg) rotateZ(1deg) translateY(-9px)}}
+@keyframes v12OrbitA{from{transform:rotate(-18deg) rotateZ(0deg)}to{transform:rotate(-18deg) rotateZ(360deg)}}
+@keyframes v12OrbitB{from{transform:rotate(55deg) rotateZ(0deg)}to{transform:rotate(55deg) rotateZ(-360deg)}}
+@keyframes v12Shadow{0%,100%{transform:scale(.94);opacity:.5}50%{transform:scale(.78);opacity:.22}}
+@keyframes v12Haze{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.08);opacity:.8}}
+@keyframes v12Dot{0%,100%{transform:translateY(0) scale(.7);opacity:.2}50%{transform:translateY(-15px) scale(1.35);opacity:.8}}
+@keyframes v12CopyIn{from{opacity:0;transform:translate(-50%,14px);filter:blur(4px)}to{opacity:1;transform:translate(-50%,0);filter:blur(0)}}
+@keyframes v12Loader{0%{transform:translateX(-130%)}100%{transform:translateX(340%)}}
+
+/* Cleaner chat cards */
+#chatList{
+    padding:6px 7px 12px !important;
+    gap:6px !important;
+}
+#chatList .chat-item{
+    position:relative;
+    min-height:72px;
+    margin:0 !important;
+    padding:10px 11px !important;
+    border:1px solid rgba(255,255,255,.055) !important;
+    border-radius:15px !important;
+    background:linear-gradient(180deg,rgba(19,24,31,.92),rgba(11,14,19,.92)) !important;
+    box-shadow:0 8px 18px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+#chatList .chat-item:hover{
+    transform:translateY(-1px) !important;
+    border-color:rgba(255,255,255,.12) !important;
+    box-shadow:0 12px 24px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+#chatList .chat-item.active{
+    background:linear-gradient(180deg,#1b2027,#11151b) !important;
+    border-color:rgba(255,255,255,.18) !important;
+    box-shadow:inset 3px 0 0 #fff,0 12px 25px rgba(0,0,0,.18) !important;
+}
+#chatList .avatar{
+    width:44px !important;height:44px !important;border-radius:13px !important;
+    box-shadow:0 0 0 1px rgba(255,255,255,.07),0 8px 14px rgba(0,0,0,.18) !important;
+}
+#chatList .chat-name{font-size:13px !important;font-weight:800 !important;color:#f2f4f6 !important}
+#chatList .chat-preview{font-size:11px !important;color:#858c96 !important}
+#chatList .chat-time{font-size:10px !important;color:#707782 !important}
+#chatList .chat-preview-row{margin-top:4px !important}
+#chatList .chat-badge{
+    background:#fff !important;color:#101214 !important;
+    min-width:18px !important;height:18px !important;border-radius:999px !important;
+    font-weight:800 !important;
+}
+.worldio-chat-empty{
+    color:#777e88 !important;
+    border:1px dashed rgba(255,255,255,.08);
+    border-radius:16px;padding:28px 16px !important;
+}
+.worldio-chat-empty strong{color:#eceff2 !important}
+
+/* Better message rendering */
+.message-row{animation: v12MessageIn .22s cubic-bezier(.16,1,.3,1) both}
+.message-row.me .message{
+    box-shadow:0 6px 14px rgba(0,0,0,.14);
+}
+.message{box-shadow:0 6px 14px rgba(0,0,0,.08)}
+.send{
+    transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease !important;
+}
+.send:hover{transform:translateY(-1px) !important}
+.send:active{transform:scale(.96) !important}
+.send.sending::after{
+    content:"";display:block;width:12px;height:12px;margin:auto;border-radius:50%;
+    border:2px solid rgba(255,255,255,.38);border-top-color:#fff;
+    animation:v12Spin .7s linear infinite;
+}
+.send.sending{font-size:0;opacity:.9}
+@keyframes v12MessageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes v12Spin{to{transform:rotate(360deg)}}
+
+@media (prefers-reduced-motion: reduce){
+    #worldioSplash *,#worldioSplash::before,#worldioSplash::after,
+    .message-row,.chat-item,.send{animation:none!important;transition:none!important}
+}
+
 </style>
 
 <script id="worldio-v10-noir-logic">
@@ -4115,5 +4465,19 @@ body.worldio-mono .worldio-item-card.equipped{animation:noirEquip .24s ease both
 })();
 </script>
 
+
+<script id="worldio-v12-input-guard">
+(() => {
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" || event.isComposing) return;
+    const input = event.target?.closest?.("#messageInput");
+    if (!input) return;
+    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (typeof sendMessage === "function") sendMessage();
+  }, true);
+})();
+</script>
 </body>
 </html>
