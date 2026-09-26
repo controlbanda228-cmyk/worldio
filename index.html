@@ -4,8 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worldio</title>
+    <meta name="theme-color" content="#0b1220">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Worldio">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-    <script type="text/javascript" src="https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=1WfcB0cLKnKXVpwr44onfDkNo8YZUgmhIWIXrCbaDiMimr5gqntJvVT5iFfWUAH2dj-15PuYypO_cXUfnbQPd33HUs5XQg6vy8p4ER6BRWGseJykyzQ8tV7RRtrw-F74rOCJ-mJ_fQQZGEzWbh0ydQekj_zKo3drNIfIbkauk4ZoHRvLAYEGWMLBdFtb0j31E0oWiQ8I95BHUKT8NvVbInmbjQNizLLGjD3CqJHnLk1PavWG6f8GnTfNBbWtNg720iPeMbGj_hl3w6sjvnlgumyo8NfMqNy66ZNkAJvBll-8_BAJQymA1HDhEAALycCy" charset="UTF-8"></script><style>
+    <style>
         * {
             box-sizing: border-box;
         }
@@ -1040,6 +1048,7 @@
                 <div class="profile-menu-user" id="menuProfileHandle">@user</div>
             </div>
             <button class="profile-menu-item" onclick="openProfile(event)"><span class="mi">👤</span><span>Мой профиль</span></button>
+            <button class="profile-menu-item" id="installWorldioBtn" onclick="installWorldio(event)" style="display:none"><span class="mi">📲</span><span>Установить Worldio</span></button>
             <button class="profile-menu-item" onclick="openSettings(event)"><span class="mi">⚙️</span><span>Настройки</span></button>
             <button class="profile-menu-item" onclick="signOutWorldio(event)"><span class="mi">↪</span><span>Выйти из аккаунта</span></button>
         </div>
@@ -1787,6 +1796,45 @@
 
         });
 
+
+    // =============================
+    // WORLDIO PWA INSTALL
+    // =============================
+    let worldioInstallPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        worldioInstallPrompt = event;
+        const btn = document.getElementById("installWorldioBtn");
+        if (btn) btn.style.display = "flex";
+    });
+
+    window.addEventListener("appinstalled", () => {
+        worldioInstallPrompt = null;
+        const btn = document.getElementById("installWorldioBtn");
+        if (btn) btn.style.display = "none";
+    });
+
+    async function installWorldio(event) {
+        if (event) event.stopPropagation();
+        if (!worldioInstallPrompt) {
+            alert("Если кнопки установки нет, открой Worldio в Chrome или Edge и выбери «Установить Worldio» в меню браузера.");
+            return;
+        }
+        worldioInstallPrompt.prompt();
+        const choice = await worldioInstallPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+            worldioInstallPrompt = null;
+            const btn = document.getElementById("installWorldioBtn");
+            if (btn) btn.style.display = "none";
+        }
+    }
+
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("./sw.js").catch(err => console.warn("Worldio SW:", err));
+        });
+    }
 
     async function restoreSession() {
         if (!supabaseClient) return;
