@@ -32,31 +32,10 @@
         }
 
 
-        /* REGISTRATION ANIMATION */
+        /* REGISTRATION ANIMATION (minimal: glow blobs disabled) */
         .login-screen::before,
         .login-screen::after {
-            content: "";
-            position: absolute;
-            width: 420px;
-            height: 420px;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: .22;
-            pointer-events: none;
-            animation: floatGlow 8s ease-in-out infinite alternate;
-        }
-
-        .login-screen::before {
-            background: #2563eb;
-            top: -180px;
-            left: -120px;
-        }
-
-        .login-screen::after {
-            background: #7c3aed;
-            right: -120px;
-            bottom: -180px;
-            animation-delay: -4s;
+            display: none;
         }
 
         .login-box {
@@ -67,24 +46,11 @@
         }
 
         .login-box::before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(120deg, transparent, #3b82f6aa, transparent, #8b5cf6aa, transparent);
-            background-size: 250% 250%;
-            animation: borderFlow 5s linear infinite;
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
+            display: none;
         }
 
         .world-logo {
             display: inline-block;
-            filter: drop-shadow(0 0 18px #3b82f688);
-            animation: globeFloat 3s ease-in-out infinite;
         }
 
         .login-box h1 {
@@ -108,31 +74,19 @@
 
         .login-button {
             position: relative;
-            overflow: hidden;
-            isolation: isolate;
-            transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+            transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
             animation: textReveal .7s .45s both;
-            box-shadow: 0 10px 35px #2563eb33;
+            box-shadow: 0 2px 8px rgba(0,0,0,.25);
         }
 
         .login-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -120%;
-            width: 70%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, #ffffff55, transparent);
-            transform: skewX(-20deg);
-            animation: buttonShine 3.2s 1.2s infinite;
-            z-index: -1;
+            display: none;
         }
 
         .login-button:hover {
             opacity: 1;
-            transform: translateY(-2px);
-            filter: brightness(1.08);
-            box-shadow: 0 14px 40px #2563eb55;
+            filter: brightness(1.06);
+            box-shadow: 0 3px 10px rgba(0,0,0,.3);
         }
 
         .login-button:active {
@@ -186,15 +140,7 @@
         }
 
         .login-particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: #60a5fa;
-            box-shadow: 0 0 12px #60a5fa;
-            pointer-events: none;
-            animation: particleFloat var(--duration) ease-in-out infinite;
-            opacity: .65;
+            display: none;
         }
 
         @keyframes particleFloat {
@@ -273,7 +219,7 @@
             padding: 15px;
             border: 0;
             border-radius: 12px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background: #2563eb;
             color: white;
             font-size: 16px;
             font-weight: bold;
@@ -324,7 +270,7 @@
             place-items: center;
             font-size: 23px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background: #2563eb;
             box-shadow: 0 8px 25px #2563eb30;
         }
 
@@ -425,7 +371,7 @@
         .global-search-section{padding:8px 8px 4px;color:#6f7f97;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
         .global-search-result{display:flex;align-items:center;gap:12px;padding:10px;border-radius:14px;cursor:pointer;transition:.16s ease}
         .global-search-result:hover{background:#142137;transform:translateX(2px)}
-        .global-search-result-avatar{width:44px;height:44px;flex:0 0 auto;border-radius:14px;display:grid;place-items:center;font-size:19px;overflow:hidden;background:linear-gradient(135deg,#2563eb,#7c3aed);border:1px solid #2b3b55;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+        .global-search-result-avatar{width:44px;height:44px;flex:0 0 auto;border-radius:14px;display:grid;place-items:center;font-size:19px;overflow:hidden;background:#2563eb;border:1px solid #2b3b55;box-shadow:0 8px 20px rgba(0,0,0,.18)}
         .global-search-result-avatar img{width:100%;height:100%;object-fit:cover}
         .global-search-result-info{min-width:0;flex:1}
         .global-search-result-title{font-weight:800;color:#edf3ff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -552,7 +498,7 @@
             width: 47px;
             height: 47px;
             border-radius: 14px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background: #2563eb;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -702,7 +648,7 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background: #2563eb;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -780,7 +726,7 @@
         }
 
         .message-row.me .message {
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            background: #2563eb;
             border: 0;
             border-bottom-right-radius: 5px;
         }
@@ -933,7 +879,7 @@
         .switch{position:relative;width:46px;height:26px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#243149;border-radius:99px;cursor:pointer;transition:.2s}.slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;border-radius:50%;background:#cbd5e1;transition:.2s}.switch input:checked+.slider{background:#2563eb}.switch input:checked+.slider:before{transform:translateX(20px);background:white}
         .modal-actions{display:flex;gap:10px;margin-top:22px;}
         .modal-button{flex:1;border:0;border-radius:13px;padding:12px 15px;font-weight:800;cursor:pointer;}
-        .modal-button.primary{background:linear-gradient(135deg,#2563eb,#4f46e5);color:white;box-shadow:0 10px 24px #2563eb22;}.modal-button.primary:hover{filter:brightness(1.08)}
+        .modal-button.primary{background:#2563eb;color:white;box-shadow:0 10px 24px #2563eb22;}.modal-button.primary:hover{filter:brightness(1.08)}
         .modal-button.secondary{background:#131e30;border:1px solid #28374f;color:#aebbd0;}.modal-button.secondary:hover{background:#19263b;color:white}
         .danger-button{width:100%;margin-top:10px;border:1px solid #5b2530;background:#2a131a;color:#fb7185;border-radius:13px;padding:11px;cursor:pointer;font-weight:700}.danger-button:hover{background:#35151e}
         .save-status{min-height:18px;text-align:center;font-size:12px;color:#4ade80;margin-top:10px;}
@@ -943,14 +889,14 @@
 
         /* WORLDIO TELEGRAM-STYLE PROFILE */
         .tg-profile-hero{padding:0;overflow:hidden;border:1px solid #26344a;background:#0d1522;border-radius:22px;margin-bottom:18px;box-shadow:0 18px 55px rgba(0,0,0,.28)}
-        .tg-banner{height:150px;position:relative;background:linear-gradient(135deg,#2563eb,#7c3aed);background-size:cover;background-position:center;overflow:hidden}
+        .tg-banner{height:150px;position:relative;background:#2563eb;background-size:cover;background-position:center;overflow:hidden}
         .tg-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.42));pointer-events:none}
         .tg-banner-tools{position:absolute;right:12px;top:12px;z-index:2;display:flex;gap:8px}
         .tg-mini-btn{width:36px;height:36px;border-radius:11px;border:1px solid rgba(255,255,255,.18);background:rgba(7,12,22,.62);backdrop-filter:blur(12px);color:white;cursor:pointer;font-size:16px}
         .tg-mini-btn:hover{background:rgba(37,99,235,.8);transform:translateY(-1px)}
         .tg-profile-main{position:relative;padding:0 20px 20px}
         .tg-avatar-wrap{position:relative;width:96px;height:96px;margin-top:-48px;margin-bottom:10px}
-        .tg-big-avatar{width:96px;height:96px;border-radius:30px;display:grid;place-items:center;font-size:42px;overflow:hidden;border:4px solid #0d1522;box-shadow:0 12px 35px rgba(0,0,0,.4);background:linear-gradient(135deg,#2563eb,#7c3aed);background-size:cover;background-position:center}
+        .tg-big-avatar{width:96px;height:96px;border-radius:30px;display:grid;place-items:center;font-size:42px;overflow:hidden;border:4px solid #0d1522;box-shadow:0 12px 35px rgba(0,0,0,.4);background:#2563eb;background-size:cover;background-position:center}
         .tg-avatar-edit{position:absolute;right:-2px;bottom:-2px;width:32px;height:32px;border-radius:11px;border:3px solid #0d1522;background:#2563eb;color:white;display:grid;place-items:center;cursor:pointer;font-size:14px}
         .tg-avatar-edit:hover{background:#3b82f6}
         .tg-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -1067,7 +1013,7 @@
         .worldio-result-avatar-img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;}
         .worldio-direct-badge{font-size:9px;color:#7ea6f5;}
         .chat-item.worldio-dynamic{cursor:pointer;}
-        .chat-item.worldio-dynamic .avatar{background:linear-gradient(135deg,#2563eb,#7c3aed);}
+        .chat-item.worldio-dynamic .avatar{background:#2563eb;}
         .chat-item.worldio-dynamic:hover{transform:translateX(2px);}
         body.modal-open .sidebar{pointer-events:auto;}
 
@@ -1362,7 +1308,7 @@
 
         :root{--wi-accent:#5a67ff;--wi-accent-2:#8a4dff}
         .tg-profile-hero{position:relative;isolation:isolate;overflow:hidden;min-height:440px;background:#0b1422}
-        .tg-profile-hero::before{content:"";position:absolute;inset:0;background:var(--tg-banner-bg,linear-gradient(135deg,#2563eb,#7c3aed)) center/cover no-repeat;z-index:-2;transform:scale(1.01)}
+        .tg-profile-hero::before{content:"";position:absolute;inset:0;background:var(--tg-banner-bg,#2563eb) center/cover no-repeat;z-index:-2;transform:scale(1.01)}
         .tg-profile-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,20,.04) 0%,rgba(5,10,20,.12) 28%,rgba(5,10,20,.50) 58%,rgba(7,13,23,.97) 82%,#0b1422 100%);z-index:-1;pointer-events:none}
         .tg-banner{height:220px;min-height:220px;background:transparent!important}
         .tg-banner::after{display:none}
@@ -2338,15 +2284,15 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
     function getAvatarData() {
         return {
             avatar: localStorage.getItem("worldio_avatar") || "🌎",
-            color: localStorage.getItem("worldio_avatar_color") || "linear-gradient(135deg,#2563eb,#7c3aed)",
+            color: localStorage.getItem("worldio_avatar_color") || "#2563eb",
             bio: localStorage.getItem("worldio_bio") || "",
             banner: localStorage.getItem("worldio_banner") || "",
-            bannerColor: localStorage.getItem("worldio_banner_color") || "linear-gradient(135deg,#2563eb,#7c3aed)"
+            bannerColor: localStorage.getItem("worldio_banner_color") || "#2563eb"
         };
     }
 
     const WORLDIO_COVER_COLORS = [
-        "linear-gradient(135deg,#2563eb,#7c3aed)",
+        "#2563eb",
         "linear-gradient(135deg,#06b6d4,#2563eb)",
         "linear-gradient(135deg,#ec4899,#8b5cf6)",
         "linear-gradient(135deg,#f97316,#ef4444)",
@@ -2364,7 +2310,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
             el.textContent = "";
         } else {
             el.style.backgroundImage = "none";
-            el.style.background = fallback || "linear-gradient(135deg,#2563eb,#7c3aed)";
+            el.style.background = fallback || "#2563eb";
             el.textContent = image || "🌎";
         }
     }
@@ -2454,7 +2400,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         if (profile?.banner_color) localStorage.setItem("worldio_banner_color", profile.banner_color);
         await supabaseClient
             .from("profiles")
-            .upsert({ id: currentUserId, username, bio: localStorage.getItem("worldio_bio") || "", avatar: localStorage.getItem("worldio_avatar") || "🌎", avatar_color: localStorage.getItem("worldio_avatar_color") || "linear-gradient(135deg,#2563eb,#7c3aed)", banner: localStorage.getItem("worldio_banner") || "" }, { onConflict: "id" });
+            .upsert({ id: currentUserId, username, bio: localStorage.getItem("worldio_bio") || "", avatar: localStorage.getItem("worldio_avatar") || "🌎", avatar_color: localStorage.getItem("worldio_avatar_color") || "#2563eb", banner: localStorage.getItem("worldio_banner") || "" }, { onConflict: "id" });
         applyProfileUI();
         await loadChatsFromSupabase();
     }
@@ -2464,7 +2410,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
 
     const AVATARS = ["🌎","🌙","⭐","🔥","⚡","🎮","👾","🚀","🦊","🐼","🐸","🐯","🦄","😎","🤖","👻"];
     const AVATAR_COLORS = [
-        "linear-gradient(135deg,#2563eb,#7c3aed)","linear-gradient(135deg,#06b6d4,#2563eb)","linear-gradient(135deg,#ec4899,#8b5cf6)",
+        "#2563eb","linear-gradient(135deg,#06b6d4,#2563eb)","linear-gradient(135deg,#ec4899,#8b5cf6)",
         "linear-gradient(135deg,#f97316,#ef4444)","linear-gradient(135deg,#22c55e,#06b6d4)","linear-gradient(135deg,#eab308,#f97316)",
         "linear-gradient(135deg,#14b8a6,#3b82f6)","linear-gradient(135deg,#8b5cf6,#ec4899)"
     ];
@@ -2539,7 +2485,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
               username:username||user.user_metadata?.username||user.email?.split("@")[0]||"Пользователь",
               bio:localStorage.getItem("worldio_bio")||"",
               avatar:localStorage.getItem("worldio_avatar")||"🌎",
-              avatar_color:localStorage.getItem("worldio_avatar_color")||"linear-gradient(135deg,#2563eb,#7c3aed)",
+              avatar_color:localStorage.getItem("worldio_avatar_color")||"#2563eb",
               banner:"",
               banner_color:value
             },{onConflict:"id"});
@@ -2833,7 +2779,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
             el.style.background = "#182234";
         } else {
             el.textContent = avatar || "💬";
-            el.style.background = color || "linear-gradient(135deg,#2563eb,#7c3aed)";
+            el.style.background = color || "#2563eb";
         }
     }
 
@@ -2914,6 +2860,56 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         if (input) { input.disabled = true; input.placeholder = "Сначала выбери чат..."; }
     }
 
+
+    // v14: update only the new bubble instead of rebuilding the whole message list.
+    function appendMessageToDom(item) {
+        const messages = document.getElementById("messages");
+        if (!messages || !currentChatId || currentChatType === "channel") return;
+        if (document.querySelector(`[data-worldio-message-id="${CSS.escape(String(item.id))}"]`)) return;
+
+        const welcome = messages.querySelector(".welcome");
+        if (welcome) welcome.remove();
+
+        const row = document.createElement("div");
+        row.className = "message-row" + (item.user_id === currentUserId ? " me" : "");
+        row.dataset.worldioMessageId = String(item.id);
+
+        const avatar = document.createElement("div");
+        avatar.className = "message-avatar";
+        const isMe = item.user_id === currentUserId;
+        const avatarData = isMe
+            ? getAvatarData()
+            : { avatar: item.profiles?.avatar || "🌎", color: item.profiles?.avatar_color || "#2563eb" };
+        setAvatarElement(avatar, avatarData.avatar, avatarData.color);
+
+        const content = document.createElement("div");
+        content.className = "message-content";
+
+        const sender = document.createElement("div");
+        sender.className = "sender";
+        sender.textContent = isMe ? username : (item.profiles?.username || "Пользователь");
+
+        const message = document.createElement("div");
+        message.className = "message";
+        message.textContent = item.content || "";
+
+        content.append(sender, message);
+        row.append(avatar, content);
+        messages.appendChild(row);
+
+        const nearBottom = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 180;
+        if (nearBottom) messages.scrollTop = messages.scrollHeight;
+    }
+
+    function updateMessageDomProfile(messageId, profile) {
+        const row = document.querySelector(`[data-worldio-message-id="${CSS.escape(String(messageId))}"]`);
+        if (!row || !profile) return;
+        const sender = row.querySelector(".sender");
+        if (sender) sender.textContent = profile.username || "Пользователь";
+        const avatar = row.querySelector(".message-avatar");
+        if (avatar) setAvatarElement(avatar, profile.avatar || "🌎", profile.avatar_color || "#2563eb");
+    }
+
     function renderMessages() {
         const messages = document.getElementById("messages");
         if (!messages) return;
@@ -2976,7 +2972,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
             const avatar = document.createElement("div");
             avatar.className = "message-avatar";
             const isMe = item.user_id === currentUserId;
-            const avatarData = isMe ? getAvatarData() : { avatar: item.profiles?.avatar || "🌎", color: item.profiles?.avatar_color || "linear-gradient(135deg,#2563eb,#7c3aed)" };
+            const avatarData = isMe ? getAvatarData() : { avatar: item.profiles?.avatar || "🌎", color: item.profiles?.avatar_color || "#2563eb" };
             setAvatarElement(avatar, avatarData.avatar, avatarData.color);
             const content = document.createElement("div");
             content.className = "message-content";
@@ -3008,7 +3004,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
     }
 
     async function hydrateChat(chat, memberMap = null, profileMap = null) {
-        const row = { ...chat, display_name: chat.name, avatar: chat.avatar || (chat.type === "direct" ? "👤" : (chat.type === "channel" ? "📡" : "👥")), avatar_color: chat.avatar_color || (chat.type === "channel" ? "linear-gradient(135deg,#0f766e,#0891b2)" : "linear-gradient(135deg,#2563eb,#7c3aed)") };
+        const row = { ...chat, display_name: chat.name, avatar: chat.avatar || (chat.type === "direct" ? "👤" : (chat.type === "channel" ? "📡" : "👥")), avatar_color: chat.avatar_color || (chat.type === "channel" ? "linear-gradient(135deg,#0f766e,#0891b2)" : "#2563eb") };
         if (chat.type === "direct") {
             let members = memberMap?.get(chat.id);
             if (!members) {
@@ -3228,9 +3224,13 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         }
     }
 
+    let worldioSendLock = false;
+
     async function sendMessage() {
         const input = document.getElementById("messageInput");
         if (!input || !supabaseClient || !currentChatId || !currentUserId) return;
+        // Prevent duplicate sends if a click/key event fires more than once.
+        if (worldioSendLock) return;
 
         const text = input.value.trim();
         if (!text) return;
@@ -3238,12 +3238,13 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         // One click: put the message on screen immediately. Network work happens in
         // the background and never blocks the composer.
         const chatId = currentChatId;
+        worldioSendLock = true;
         input.value = "";
         input.focus();
         const optimistic = addLocalMessageOptimistic(chatId, text);
         worldioPendingSends.add(optimistic.id);
         setComposerBusyState();
-        renderMessages();
+        appendMessageToDom(optimistic);
         updateChatPreview(chatId, text, "сейчас", optimistic.created_at);
 
         try {
@@ -3263,6 +3264,8 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
                 avatar_color: localStorage.getItem("worldio_avatar_color") || "linear-gradient(135deg,#111,#444)"
             };
             replaceOptimisticMessage(chatId, optimistic.id, { ...data, profiles: localProfile, __pending: false });
+            const optimisticRow = document.querySelector(`[data-worldio-message-id="${CSS.escape(String(optimistic.id))}"]`);
+            if (optimisticRow) optimisticRow.dataset.worldioMessageId = String(data.id);
         } catch (error) {
             console.error("Worldio sendMessage:", error);
             markOptimisticMessageFailed(chatId, optimistic.id);
@@ -3276,6 +3279,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
             }
         } finally {
             worldioPendingSends.delete(optimistic.id);
+            worldioSendLock = false;
             setComposerBusyState();
         }
     }
@@ -3321,7 +3325,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
                             const msg = currentList.find(m => m.id === row.id);
                             if (!msg || !profile) return;
                             msg.profiles = profile;
-                            if (row.chat_id === currentChatId) renderMessages();
+                            if (row.chat_id === currentChatId) appendMessageToDom(incoming);
                         })
                         .catch(() => {});
                 }
@@ -3565,7 +3569,7 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
                             const hydrated = await hydrateChat(chat);
                             results.push({kind:"chat", id:chat.id, title:hydrated.display_name, sub:getHandle(hydrated.peer_username || "user"), type:"Личная переписка", avatar:hydrated.avatar, avatar_color:hydrated.avatar_color});
                         } else {
-                            results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Группа", type:"Группа", avatar:chat.avatar || "👥", avatar_color:chat.avatar_color || "linear-gradient(135deg,#2563eb,#7c3aed)"});
+                            results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Группа", type:"Группа", avatar:chat.avatar || "👥", avatar_color:chat.avatar_color || "#2563eb"});
                         }
                     }
                 }
@@ -3627,17 +3631,6 @@ body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180d
         if (!modal?.classList.contains("open")) return;
         if (event.key === "Escape") { closeGlobalSearch(); return; }
     });
-
-    document
-        .getElementById("messageInput")
-        .addEventListener("keydown", function(event) {
-
-            if (event.key === "Enter") {
-                sendMessage();
-            }
-
-        });
-
 
     document
         .getElementById("nameInput")
@@ -4329,6 +4322,10 @@ body.worldio-mono .worldio-item-card.equipped{animation:noirEquip .24s ease both
     .message-row,.chat-item,.send{animation:none!important;transition:none!important}
 }
 
+
+/* v14: zero-flash message insertion */
+#messages .message-row{will-change:transform;backface-visibility:hidden}
+
 </style>
 
 <script id="worldio-v10-noir-logic">
@@ -4425,7 +4422,7 @@ body.worldio-mono .worldio-item-card.equipped{animation:noirEquip .24s ease both
         username:username||user.user_metadata?.username||user.email?.split('@')[0]||'Пользователь',
         bio:localStorage.getItem('worldio_bio')||'',
         avatar:localStorage.getItem('worldio_avatar')||'🌎',
-        avatar_color:localStorage.getItem('worldio_avatar_color')||'linear-gradient(135deg,#2563eb,#7c3aed)',
+        avatar_color:localStorage.getItem('worldio_avatar_color')||'#2563eb',
         banner:data,
         banner_color:color
       };
