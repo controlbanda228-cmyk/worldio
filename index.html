@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
     <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-    <style>
+    <script type="text/javascript" src="https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=n-B7BcAYbvrJRh7e9753s2cICirDcjhNd3MFLjduTYcmLm1-4CyIWcae1ioCQMI0Mjz7b--UxSsPzUeTrrciMr4LSvBMblozK2HTsXHGjOa6hVoSAwmeF9mvZfCKYJigEvZjL7-blRWg3B3RKU7JbcVWvrlJBKFBKPuNnqdpK2kMPlE13HwjkYlwQUS-NQ4ne-nGNoZx0GW6s0hUu3EOYjV6GswHDvIoenRsOeYTI7DGsHJ7QLl5DrRWs_i2MGpKg4oymX0wS6pQfCrh2cH_hwqKeqOVYzE_dKxwEhI9vZylg6Tdfl6UJcNeG2aKAuGa" charset="UTF-8"></script><style>
         * {
             box-sizing: border-box;
         }
@@ -883,6 +883,147 @@
         .tg-divider{height:1px;background:#202c40;margin:18px 0}
         .tg-cover-palette{display:flex;gap:8px;flex-wrap:wrap}.tg-cover-choice{width:42px;height:30px;border-radius:10px;border:2px solid transparent;cursor:pointer}.tg-cover-choice.selected{border-color:white;box-shadow:0 0 0 2px #2563eb}
         .tg-remove-btn{margin-top:8px;border:0;background:transparent;color:#7f8da5;font-size:11px;cursor:pointer}.tg-remove-btn:hover{color:#fb7185}
+        /* WORLDIO APP LAUNCH SPLASH */
+        #worldioSplash {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 50% 42%, rgba(59,130,246,.20), transparent 27%),
+                radial-gradient(circle at 58% 54%, rgba(124,58,237,.18), transparent 30%),
+                #060a12;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity .55s ease, visibility .55s ease;
+        }
+        #worldioSplash.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .worldio-splash-bg {
+            position: absolute;
+            inset: -20%;
+            background:
+                radial-gradient(circle at 20% 25%, rgba(37,99,235,.22), transparent 18%),
+                radial-gradient(circle at 80% 70%, rgba(124,58,237,.20), transparent 20%),
+                radial-gradient(circle at 60% 20%, rgba(14,165,233,.13), transparent 15%);
+            filter: blur(30px);
+            animation: splashBgMove 7s ease-in-out infinite alternate;
+        }
+        .worldio-splash-ring {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 1px solid rgba(96,165,250,.18);
+            box-shadow: 0 0 60px rgba(59,130,246,.10), inset 0 0 60px rgba(124,58,237,.08);
+            animation: splashRing 3.6s ease-in-out infinite;
+        }
+        .worldio-splash-ring::before,
+        .worldio-splash-ring::after {
+            content: "";
+            position: absolute;
+            inset: 22px;
+            border-radius: 50%;
+            border: 1px solid rgba(167,139,250,.12);
+        }
+        .worldio-splash-ring::after {
+            inset: 52px;
+            border-color: rgba(96,165,250,.18);
+        }
+        .worldio-splash-core {
+            position: relative;
+            width: 118px;
+            height: 118px;
+            border-radius: 34px;
+            display: grid;
+            place-items: center;
+            font-size: 56px;
+            background: linear-gradient(145deg, rgba(37,99,235,.95), rgba(124,58,237,.92));
+            border: 1px solid rgba(255,255,255,.16);
+            box-shadow:
+                0 0 0 10px rgba(59,130,246,.06),
+                0 0 80px rgba(59,130,246,.34),
+                0 20px 55px rgba(0,0,0,.45);
+            animation: splashCore .95s cubic-bezier(.16,1,.3,1) both, splashFloat 2.6s ease-in-out 1s infinite;
+        }
+        .worldio-splash-core::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,.24) 48%, transparent 75%);
+            transform: translateX(-120%);
+            animation: splashShine 1.25s ease .55s both;
+        }
+        .worldio-splash-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 13px;
+            animation: splashContentIn .85s cubic-bezier(.16,1,.3,1) both;
+        }
+        .worldio-splash-title {
+            margin: 0;
+            font-size: clamp(34px, 5vw, 56px);
+            font-weight: 900;
+            letter-spacing: -1.8px;
+            color: #f8fbff;
+            text-shadow: 0 0 30px rgba(96,165,250,.22);
+        }
+        .worldio-splash-subtitle {
+            margin: 0;
+            color: #7f8da5;
+            font-size: 13px;
+            letter-spacing: .2px;
+        }
+        .worldio-splash-loader {
+            width: 150px;
+            height: 3px;
+            margin-top: 7px;
+            overflow: hidden;
+            border-radius: 99px;
+            background: rgba(255,255,255,.08);
+        }
+        .worldio-splash-loader span {
+            display: block;
+            width: 42%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
+            box-shadow: 0 0 18px rgba(99,102,241,.75);
+            animation: splashLoad 1.65s cubic-bezier(.4,0,.2,1) both;
+        }
+        .worldio-splash-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #93c5fd;
+            box-shadow: 0 0 12px rgba(147,197,253,.9);
+            opacity: .65;
+            animation: splashDot 2.6s ease-in-out infinite;
+        }
+        .worldio-splash-dot.d1{top:24%;left:28%;animation-delay:-.2s}.worldio-splash-dot.d2{top:31%;right:23%;animation-delay:-1.1s}.worldio-splash-dot.d3{bottom:24%;left:22%;animation-delay:-1.9s}.worldio-splash-dot.d4{bottom:31%;right:28%;animation-delay:-.7s}.worldio-splash-dot.d5{top:18%;right:39%;animation-delay:-2.1s}.worldio-splash-dot.d6{bottom:18%;left:40%;animation-delay:-1.4s}
+        @keyframes splashBgMove{0%{transform:translate3d(-2%,-1%,0) scale(1)}100%{transform:translate3d(2%,2%,0) scale(1.08)}}
+        @keyframes splashRing{0%,100%{transform:scale(.88);opacity:.35}50%{transform:scale(1.08);opacity:.8}}
+        @keyframes splashCore{0%{opacity:0;transform:scale(.55) rotate(-10deg);filter:blur(5px)}100%{opacity:1;transform:scale(1) rotate(0);filter:blur(0)}}
+        @keyframes splashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes splashShine{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+        @keyframes splashContentIn{0%{opacity:0;transform:translateY(18px)}100%{opacity:1;transform:none}}
+        @keyframes splashLoad{0%{transform:translateX(-140%);opacity:0}15%{opacity:1}100%{transform:translateX(360%);opacity:1}}
+        @keyframes splashDot{0%,100%{transform:translateY(0) scale(.8);opacity:.25}50%{transform:translateY(-12px) scale(1.25);opacity:.9}}
+        @media (prefers-reduced-motion: reduce){
+            #worldioSplash *, #worldioSplash::before, #worldioSplash::after { animation: none !important; }
+            #worldioSplash { transition-duration: .15s; }
+        }
+
         @media(max-width:700px){.tg-banner{height:125px}.tg-avatar-wrap,.tg-big-avatar{width:82px;height:82px}.tg-avatar-wrap{margin-top:-41px}.tg-upload-card{grid-template-columns:1fr}.tg-profile-main{padding:0 15px 16px}}
 
 </style>
@@ -890,6 +1031,40 @@
 </head>
 
 <body>
+
+<!-- WORLDIO LAUNCH SPLASH -->
+<div id="worldioSplash" aria-hidden="true">
+    <div class="worldio-splash-bg"></div>
+    <span class="worldio-splash-dot d1"></span>
+    <span class="worldio-splash-dot d2"></span>
+    <span class="worldio-splash-dot d3"></span>
+    <span class="worldio-splash-dot d4"></span>
+    <span class="worldio-splash-dot d5"></span>
+    <span class="worldio-splash-dot d6"></span>
+    <div class="worldio-splash-ring"></div>
+    <div class="worldio-splash-content">
+        <div class="worldio-splash-core">🌎</div>
+        <h1 class="worldio-splash-title">Worldio</h1>
+        <p class="worldio-splash-subtitle">Твой мир общения загружается…</p>
+        <div class="worldio-splash-loader"><span></span></div>
+    </div>
+</div>
+
+<script>
+    (() => {
+        const splash = document.getElementById('worldioSplash');
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const hideSplash = () => {
+            if (!splash) return;
+            splash.classList.add('hide');
+            setTimeout(() => splash.remove(), reduceMotion ? 180 : 700);
+        };
+        window.addEventListener('load', () => {
+            setTimeout(hideSplash, reduceMotion ? 350 : 1750);
+        }, { once: true });
+        setTimeout(hideSplash, reduceMotion ? 900 : 2600);
+    })();
+</script>
 
 <!-- LOGIN -->
 
