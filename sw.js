@@ -1,5 +1,5 @@
-const CACHE = "worldio-v1";
-const APP_SHELL = [
+const CACHE_NAME = "worldio-v4";
+const CORE = [
   "./",
   "./index.html",
   "./manifest.json",
@@ -7,45 +7,55 @@ const APP_SHELL = [
   "./icons/icon-512.png"
 ];
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
-});
-
-self.addEventListener("activate", (event) => {
+self.addEventListener("install", event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(key => key !== CACHE).map(key => caches.delete(key))
-    ))
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(CORE))
+      .then(() => self.skipWaiting())
   );
-  self.clients.claim();
 });
 
-self.addEventListener("fetch", (event) => {
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key.startsWith("worldio-") && key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      )
+    ).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", event => {
   const req = event.request;
   if (req.method !== "GET") return;
 
-  const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
-
-  if (req.mode === "navigate") {
+  // Always try network for the app HTML so updates appear quickly.
+  if (new URL(req.url).pathname.endsWith("/worldio/") ||
+      new URL(req.url).pathname.endsWith("/worldio/index.html")) {
     event.respondWith(
-      fetch(req)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put("./index.html", copy));
-          return response;
+      fetch(req, { cache: "no-store" })
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+          return res;
         })
-        .catch(() => caches.match("./index.html"))
+        .catch(() => caches.match(req).then(r => r || caches.match("./index.html")))
     );
     return;
   }
 
   event.respondWith(
-    caches.match(req).then(cached => cached || fetch(req).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE).then(cache => cache.put(req, copy));
-      return response;
-    }))
+    caches.match(req).then(cached => {
+      if (cached) return cached;
+      return fetch(req).then(res => {
+        if (new URL(req.url).origin === self.location.origin) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+        }
+        return res;
+      });
+    })
   );
 });
