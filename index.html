@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
     <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-    <script type="text/javascript" src="https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=fXj7-uNbbhrOdhlAh5wb8ittHoYi0-1MRX7yxd65Il1HVfjRvMIA6znOA1kwBk3jQI92mz5B7YDVetRcmfLl9dnmnxi94kcNkAnK_JA1JJrnlf362js_LFtt8WNHPeUYuwRfZlEKkwHxkfZCmzDBYK000S28BFRu-3Cu2OWrvQpcy9sDtSzX4rONvXmYqzjZ65mMl8wJtEovYimnE16Hq3Rx-lesLDsysL99jurWIN83JpvW2ptbRSwJOCa9KKbDEoG642xHSadimqijXxrNsqwQVzbS1k2F17iAY5DJJo_42fVQKTZ-aGw7vXYcayo4" charset="UTF-8"></script><style>
+    <style>
         * {
             box-sizing: border-box;
         }
@@ -317,7 +317,7 @@
             padding: 0 4px;
         }
 
-        .brand span {
+        .brand > span {
             width: 38px;
             height: 38px;
             display: grid;
@@ -328,7 +328,7 @@
             box-shadow: 0 8px 25px #2563eb30;
         }
 
-        .brand strong {
+        .brand > strong {
             letter-spacing: -.4px;
         }
 
@@ -741,7 +741,7 @@
         }
 
 
-        .message-avatar{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:17px;flex:0 0 auto;align-self:flex-end;box-shadow:0 7px 18px rgba(0,0,0,.22);}
+        .message-avatar{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-size:17px;flex:0 0 auto;align-self:flex-end;box-shadow:0 7px 18px rgba(0,0,0,.22);}
         .message-row{display:flex;align-items:flex-end;gap:8px;}
         .message-row.me{justify-content:flex-end;}
         .message-row.me .message-avatar{order:2;}
@@ -1020,7 +1020,6 @@
         .worldio-orbit.o2::after{right:auto;top:18px;left:28px;background:#b49cff;box-shadow:0 0 18px #9b7cff,0 0 35px rgba(155,124,255,.5)}
         .worldio-splash-copy{position:absolute;left:50%;top:calc(50% + 143px);transform:translateX(-50%);text-align:center;white-space:nowrap;animation:copyIn .9s .42s cubic-bezier(.16,1,.3,1) both}
         .worldio-splash-title{margin:0;font-size:50px;line-height:1;font-weight:900;letter-spacing:-2.8px;color:#f6f9ff;text-shadow:0 0 30px rgba(86,144,255,.28)}
-        .worldio-splash-subtitle{margin:11px 0 0;color:#7e8ba3;font-size:12px;letter-spacing:.34px;opacity:.92}
         .worldio-splash-loader{width:165px;height:3px;margin:18px auto 0;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;animation:loaderIn .6s .75s both}
         .worldio-splash-loader span{display:block;width:45%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#57c7ff,#586bff,#a855f7);box-shadow:0 0 18px rgba(88,107,255,.72);animation:loaderMove 1.55s .85s cubic-bezier(.4,0,.2,1) both}
         .worldio-splash-particle{position:absolute;width:3px;height:3px;border-radius:50%;background:#a9d8ff;box-shadow:0 0 12px rgba(100,180,255,.9);opacity:.55;animation:particleDrift 2.8s ease-in-out infinite}
@@ -1070,11 +1069,684 @@
         .chat-item.worldio-dynamic .avatar{background:linear-gradient(135deg,#2563eb,#7c3aed);}
         .chat-item.worldio-dynamic:hover{transform:translateX(2px);}
         body.modal-open .sidebar{pointer-events:auto;}
+
+
+        /* ===== WORLDIO UI REFRESH ===== */
+        :root{--wi-bg:#080d16;--wi-panel:#0d1522;--wi-panel-2:#101a2a;--wi-line:#202c40;--wi-text:#f4f7ff;--wi-muted:#738199;--wi-accent:#4c7dff;--wi-accent-2:#8b5cf6}
+        html,body{background:var(--wi-bg)}
+        .brand{gap:10px}
+        .brand-mark{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;font-size:18px;font-weight:950;letter-spacing:-.06em;color:#fff;background:linear-gradient(145deg,#6e83ff 0%,#3d54ef 48%,#8c3df4 100%);box-shadow:0 10px 28px rgba(60,82,240,.28),inset 0 1px 0 rgba(255,255,255,.2);position:relative;overflow:hidden}
+        .brand-mark::after{content:"";position:absolute;inset:-40%;background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.28) 50%,transparent 60%);transform:translateX(-40%) rotate(10deg);animation:brandShimmer 4.8s linear infinite}
+        @keyframes brandShimmer{0%{transform:translateX(-60%) rotate(10deg)}55%,100%{transform:translateX(75%) rotate(10deg)}}
+        .brand strong{font-size:22px}
+        .sidebar-top{padding-top:17px}
+        .chat-list{contain:layout paint;overscroll-behavior:contain}
+        .chat-item{contain:layout paint}
+        .profile{padding:10px 10px 10px 8px;margin:8px 10px 12px;border:1px solid transparent;border-radius:15px;transition:.18s ease;background:linear-gradient(180deg,rgba(16,25,40,.58),rgba(10,16,27,.35))}
+        .profile:hover{border-color:#22324b;background:#111b2b}
+        .profile-avatar{width:40px;height:40px;border-radius:13px}
+
+        .chat{background:radial-gradient(circle at 50% -10%,rgba(78,125,255,.10),transparent 34%),radial-gradient(circle at 100% 100%,rgba(139,92,246,.07),transparent 28%),#0b1019}
+        .chat-header{height:72px;padding:0 22px;border-bottom-color:#1c2738;background:rgba(9,15,25,.56);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+        .header-avatar{width:40px;height:40px;border-radius:13px;font-weight:900;box-shadow:0 8px 25px rgba(0,0,0,.24)}
+        .header-name{font-size:14px;letter-spacing:-.01em}.header-status{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:3px 8px;margin-top:3px;border-radius:999px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.13);color:#74dea1}.header-status::before{content:"";width:6px;height:6px;border-radius:50%;background:#35d07f;box-shadow:0 0 8px rgba(53,208,127,.45);flex:0 0 auto}
+        .header-action{width:36px;height:36px;border-radius:10px}
+        .message-row{animation:messageIn .22s cubic-bezier(.16,1,.3,1) both}
+        @keyframes messageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+        .messages{padding:26px 28px 22px;overscroll-behavior:contain}
+
+        /* Empty workspace */
+        .worldio-empty-workspace{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0;position:relative;padding:40px 20px;overflow:hidden}
+        .worldio-empty-workspace::before{content:"";position:absolute;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,rgba(76,125,255,.09),transparent 58%);filter:blur(10px);pointer-events:none}
+        .empty-visual{width:220px;height:180px;position:relative;display:grid;place-items:center;margin-bottom:-4px;perspective:900px}
+        .empty-w-badge{width:82px;height:82px;display:grid;place-items:center;border-radius:24px;font-size:35px;font-weight:950;letter-spacing:-.08em;color:#fff;background:linear-gradient(145deg,#7388ff,#3c55e9 53%,#8b3df4);box-shadow:0 24px 60px rgba(48,76,216,.34),inset 0 1px 0 rgba(255,255,255,.22);transform:rotateX(13deg) rotateY(-16deg) rotateZ(-4deg);animation:emptyBadgeFloat 3.6s ease-in-out infinite;position:relative;z-index:2}
+        .empty-w-badge::before{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,.22);border-radius:18px}
+        .empty-w-badge::after{content:"";position:absolute;inset:-8px;border-radius:28px;background:radial-gradient(circle,rgba(111,139,255,.26),transparent 65%);filter:blur(6px);z-index:-1}
+        @keyframes emptyBadgeFloat{0%,100%{transform:rotateX(13deg) rotateY(-16deg) rotateZ(-4deg) translate3d(0,0,0)}50%{transform:rotateX(17deg) rotateY(12deg) rotateZ(2deg) translate3d(0,-8px,0)}}
+        .empty-orbit{position:absolute;border:1px solid rgba(124,147,255,.20);border-radius:50%;transform-style:preserve-3d}
+        .empty-orbit-a{width:142px;height:74px;transform:rotateX(65deg) rotateZ(18deg);animation:orbitSpinA 7s linear infinite}
+        .empty-orbit-b{width:170px;height:92px;transform:rotateY(68deg) rotateZ(-14deg);animation:orbitSpinB 9s linear infinite}
+        .empty-orbit-c{width:205px;height:110px;transform:rotateX(78deg) rotateY(8deg);animation:orbitSpinC 12s linear infinite}
+        @keyframes orbitSpinA{to{transform:rotateX(65deg) rotateZ(378deg)}}
+        @keyframes orbitSpinB{to{transform:rotateY(68deg) rotateZ(-374deg)}}
+        @keyframes orbitSpinC{to{transform:rotateX(78deg) rotateY(8deg) rotateZ(360deg)}}
+        .empty-particle{position:absolute;width:5px;height:5px;border-radius:50%;background:#b5c4ff;box-shadow:0 0 14px #6f8cff;animation:emptyParticle 2.8s ease-in-out infinite}
+        .empty-particle-a{top:24px;right:22px}.empty-particle-b{left:26px;bottom:32px;animation-delay:-1.3s}
+        @keyframes emptyParticle{0%,100%{opacity:.25;transform:translateY(3px) scale(.8)}50%{opacity:1;transform:translateY(-9px) scale(1.2)}}
+        .empty-profile-mini{display:flex;align-items:center;gap:11px;padding:9px 11px 9px 9px;margin-top:8px;border:1px solid rgba(105,128,177,.18);background:rgba(12,20,33,.68);backdrop-filter:blur(14px);border-radius:15px;box-shadow:0 14px 38px rgba(0,0,0,.24);min-width:245px;animation:profileCardIn .7s .15s both}
+        @keyframes profileCardIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+        .empty-profile-avatar{width:40px;height:40px;flex:0 0 auto;border-radius:12px;display:grid;place-items:center;overflow:hidden;font-weight:900;color:#fff;background:linear-gradient(135deg,#4f6bf2,#8a49ef);box-shadow:0 7px 20px rgba(61,84,239,.22)}
+        .empty-profile-avatar img{width:100%;height:100%;object-fit:cover}
+        .empty-profile-copy{min-width:0;text-align:left;flex:1}
+        .empty-profile-name{font-size:12px;font-weight:850;color:#f3f6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .empty-profile-handle{font-size:10px;color:#72809a;margin-top:2px}
+        .empty-profile-online{font-size:10px;color:#65d98a;display:flex;align-items:center;gap:5px}
+        .empty-profile-online i{width:6px;height:6px;border-radius:50%;background:#32d583;box-shadow:0 0 10px rgba(50,213,131,.55)}
+        .empty-copy{max-width:520px;margin-top:18px;animation:emptyCopyIn .7s .28s both}
+        @keyframes emptyCopyIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+        .empty-eyebrow{font-size:9px;letter-spacing:.18em;color:#6d83c8;font-weight:900;margin-bottom:6px}
+        .empty-copy h2{margin:0;color:#eef3ff;font-size:23px;letter-spacing:-.035em}
+        .empty-copy p{margin:8px auto 0;max-width:500px;color:#6f7e96;font-size:12px;line-height:1.6}
+        .empty-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:17px;animation:emptyCopyIn .7s .38s both}
+        .empty-action{height:38px;padding:0 13px;border-radius:11px;border:1px solid #26344a;background:#101927;color:#b8c6da;font-size:12px;font-weight:800;cursor:pointer;transition:.18s ease;box-shadow:0 8px 20px rgba(0,0,0,.14)}
+        .empty-action span{margin-right:7px;color:#8ca7ff}
+        .empty-action:hover{transform:translateY(-2px);border-color:#355ea7;background:#152238;color:#fff}
+        .empty-action.primary{background:linear-gradient(135deg,#2e55dd,#6948df);border-color:transparent;color:#fff;box-shadow:0 11px 28px rgba(62,84,224,.28)}
+        .empty-action.primary:hover{filter:brightness(1.08)}
+
+        /* Cleaner settings */
+        .settings-modal{width:min(640px,100%)}
+        .settings-group-title{margin-top:3px;color:#6d7b91;font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:900}
+        .settings-card{border:1px solid #202e43;border-radius:16px;padding:4px 14px 6px;background:linear-gradient(180deg,rgba(17,27,42,.72),rgba(11,18,30,.65))}
+        .settings-section + .settings-group-title{margin-top:18px}
+        .theme-choice{display:flex;gap:5px;padding:4px;border-radius:11px;background:#0b1421;border:1px solid #233149}
+        .theme-btn{border:0;background:transparent;color:#72809a;padding:7px 10px;border-radius:8px;font-size:10px;font-weight:800;cursor:pointer;transition:.18s ease}
+        .theme-btn.active{background:#25375b;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+
+        /* Performance: keep large scroll surfaces cheap */
+        .messages,.chat-list,.global-search-results,.worldio-modal{scrollbar-gutter:stable}
+        .global-search-results,.worldio-modal{contain:layout paint}
+        .message-row,.chat-item,.global-search-result{contain:layout paint}
+
+        /* ===== LIGHT THEME ===== */
+        body.theme-light{background:#f4f7fb;color:#172033}
+        .theme-light .sidebar{background:#fbfcfe;border-right:1px solid #dfe5ee}
+        .theme-light .chat{background:radial-gradient(circle at 50% -8%,rgba(78,125,255,.12),transparent 36%),#f4f7fb}
+        .theme-light .chat-header{background:rgba(255,255,255,.76);border-bottom-color:#e1e7ef}
+        .theme-light .brand-mark{box-shadow:0 10px 24px rgba(60,82,240,.18)}
+        .theme-light .search{background:#eef2f7;border-color:#dbe3ed;color:#1c2637}
+        .theme-light .search:focus{background:#fff}
+        .theme-light .chat-tab{color:#6b778a}.theme-light .chat-tab.active,.theme-light .chat-tab:hover{background:#e7edf6;color:#28364b}
+        .theme-light .chat-item:hover{background:#f0f4f8;border-color:#e0e7ef}
+        .theme-light .chat-item.active{background:linear-gradient(135deg,#e3ebff,#eef0fb);border-color:#c9d6ee;box-shadow:inset 3px 0 0 #4c74e7,0 8px 22px rgba(28,57,100,.08)}
+        .theme-light .chat-name{color:#1b2639}.theme-light .chat-preview{color:#768296}.theme-light .chat-time{color:#8c97a8}
+        .theme-light .profile{background:linear-gradient(180deg,#fff,#f7f9fc);border-color:#e1e7ef}.theme-light .profile:hover{background:#fff;border-color:#cfd9e7}
+        .theme-light .profile-name,.theme-light .header-name{color:#182235}.theme-light .profile-handle,.theme-light .header-status{color:#77849a}
+        .theme-light .settings{background:#f0f3f7;border-color:#dbe2eb;color:#657187}.theme-light .settings:hover{background:#e9eff8;color:#243552}
+        .theme-light .header-action{background:#f1f4f8;border-color:#dce3ec;color:#647187}
+        .theme-light .message-input{background:#fff;border-color:#dce4ee;color:#1b2639}.theme-light .message-input::placeholder{color:#98a3b3}
+        .theme-light .message{background:#fff;border-color:#dce4ee;color:#263245;box-shadow:0 7px 20px rgba(30,52,82,.05)}
+        .theme-light .sender{color:#77849a}
+        .theme-light .worldio-empty-workspace::before{background:radial-gradient(circle,rgba(76,125,255,.12),transparent 58%)}
+        .theme-light .empty-profile-mini{background:rgba(255,255,255,.82);border-color:#e0e6ee;box-shadow:0 15px 34px rgba(40,63,94,.11)}
+        .theme-light .empty-profile-name{color:#1d293b}.theme-light .empty-profile-handle{color:#7a8798}.theme-light .empty-copy h2{color:#1c2940}.theme-light .empty-copy p{color:#758398}
+        .theme-light .empty-action{background:#fff;border-color:#d9e2ec;color:#506076;box-shadow:0 8px 18px rgba(38,59,92,.07)}
+        .theme-light .empty-action:hover{background:#f4f7fb;border-color:#afc1df;color:#1f2d44}.theme-light .empty-action.primary{color:#fff;background:linear-gradient(135deg,#315fe0,#6a49df);border-color:transparent}
+        .theme-light .global-search-backdrop{background:rgba(32,42,58,.28)}
+        .theme-light .global-search-panel{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(246,249,253,.99));border-color:#dce4ee;box-shadow:0 30px 80px rgba(43,64,96,.18)}
+        .theme-light .global-search-top{border-bottom-color:#e5eaf1}.theme-light .global-search-input{background:#f1f4f8;border-color:#d7e0eb;color:#1b2639}.theme-light .global-search-input:focus{background:#fff}
+        .theme-light .global-search-tab{color:#7b8799}.theme-light .global-search-tab:hover{background:#edf2f7;color:#33435b}.theme-light .global-search-tab.active{background:#e2eaf8;color:#29436e}
+        .theme-light .global-search-result:hover{background:#edf2f8}.theme-light .global-search-result-title{color:#233047}.theme-light .global-search-result-sub{color:#7b8798}.theme-light .global-search-result-type{background:#f0f3f7;border-color:#dbe2eb;color:#738099}
+        .theme-light .worldio-modal-backdrop{background:rgba(32,42,58,.25)}.theme-light .worldio-modal{background:linear-gradient(180deg,#fff,#f7f9fc);border-color:#dce4ee;box-shadow:0 30px 90px rgba(43,64,96,.22)}.theme-light .modal-title{color:#1d2a3d}.theme-light .modal-subtitle{color:#7a8798}.theme-light .modal-close{background:#f0f3f7;border-color:#d9e1eb;color:#6d788b}
+        .theme-light .settings-card{background:#f7f9fc;border-color:#dfe6ee}.theme-light .setting-title{color:#263349}.theme-light .setting-desc{color:#7b8798}.theme-light .setting-icon{background:#edf2f7}.theme-light .theme-choice{background:#edf2f7;border-color:#dae2ec}.theme-light .theme-btn.active{background:#dbe6f8;color:#2d4878}.theme-light .worldio-field{background:#fff;border-color:#d8e1ec;color:#1f2c40}
+        .theme-light .danger-button{background:#fff2f3;border-color:#f0cbd2;color:#c43b52}
+        @media(max-width:700px){.empty-copy h2{font-size:19px}.empty-profile-mini{min-width:min(290px,100%)}.empty-actions{max-width:320px}.theme-choice{min-width:160px}.settings-card .setting-row{align-items:flex-start;flex-wrap:wrap}.settings-card .theme-choice{margin-left:auto}}
+
+
+        /* ===== WORLDIO VISUAL PASS v2 ===== */
+        :root{--wi-bg:#080d16;--wi-panel:#0c1421;--wi-panel-2:#101a2a;--wi-line:#1b2a40;--wi-text:#f3f6ff;--wi-muted:#7d8ba3;--wi-blue:#5d7cff;--wi-violet:#8b5cf6;--wi-green:#35d07f}
+        body{background:var(--wi-bg);color:var(--wi-text);text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+        .sidebar{background:linear-gradient(180deg,#09111d 0%,#08101a 65%,#070d15 100%);border-right:1px solid rgba(112,140,190,.14)}
+        .sidebar-top{padding:14px 13px 0}
+        .worldio-topbar{height:58px;display:flex;align-items:center;gap:10px;margin-bottom:11px;position:relative}
+        .top-profile-mini{display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer;padding:5px 8px 5px 5px;border-radius:14px;transition:background .18s ease,transform .18s ease}
+        .top-profile-mini:hover{background:rgba(125,151,212,.09);transform:translateY(-1px)}
+        .top-profile-avatar{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;overflow:hidden;flex:0 0 auto;font-weight:900;color:#fff;background:linear-gradient(145deg,#344bdc,#7b4ae8);box-shadow:0 9px 24px rgba(52,78,224,.26),inset 0 1px 0 rgba(255,255,255,.18)}
+        .top-profile-avatar img{width:100%;height:100%;object-fit:cover}
+        .top-profile-copy{min-width:0}
+        .top-profile-name{font-size:11px;font-weight:850;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+        .top-profile-status{display:flex;align-items:center;gap:5px;margin-top:4px;color:#71809a;font-size:9px}
+        .top-profile-status span:first-child{width:6px;height:6px;border-radius:50%;background:var(--wi-green);box-shadow:0 0 0 3px rgba(53,208,127,.08)}
+        .global-search-btn{width:39px;height:39px;border-radius:12px;border:1px solid #263650;background:linear-gradient(180deg,#132038,#0e1828);color:#a6b8d6;display:grid;place-items:center;cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease;flex:0 0 auto}
+        .global-search-btn:hover{transform:translateY(-1px);border-color:#4665a0;background:#16243a;color:#fff;box-shadow:0 10px 24px rgba(18,33,59,.3)}
+        .global-search-btn svg,.settings svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+        .search-wrap{position:relative}.search-wrap .search-icon{pointer-events:none;opacity:.8}
+        .search{height:42px;border-radius:13px;background:#0e1828;border-color:#1e2d44;box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 7px 20px rgba(0,0,0,.12);padding-left:37px}
+        .search:focus{border-color:#365da4;box-shadow:0 0 0 3px rgba(65,96,172,.12),inset 0 1px 0 rgba(255,255,255,.03)}
+        .worldio-chats-heading{margin-top:16px;margin-bottom:9px}
+        .worldio-create-chat-btn{width:32px;height:32px;border-radius:10px;background:#111d30;border:1px solid #2a3b56;color:#aab9d6;box-shadow:0 5px 14px rgba(0,0,0,.12);transition:.18s ease}
+        .worldio-create-chat-btn:hover{background:#1a2a45;border-color:#4867a4;color:#fff;transform:translateY(-1px)}
+        .chat-list{padding-bottom:8px}
+        .chat-item{min-height:68px;border-radius:16px;padding:9px 10px;transition:background .18s ease,border-color .18s ease,transform .18s ease;content-visibility:auto}
+        .chat-item:hover{transform:translateX(1px)}
+        .chat-item.active{box-shadow:inset 3px 0 0 #5a78ff,0 11px 24px rgba(0,0,0,.15)}
+        .avatar{border-radius:13px}
+        .worldio-account-bar{margin:0;padding:10px 12px;border-top:1px solid rgba(94,120,166,.14);background:linear-gradient(180deg,rgba(10,17,28,.78),rgba(7,12,20,.92));min-height:68px}
+        .worldio-account-bar:hover{background:linear-gradient(180deg,rgba(15,25,41,.94),rgba(9,15,25,.98))}
+        .account-presence{display:flex;align-items:center;gap:5px;font-size:9px;color:#6e7e97;margin-right:3px;white-space:nowrap}
+        .account-presence span{width:6px;height:6px;border-radius:50%;background:var(--wi-green)}
+        .worldio-account-bar .settings{width:34px;height:34px;border-radius:11px}
+
+        /* New empty workspace: 3D W monolith, no orbit circles */
+        .worldio-empty-workspace{justify-content:center;min-height:100%;padding:46px 22px 58px}
+        .worldio-empty-workspace::before{width:560px;height:420px;border-radius:46%;background:radial-gradient(ellipse,rgba(80,104,255,.12),transparent 66%);filter:blur(18px);transform:translateY(-4%)}
+        .empty-visual{width:280px;height:220px;margin-bottom:-2px;perspective:1000px}
+        .empty-orbit{display:none}
+        .empty-particle{width:3px;height:3px;background:#c4d0ff;box-shadow:0 0 12px rgba(143,165,255,.8);opacity:.45}
+        .empty-particle-a{top:22px;right:34px}.empty-particle-b{left:24px;bottom:50px}
+        .empty-w-badge{width:122px;height:122px;border-radius:30px;font-size:54px;background:linear-gradient(145deg,#f4f7ff 0%,#adb9d7 34%,#6d7da9 48%,#2d3b61 50%,#151f35 100%);color:#0a0e17;text-shadow:0 1px 0 rgba(255,255,255,.65);box-shadow:0 32px 70px rgba(30,49,105,.34),inset 0 1px 0 rgba(255,255,255,.88),inset 0 -12px 24px rgba(0,0,0,.22);transform:rotateX(18deg) rotateY(-22deg) rotateZ(-4deg);animation:emptyWFloat 4.2s cubic-bezier(.45,0,.2,1) infinite;overflow:hidden}
+        .empty-w-badge::before{content:"";position:absolute;inset:-25% -50%;background:linear-gradient(110deg,transparent 34%,rgba(255,255,255,.7) 47%,transparent 60%);transform:translateX(-65%) rotate(8deg);animation:wSheen 3.4s ease-in-out infinite}
+        .empty-w-badge::after{content:"";position:absolute;inset:auto 10% -20px;height:32px;border-radius:50%;background:rgba(69,91,147,.28);filter:blur(16px);z-index:-1}
+        @keyframes emptyWFloat{0%,100%{transform:rotateX(18deg) rotateY(-22deg) rotateZ(-4deg) translate3d(0,0,0) scale(1)}50%{transform:rotateX(8deg) rotateY(20deg) rotateZ(2deg) translate3d(0,-11px,0) scale(1.025)}}
+        @keyframes wSheen{0%,58%{transform:translateX(-80%) rotate(8deg)}80%,100%{transform:translateX(85%) rotate(8deg)}}
+        .empty-profile-mini{min-width:265px;margin-top:14px;border-radius:17px;padding:10px 12px 10px 10px;background:rgba(11,19,31,.76);border-color:rgba(103,128,177,.18);box-shadow:0 18px 44px rgba(0,0,0,.22);backdrop-filter:blur(12px)}
+        .empty-profile-avatar{width:42px;height:42px;border-radius:13px}
+        .empty-profile-name{font-size:12px}.empty-profile-handle{font-size:10px}
+        .empty-profile-online{font-size:9px}
+        .empty-copy{margin-top:15px}.empty-copy .empty-eyebrow{font-size:9px;letter-spacing:.18em;color:#7285ac;font-weight:900}.empty-copy h2{font-size:23px;letter-spacing:-.035em;margin:6px 0 7px}.empty-copy p{max-width:500px;margin:0 auto;color:#71819b;line-height:1.6;font-size:12px}
+        .empty-actions{gap:8px;margin-top:16px}.empty-action{min-height:40px;border-radius:12px;padding:0 13px}.empty-action:hover{transform:translateY(-1px)}
+
+        /* Settings: more visual and clearer */
+        .settings-modal{width:min(680px,100%);max-height:min(760px,calc(100vh - 32px));padding:22px}
+        .settings-group-title{margin-top:4px;margin-bottom:7px}
+        .settings-card{padding:5px 14px 7px;border-radius:18px;box-shadow:0 18px 42px rgba(0,0,0,.16)}
+        .setting-row{min-height:62px}
+        .setting-icon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#172640,#101a2b);border:1px solid #263754}
+        .setting-title{font-size:12px}.setting-desc{font-size:10px}
+        .theme-choice{gap:6px;padding:5px;background:#0a1321;border-color:#22334e}
+        .theme-btn{min-width:68px;padding:8px 11px}.theme-btn.active{background:linear-gradient(135deg,#2a4070,#334d82);box-shadow:0 7px 18px rgba(37,58,103,.25)}
+        .theme-btn[data-theme-choice="light"]::before{content:"☀ ";opacity:.9}.theme-btn[data-theme-choice="dark"]::before{content:"◐ ";opacity:.9}
+
+        /* Light theme upgrades */
+        .theme-light{--wi-bg:#f3f6fa;--wi-text:#182338;--wi-muted:#6f7d92;--wi-panel:#ffffff;--wi-panel-2:#eef3f8;--wi-line:#dae2ec}
+        .theme-light .sidebar{background:linear-gradient(180deg,#fbfcfe,#f6f9fc);border-right-color:#dfe6ee}
+        .theme-light .top-profile-mini:hover{background:rgba(64,95,151,.06)}
+        .theme-light .top-profile-avatar{box-shadow:0 9px 20px rgba(63,87,164,.15)}
+        .theme-light .top-profile-name{color:#192338}
+        .theme-light .top-profile-status{color:#7c899b}
+        .theme-light .global-search-btn{background:#eef3f8;border-color:#d7e0ea;color:#51627b;box-shadow:none}
+        .theme-light .global-search-btn:hover{background:#e7edf5;border-color:#c9d5e4;color:#23324a}
+        .theme-light .search{background:#eef3f8;border-color:#d9e2eb;box-shadow:none}
+        .theme-light .worldio-create-chat-btn{background:#eef3f8;border-color:#d8e1ec;color:#62728a}
+        .theme-light .chat-item:hover{background:#f0f4f8;border-color:#e1e7ee}
+        .theme-light .worldio-account-bar{background:linear-gradient(180deg,#ffffff,#f7f9fc);border-top-color:#dfe6ee}
+        .theme-light .worldio-account-bar:hover{background:#fff}
+        .theme-light .empty-w-badge{background:linear-gradient(145deg,#2f3d57,#151f32 58%,#070b12);color:#f6f8fc;box-shadow:0 28px 60px rgba(55,71,103,.2),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -12px 24px rgba(0,0,0,.25)}
+        .theme-light .empty-profile-mini{background:rgba(255,255,255,.86);border-color:#dbe4ed;box-shadow:0 18px 40px rgba(42,64,94,.12)}
+        .theme-light .empty-profile-name,.theme-light .empty-copy h2{color:#1c2940}.theme-light .empty-copy p{color:#718096}
+        .theme-light .settings-card{background:linear-gradient(180deg,#fff,#f8fafc);border-color:#dfe6ee;box-shadow:0 18px 42px rgba(40,62,91,.08)}
+        .theme-light .setting-icon{background:#eef3f8;border-color:#dce4ee}.theme-light .theme-choice{background:#eef3f8;border-color:#d7e1eb}.theme-light .theme-btn.active{background:#dce7fa;color:#27406d}
+
+        /* Performance: isolate and skip work below the fold */
+        .chat-item,.message-row,.global-search-result{content-visibility:auto;contain-intrinsic-size:68px}
+        .messages{contain:layout paint style;overscroll-behavior:contain}
+        .chat-list{contain:layout style;overscroll-behavior:contain}
+        @media (prefers-reduced-motion:reduce){.empty-w-badge,.empty-particle,.chat-item,.global-search-btn,.empty-action,.top-profile-mini{animation:none!important;transition:none!important}}
+        @media (max-width:900px){.top-profile-name{max-width:145px}.account-presence{display:none}.empty-copy h2{font-size:20px}}
+
+        /* ===== POLISH FIX: clean top profile / no duplicate account bar ===== */
+        .worldio-topbar{height:58px;display:flex;align-items:center;gap:8px;margin-bottom:11px;position:relative;padding:0 1px;}
+        .top-profile-mini{flex:0 1 auto;min-width:0;max-width:calc(100% - 94px);padding:4px 6px 4px 4px;}
+        .top-profile-copy{min-width:0;}
+        .top-profile-name{max-width:155px;}
+        .global-search-btn{margin-left:auto;flex:0 0 auto;}
+        .top-settings-btn{width:39px;height:39px;border-radius:12px;border:1px solid #263650;background:linear-gradient(180deg,#132038,#0e1828);color:#9fb2d2;display:grid;place-items:center;cursor:pointer;flex:0 0 auto;transition:.2s ease;box-shadow:0 6px 18px rgba(0,0,0,.16);}
+        .top-settings-btn:hover{transform:translateY(-1px);border-color:#3b82f6;color:#eef4ff;background:#17243a;}
+        .top-settings-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+        .sidebar-top{overflow:visible;}
+        .sidebar{overflow:visible;}
+        .profile-menu{top:62px;bottom:auto;left:12px;}
+        .chat-list{min-height:0;}
+        .worldio-chat-empty{margin-top:8px;}
+        .worldio-empty-workspace{padding-top:32px;}
+        @media(max-width:900px){.top-profile-name{max-width:120px}.top-profile-mini{max-width:calc(100% - 90px)}}
+        @media(prefers-reduced-motion:reduce){.top-profile-mini,.global-search-btn,.top-settings-btn{transform:none!important;}}
+
+    
+        /* ===== WORLDIO POLISH FIX v3 ===== */
+        .worldio-topbar{padding-right:2px}
+        .top-profile-mini{background:rgba(13,21,34,.55);border:1px solid rgba(86,110,151,.14);box-shadow:0 8px 24px rgba(0,0,0,.10)}
+        .top-profile-name{font-size:12px}
+        .top-profile-status{margin-top:5px;font-size:9px;color:#9aa8bd}
+        .top-profile-status span:first-child{width:7px;height:7px;box-shadow:0 0 0 3px rgba(53,208,127,.09),0 0 10px rgba(53,208,127,.35)}
+        .top-profile-status span:last-child{padding:2px 7px;border-radius:999px;background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.16);color:#77e3a6;line-height:1.2}
+        .chats-title.worldio-chats-heading{margin:17px 5px 10px;padding:8px 8px 8px 7px;border:1px solid rgba(91,116,158,.13);border-radius:14px;background:linear-gradient(180deg,rgba(17,28,45,.60),rgba(11,18,30,.45));box-shadow:inset 0 1px 0 rgba(255,255,255,.02)}
+        .chats-heading-main{display:flex;align-items:center;gap:9px;min-width:0}
+        .chats-heading-icon{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(145deg,#1a2d4e,#111d31);border:1px solid #2a3b57;color:#86a8ff;box-shadow:0 6px 16px rgba(0,0,0,.14);flex:0 0 auto}
+        .chats-heading-icon svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+        .chats-heading-main>div{display:flex;flex-direction:column;min-width:0}
+        .chats-heading-main>div>span{font-size:11px;color:#d7e1f2;font-weight:900;letter-spacing:.06em;text-transform:uppercase;line-height:1.1}
+        .chats-heading-main small{font-size:9px;color:#66758c;margin-top:4px;font-weight:600;text-transform:none;letter-spacing:0}
+        .worldio-chat-create-actions{gap:6px}
+        .chats-count{min-width:22px;height:24px;padding:0 7px;display:inline-grid;place-items:center;border-radius:8px;background:#111d30;border:1px solid #273750;color:#8293ad;font-size:10px;font-weight:800}
+        .worldio-create-chat-btn{width:30px;height:30px;border-radius:10px}
+
+        .tg-profile-hero{border-radius:24px;box-shadow:0 22px 70px rgba(0,0,0,.34)}
+        .tg-banner{width:100%;height:210px;min-height:210px;display:block;position:relative;background-size:cover;background-position:center center;background-repeat:no-repeat;background-color:#1b2740}
+        .tg-banner::after{background:linear-gradient(180deg,rgba(5,10,20,.03),rgba(5,10,20,.50))}
+        .tg-profile-main{padding:0 22px 22px}
+        .tg-avatar-wrap{margin-top:-44px}
+        .tg-online{padding:6px 10px;margin-top:11px;background:rgba(17,44,30,.72);border-color:rgba(55,210,130,.24);box-shadow:0 6px 18px rgba(16,110,64,.10)}
+        .presence-dot{width:7px;height:7px;border-radius:50%;background:#35d07f;box-shadow:0 0 0 3px rgba(53,208,127,.09),0 0 13px rgba(53,208,127,.42);animation:presencePulse 2.1s ease-in-out infinite}
+        @keyframes presencePulse{0%,100%{transform:scale(.95);opacity:.85}50%{transform:scale(1.12);opacity:1}}
+        .tg-cover-palette{padding:4px 0 2px}
+        .tg-cover-choice{width:50px;height:34px;border-radius:11px;border:2px solid rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 6px 14px rgba(0,0,0,.12);transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+        .tg-cover-choice:hover{transform:translateY(-2px) scale(1.02)}
+        .tg-cover-choice.selected{border-color:#fff;box-shadow:0 0 0 2px #4b78f6,0 8px 22px rgba(61,102,235,.20)}
+        .tg-preview{color:#63dda0}
+
+        /* Main empty state: no duplicated W/app icon */
+        .worldio-empty-workspace{gap:0}
+        .empty-visual{height:185px}
+        .empty-w-badge{display:none!important}
+        .empty-orbit{display:none!important}
+        .empty-core-orb{width:116px;height:116px;border-radius:34px;position:relative;display:grid;place-items:center;transform:rotate(-8deg);background:linear-gradient(145deg,#f4f7ff 0%,#aebbd4 31%,#586a90 52%,#1e2a45 100%);box-shadow:0 32px 72px rgba(35,57,110,.28),inset 0 1px 0 rgba(255,255,255,.85),inset 0 -16px 25px rgba(0,0,0,.20);animation:emptyCoreFloat 4.2s cubic-bezier(.45,0,.2,1) infinite;overflow:hidden}
+        .empty-core-orb::before{content:"";position:absolute;inset:-30% -70%;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.72) 49%,transparent 62%);transform:translateX(-72%) rotate(7deg);animation:emptyCoreShine 3.6s ease-in-out infinite}
+        .empty-core-orb::after{content:"";position:absolute;left:12%;right:12%;bottom:-14px;height:34px;border-radius:50%;background:rgba(64,83,127,.25);filter:blur(16px);z-index:-1}
+        .empty-core-orb span{width:40px;height:40px;border-radius:14px;background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(222,229,240,.34));border:1px solid rgba(255,255,255,.56);box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 8px 20px rgba(15,29,56,.14);position:relative}
+        .empty-core-orb span::before,.empty-core-orb span::after{content:"";position:absolute;border-radius:50%;background:#7ca5ff;box-shadow:0 0 12px rgba(124,165,255,.7)}
+        .empty-core-orb span::before{width:5px;height:5px;left:10px;top:9px}.empty-core-orb span::after{width:4px;height:4px;right:8px;bottom:10px;background:#b58bff}
+        @keyframes emptyCoreFloat{0%,100%{transform:rotate(-8deg) translate3d(0,0,0) scale(1)}50%{transform:rotate(5deg) translate3d(0,-10px,0) scale(1.025)}}
+        @keyframes emptyCoreShine{0%,58%{transform:translateX(-82%) rotate(7deg)}80%,100%{transform:translateX(88%) rotate(7deg)}}
+        .empty-particle-c{position:absolute;right:16%;top:33px;width:4px;height:4px;border-radius:50%;background:#c3d3ff;box-shadow:0 0 14px rgba(135,167,255,.85);animation:emptyParticle 2.6s ease-in-out -.7s infinite}
+        .empty-profile-mini{min-width:300px;max-width:340px;padding:10px 12px 10px 10px;background:rgba(11,18,30,.78);border-color:rgba(102,128,177,.19);box-shadow:0 18px 46px rgba(0,0,0,.20)}
+        .empty-profile-online{padding:4px 7px;border-radius:999px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.14);font-size:9px}
+
+        .worldio-no-animations *, .worldio-no-animations *::before, .worldio-no-animations *::after{animation:none!important;transition:none!important}
+        .theme-light .chats-title.worldio-chats-heading{background:linear-gradient(180deg,#fff,#f7f9fc);border-color:#dfe6ee;box-shadow:0 8px 20px rgba(42,63,94,.06)}
+        .theme-light .chats-heading-icon{background:#eef3f8;border-color:#d9e2ec;color:#516fba}
+        .theme-light .chats-heading-main>div>span{color:#2a3b54}.theme-light .chats-heading-main small{color:#8491a3}
+        .theme-light .chats-count{background:#eef3f8;border-color:#dbe3ec;color:#64738a}
+        .theme-light .top-profile-mini{background:rgba(255,255,255,.68);border-color:#dfe6ee;box-shadow:0 8px 20px rgba(39,60,90,.06)}
+        .theme-light .top-profile-status{color:#6f7d92}.theme-light .top-profile-status span:last-child{background:#ecf8f1;border-color:#d2efdf;color:#2eaf6b}.theme-light .header-status{background:#edf9f2;border-color:#d7eedf;color:#2da96a}
+        .theme-light .tg-online{background:#effaf4;border-color:#d6efdf;color:#31ad6a}
+        .theme-light .tg-banner::after{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(20,30,45,.34))}
+        .theme-light .empty-core-orb{background:linear-gradient(145deg,#2e3b55 0%,#172338 54%,#070b12 100%);box-shadow:0 28px 60px rgba(55,71,103,.20),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -16px 24px rgba(0,0,0,.25)}
+        .theme-light .empty-profile-online{background:#edf9f2;border-color:#d7eedf}
+        @media(max-width:700px){.tg-banner{height:180px;min-height:180px}.empty-profile-mini{min-width:min(300px,94vw)}.chats-heading-main small{display:none}}
+        @media(prefers-reduced-motion:reduce){.presence-dot,.empty-core-orb,.empty-core-orb::before{animation:none!important}}
+
+        /* ===================== WORLDIO V4 POLISH ===================== */
+        .worldio-account-bar{display:none!important}
+
+        :root{--wi-accent:#5a67ff;--wi-accent-2:#8a4dff}
+        .tg-profile-hero{position:relative;isolation:isolate;overflow:hidden;min-height:440px;background:#0b1422}
+        .tg-profile-hero::before{content:"";position:absolute;inset:0;background:var(--tg-banner-bg,linear-gradient(135deg,#2563eb,#7c3aed)) center/cover no-repeat;z-index:-2;transform:scale(1.01)}
+        .tg-profile-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,20,.04) 0%,rgba(5,10,20,.12) 28%,rgba(5,10,20,.50) 58%,rgba(7,13,23,.97) 82%,#0b1422 100%);z-index:-1;pointer-events:none}
+        .tg-banner{height:220px;min-height:220px;background:transparent!important}
+        .tg-banner::after{display:none}
+        .tg-profile-main{background:linear-gradient(180deg,rgba(8,15,25,.08),rgba(9,16,27,.58) 22%,rgba(9,16,27,.98) 72%);margin:0 -1px -1px;padding:0 22px 23px;border-top:1px solid rgba(255,255,255,.06)}
+        .tg-avatar-wrap{margin-top:-48px}
+        .tg-big-avatar{box-shadow:0 18px 42px rgba(0,0,0,.38),0 0 0 1px rgba(255,255,255,.08);border-color:#0b1422}
+        .tg-online{display:inline-flex!important;width:max-content}
+        .tg-cover-palette{display:grid;grid-template-columns:repeat(8,minmax(42px,1fr));gap:10px}
+        .tg-cover-choice{width:100%;height:42px;border-radius:13px;position:relative;cursor:pointer;overflow:hidden}
+        .tg-cover-choice::after{content:"";position:absolute;inset:2px;border-radius:10px;border:1px solid rgba(255,255,255,.16);pointer-events:none}
+        .tg-cover-choice.selected{transform:translateY(-2px);border-color:#fff!important;box-shadow:0 0 0 3px rgba(91,125,255,.35),0 10px 22px rgba(55,88,214,.22)!important}
+        .tg-remove-btn{margin-top:8px;color:#8392aa;font-size:11px;opacity:.9}
+        .tg-remove-btn:hover{color:#b9c7df}
+
+        /* Real rotating 3D globe */
+        .worldio-globe-wrap{position:relative;width:240px;height:210px;display:grid;place-items:center;perspective:1000px;transform-style:preserve-3d;filter:drop-shadow(0 30px 35px rgba(32,53,116,.22))}
+        .worldio-globe-halo{position:absolute;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(77,117,255,.24),rgba(77,117,255,.08) 38%,transparent 72%);filter:blur(18px);animation:globeHalo 3.8s ease-in-out infinite}
+        .worldio-globe{position:relative;width:124px;height:124px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 31% 27%,#eef4ff 0%,#b6c6e8 20%,#6f83b0 38%,#2e416c 62%,#111b30 100%);box-shadow:inset -16px -14px 28px rgba(0,0,0,.46),inset 10px 10px 25px rgba(255,255,255,.24),0 24px 48px rgba(21,42,89,.36);transform-style:preserve-3d;animation:globeFloat 4.8s ease-in-out infinite}
+        .worldio-globe-grid{position:absolute;inset:-14%;border-radius:50%;background:repeating-linear-gradient(90deg,transparent 0 17px,rgba(225,236,255,.16) 18px 19px,transparent 20px 35px),repeating-linear-gradient(0deg,transparent 0 17px,rgba(225,236,255,.12) 18px 19px,transparent 20px 35px);mix-blend-mode:screen;transform:translateX(-28%);animation:globeGrid 5.2s linear infinite}
+        .worldio-globe-shine{position:absolute;inset:-30%;background:linear-gradient(115deg,transparent 36%,rgba(255,255,255,.34) 46%,transparent 57%);transform:translateX(-70%) rotate(8deg);animation:globeShine 4.5s ease-in-out infinite}
+        .worldio-globe-pin{position:absolute;width:7px;height:7px;border-radius:50%;background:#a5c3ff;box-shadow:0 0 0 3px rgba(165,195,255,.12),0 0 17px rgba(112,155,255,.9)}
+        .worldio-globe-pin.p1{left:41px;top:46px}.worldio-globe-pin.p2{right:28px;bottom:31px;background:#c3a4ff;box-shadow:0 0 0 3px rgba(195,164,255,.12),0 0 17px rgba(164,119,255,.8)}
+        .worldio-globe-orbit{position:absolute;left:50%;top:50%;width:182px;height:52px;margin:-26px 0 0 -91px;border:1px solid rgba(122,158,255,.22);border-radius:50%;transform-style:preserve-3d;pointer-events:none}
+        .worldio-globe-orbit.o1{transform:rotateX(67deg) rotateZ(-16deg);animation:globeOrbit1 7s linear infinite}
+        .worldio-globe-orbit.o2{width:154px;height:44px;margin:-22px 0 0 -77px;transform:rotateY(70deg) rotateZ(19deg);border-color:rgba(192,160,255,.16);animation:globeOrbit2 9s linear infinite reverse}
+        .worldio-globe-orbit span{position:absolute;left:14%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#8bb3ff;box-shadow:0 0 15px rgba(114,158,255,.9)}
+        .worldio-globe-orbit.o2 span{left:78%;background:#c6a7ff;box-shadow:0 0 15px rgba(174,127,255,.9)}
+        @keyframes globeFloat{0%,100%{transform:translateY(0) rotateX(8deg) rotateY(-10deg)}50%{transform:translateY(-10px) rotateX(-5deg) rotateY(14deg)}}
+        @keyframes globeGrid{from{transform:translateX(-32%)}to{transform:translateX(30%)}}
+        @keyframes globeShine{0%,58%{transform:translateX(-80%) rotate(8deg)}82%,100%{transform:translateX(80%) rotate(8deg)}}
+        @keyframes globeHalo{0%,100%{opacity:.68;transform:scale(.92)}50%{opacity:1;transform:scale(1.06)}}
+        @keyframes globeOrbit1{to{transform:rotateX(67deg) rotateZ(344deg)}}
+        @keyframes globeOrbit2{to{transform:rotateY(70deg) rotateZ(-341deg)}}
+        .empty-particle-d{position:absolute;left:18%;top:35%;width:3px;height:3px;border-radius:50%;background:#9fb8ff;box-shadow:0 0 13px rgba(133,165,255,.8);animation:emptyParticleD 3.5s ease-in-out infinite}
+        @keyframes emptyParticleD{0%,100%{transform:translate3d(0,0,0);opacity:.25}50%{transform:translate3d(16px,-9px,0);opacity:.9}}
+
+        /* Cleaner status chips */
+        .header-status{display:inline-flex;align-items:center;gap:6px;width:max-content;padding:4px 8px;border-radius:999px;margin-top:5px;background:rgba(25,74,48,.24);border:1px solid rgba(66,214,136,.18);color:#75e1a6;font-size:10px;line-height:1}
+        .header-status::before{content:"";width:6px;height:6px;border-radius:50%;background:#36d581;box-shadow:0 0 10px rgba(54,213,129,.55)}
+
+        /* Chat list header */
+        .worldio-chats-heading{position:relative;overflow:hidden}
+        .worldio-chats-heading::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(90,103,255,.07),transparent 65%);pointer-events:none}
+        .chats-heading-icon{box-shadow:0 8px 20px rgba(70,94,177,.16),inset 0 1px 0 rgba(255,255,255,.08)}
+        .chats-count{font-variant-numeric:tabular-nums}
+
+        /* Functional header info modal */
+        .chat-info-modal{width:min(520px,100%)}
+        .chat-info-hero{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid #25354f;border-radius:18px;background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(124,58,237,.06));margin-bottom:14px}
+        .chat-info-hero-avatar{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;background:linear-gradient(145deg,#315fe0,#7a4ce0);font-weight:900;font-size:23px;box-shadow:0 14px 30px rgba(54,78,176,.22)}
+        .chat-info-name{font-size:16px;font-weight:850}.chat-info-type{font-size:11px;color:#7c8ba4;margin-top:4px}
+        .chat-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chat-info-stat{padding:13px 14px;border:1px solid #24344d;border-radius:14px;background:rgba(15,24,39,.76)}.chat-info-stat span{display:block;font-size:10px;color:#71819a}.chat-info-stat strong{display:block;margin-top:5px;font-size:13px;color:#e5ebf7}
+        .theme-light .chat-info-hero{border-color:#dfe6ee;background:linear-gradient(135deg,#f4f7ff,#f8faff)}.theme-light .chat-info-stat{background:#f7f9fc;border-color:#dfe6ee}.theme-light .chat-info-stat strong{color:#263349}.theme-light .chat-info-stat span{color:#7b8798}
+
+        /* Settings visual upgrade */
+        .settings-modal{background:linear-gradient(180deg,#0e1727,#0a101b);border-color:#263751;box-shadow:0 38px 110px rgba(0,0,0,.6)}
+        .settings-modal .modal-top{padding-bottom:15px;border-bottom:1px solid rgba(104,129,173,.14)}
+        .settings-card{overflow:hidden;background:linear-gradient(180deg,rgba(17,27,42,.88),rgba(10,17,28,.82));border-color:#263751}
+        .settings-card .setting-row{border-bottom:1px solid rgba(87,111,151,.11)}.settings-card .setting-row:last-child{border-bottom:0}
+        .theme-choice{border-radius:13px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+        .theme-btn{font-weight:800}
+        .theme-btn.active{box-shadow:0 8px 24px rgba(53,82,158,.28),inset 0 1px 0 rgba(255,255,255,.12)}
+        .theme-light .settings-modal{background:linear-gradient(180deg,#fff,#f6f9fc);border-color:#dce4ee}
+        .theme-light .settings-card{background:linear-gradient(180deg,#fff,#f7f9fc)}
+        .theme-light .settings-card .setting-row{border-bottom-color:#e8edf2}
+
+        /* Banner editor consistency */
+        #profileBannerPreview{background:transparent!important}
+        #coverPalette .tg-cover-choice{background-image:var(--cover-bg)!important;background-color:transparent!important}
+        .theme-light .tg-profile-hero{background:#eef3f8}.theme-light .tg-profile-hero::after{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(18,29,43,.10) 28%,rgba(18,29,43,.34) 56%,rgba(247,249,252,.94) 84%,#f7f9fc 100%)}
+        .theme-light .tg-profile-main{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(247,249,252,.56) 28%,rgba(247,249,252,.98) 78%);border-top-color:rgba(120,142,171,.10)}
+        .theme-light .tg-online{background:rgba(237,249,243,.90)}
+        .worldio-no-animations .worldio-globe,.worldio-no-animations .worldio-globe-grid,.worldio-no-animations .worldio-globe-shine,.worldio-no-animations .worldio-globe-orbit,.worldio-no-animations .worldio-globe-halo{animation:none!important}
+        @media(max-width:700px){.tg-cover-palette{grid-template-columns:repeat(4,minmax(50px,1fr))}.tg-profile-hero{min-height:410px}.tg-banner{height:195px;min-height:195px}.chat-info-grid{grid-template-columns:1fr}.worldio-globe-wrap{transform:scale(.9)}}
+
+/* ===== WORLDIO GLASSMORPHISM REFERENCE UI ===== */
+:root{
+  --glass-bg:rgba(10,20,48,.64);
+  --glass-bg-2:rgba(14,28,65,.72);
+  --glass-line:rgba(90,145,255,.28);
+  --glass-line-soft:rgba(126,163,232,.15);
+  --glass-blue:#4f79ff;
+  --glass-cyan:#32d4ff;
+  --glass-purple:#9b5cff;
+  --glass-text:#f4f7ff;
+  --glass-muted:#8da1c1;
+}
+body.worldio-glass-ui{background:#030917}
+body.worldio-glass-ui .app{
+  background:
+   radial-gradient(circle at 72% 8%,rgba(74,128,255,.16),transparent 28%),
+   radial-gradient(circle at 18% 85%,rgba(126,68,255,.14),transparent 24%),
+   linear-gradient(180deg,#06102a 0%,#030916 100%);
+  position:relative;
+}
+body.worldio-glass-ui .app::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:
+    radial-gradient(circle at 20% 30%,rgba(46,184,255,.07),transparent 18%),
+    radial-gradient(circle at 80% 70%,rgba(160,86,255,.08),transparent 20%);
+  filter:blur(18px);
+}
+body.worldio-glass-ui .sidebar{
+  width:570px;max-width:570px;
+  display:grid;grid-template-columns:176px minmax(0,1fr);
+  background:rgba(4,11,27,.54);
+  border-right:1px solid rgba(105,145,235,.15);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  position:relative;z-index:2;overflow:hidden;
+}
+body.worldio-glass-ui .worldio-nav{
+  grid-column:1;grid-row:1;
+  padding:20px 12px 14px;
+  display:flex;flex-direction:column;gap:8px;
+  border-right:1px solid rgba(105,145,235,.12);
+  background:linear-gradient(180deg,rgba(13,30,74,.50),rgba(4,12,29,.34));
+}
+body.worldio-glass-ui .worldio-nav .nav-brand{
+  display:flex;align-items:center;gap:10px;padding:4px 8px 18px;
+  font-size:22px;font-weight:900;color:#fff;letter-spacing:-.5px;
+}
+body.worldio-glass-ui .worldio-nav .nav-brand-mark{
+  width:36px;height:36px;border-radius:12px;display:grid;place-items:center;
+  background:linear-gradient(145deg,#67a4ff,#3d58f3 52%,#9a43f4);
+  box-shadow:0 10px 28px rgba(58,87,244,.34),inset 0 1px 0 rgba(255,255,255,.22);
+  font-weight:1000;
+}
+body.worldio-glass-ui .nav-item{
+  position:relative;display:flex;align-items:center;gap:11px;width:100%;
+  padding:10px 11px;border-radius:14px;color:#a7b8d4;background:transparent;
+  border:1px solid transparent;cursor:pointer;font-size:13px;text-align:left;
+  transition:.22s ease;overflow:hidden;
+}
+body.worldio-glass-ui .nav-item .nav-ico{
+  width:28px;height:28px;border-radius:9px;display:grid;place-items:center;
+  background:rgba(132,161,220,.10);font-size:14px;color:#bdd4ff;
+}
+body.worldio-glass-ui .nav-item:hover{background:rgba(67,101,173,.14);border-color:rgba(100,151,240,.18);transform:translateX(2px);color:#eef5ff}
+body.worldio-glass-ui .nav-item.active{
+  background:linear-gradient(135deg,rgba(63,105,255,.88),rgba(115,78,255,.8));
+  border-color:rgba(116,164,255,.46);color:#fff;box-shadow:0 12px 30px rgba(55,91,255,.22),inset 0 1px 0 rgba(255,255,255,.16);
+}
+body.worldio-glass-ui .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#4e73ff;color:#fff;font-size:10px;display:grid;place-items:center;font-weight:900}
+body.worldio-glass-ui .nav-divider{height:1px;background:rgba(118,154,216,.12);margin:7px 5px}
+body.worldio-glass-ui .nav-label{font-size:10px;color:#6f86ad;letter-spacing:.1em;text-transform:uppercase;padding:6px 9px 2px;font-weight:800}
+body.worldio-glass-ui .nav-bottom{margin-top:auto}
+body.worldio-glass-ui .sidebar-top{
+  grid-column:2;grid-row:1;min-width:0;
+  padding:15px 12px 12px;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+body.worldio-glass-ui .worldio-topbar{height:58px;margin-bottom:9px}
+body.worldio-glass-ui .search{background:rgba(11,24,49,.68);border-color:rgba(102,145,225,.18);backdrop-filter:blur(12px)}
+body.worldio-glass-ui .chat-tabs{margin-top:12px}
+body.worldio-glass-ui .chat-tab{padding:7px 11px}
+body.worldio-glass-ui .chat-tab.active{background:linear-gradient(135deg,rgba(56,101,255,.28),rgba(138,77,255,.22));border:1px solid rgba(91,132,238,.24)}
+body.worldio-glass-ui .worldio-chats-heading{margin:14px 2px 10px;padding:8px 9px;border-radius:14px;border:1px solid rgba(103,145,228,.12);background:rgba(15,29,57,.46)}
+body.worldio-glass-ui .chats-heading-icon{background:linear-gradient(135deg,#193a7b,#2e59b9)!important;box-shadow:0 8px 22px rgba(47,101,214,.25)}
+body.worldio-glass-ui .chats-heading-main div span{color:#dfeaff!important}
+body.worldio-glass-ui .chats-heading-main div small{color:#7289ae!important}
+body.worldio-glass-ui .chat-list{padding-right:4px}
+body.worldio-glass-ui .chat-item{background:rgba(9,20,43,.18);border-color:transparent;border-radius:16px;min-height:72px}
+body.worldio-glass-ui .chat-item:hover{background:rgba(44,72,127,.18);border-color:rgba(87,128,208,.15)}
+body.worldio-glass-ui .chat-item.active{background:linear-gradient(135deg,rgba(39,73,143,.58),rgba(48,58,113,.50));border-color:rgba(82,132,235,.40);box-shadow:inset 3px 0 #5f8aff,0 12px 28px rgba(0,0,0,.18)}
+body.worldio-glass-ui .profile{background:linear-gradient(180deg,rgba(9,22,45,.70),rgba(5,13,28,.78));border-top:1px solid rgba(105,145,235,.12);backdrop-filter:blur(20px)}
+body.worldio-glass-ui .chat{
+  min-width:0;position:relative;z-index:2;
+  background:
+   radial-gradient(circle at 55% 18%,rgba(64,112,255,.12),transparent 30%),
+   linear-gradient(180deg,rgba(6,14,31,.60),rgba(2,7,17,.80));
+}
+body.worldio-glass-ui .chat-header{
+  height:74px;padding:0 18px 0 24px;
+  border-bottom:1px solid rgba(105,145,235,.13);
+  background:linear-gradient(180deg,rgba(13,30,64,.62),rgba(7,15,32,.48));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+body.worldio-glass-ui .header-avatar{background:linear-gradient(135deg,#20cfff,#6051ff);box-shadow:0 10px 26px rgba(43,115,255,.26)}
+body.worldio-glass-ui .header-status{color:#66dbff;font-size:11px}
+body.worldio-glass-ui .header-actions .header-action{background:rgba(13,31,61,.62);border-color:rgba(114,153,224,.2);backdrop-filter:blur(12px)}
+body.worldio-glass-ui .messages{padding:18px 18px 18px}
+body.worldio-glass-ui .worldio-empty-workspace{min-height:100%;padding:40px 30px 55px}
+body.worldio-glass-ui .empty-copy h2{font-size:25px}
+body.worldio-glass-ui .empty-action{backdrop-filter:blur(12px)}
+body.worldio-glass-ui .input-area{padding:12px 16px 15px;border-top:1px solid rgba(105,145,235,.08);background:rgba(4,10,23,.48);backdrop-filter:blur(18px)}
+body.worldio-glass-ui .message-input{background:rgba(14,29,57,.72);border-color:rgba(104,146,225,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+body.worldio-glass-ui .send{background:linear-gradient(135deg,#2e7dff,#7050ff);box-shadow:0 10px 28px rgba(46,106,255,.26);transition:.18s ease}
+body.worldio-glass-ui .send:hover{transform:translateY(-1px) scale(1.02);background:linear-gradient(135deg,#3c8cff,#845fff)}
+
+/* Channel center */
+body.worldio-glass-ui .worldio-channel-hero{
+  max-width:980px;margin:0 auto 12px;border:1px solid rgba(87,139,237,.30);border-radius:22px;overflow:hidden;
+  background:linear-gradient(135deg,rgba(18,48,111,.74),rgba(15,27,61,.62));
+  box-shadow:0 20px 60px rgba(20,57,140,.18),inset 0 1px 0 rgba(255,255,255,.07);
+  animation:glassRise .45s cubic-bezier(.16,1,.3,1) both;
+}
+body.worldio-glass-ui .worldio-channel-cover{height:116px;position:relative;overflow:hidden;background:radial-gradient(circle at 20% 30%,rgba(88,211,255,.22),transparent 22%),radial-gradient(circle at 80% 50%,rgba(162,79,255,.24),transparent 28%),linear-gradient(135deg,#102b66,#18245d 48%,#251252)}
+body.worldio-glass-ui .worldio-channel-cover::before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 30deg,transparent,rgba(79,173,255,.14),transparent 28%,rgba(170,99,255,.12),transparent 60%);animation:coverSpin 12s linear infinite}
+body.worldio-glass-ui .worldio-channel-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(4,10,23,.78))}
+body.worldio-glass-ui .worldio-channel-main{display:flex;align-items:flex-end;gap:14px;padding:0 18px 17px;margin-top:-38px;position:relative;z-index:2}
+body.worldio-glass-ui .worldio-channel-avatar{width:78px;height:78px;border-radius:24px;display:grid;place-items:center;overflow:hidden;font-size:34px;background:linear-gradient(135deg,#21caff,#7b4dff);border:4px solid rgba(7,17,38,.9);box-shadow:0 14px 34px rgba(0,0,0,.34)}
+body.worldio-glass-ui .worldio-channel-avatar img{width:100%;height:100%;object-fit:cover}
+body.worldio-glass-ui .worldio-channel-copy{min-width:0;padding-bottom:2px}
+body.worldio-glass-ui .worldio-channel-name{font-size:18px;font-weight:900;color:#fff}
+body.worldio-glass-ui .worldio-channel-sub{color:#8ba2c5;font-size:11px;margin-top:3px}
+body.worldio-glass-ui .worldio-channel-actions{margin-left:auto;display:flex;gap:7px;padding-bottom:3px}
+body.worldio-glass-ui .worldio-channel-action{height:34px;padding:0 11px;border-radius:11px;border:1px solid rgba(111,154,234,.22);background:rgba(10,26,56,.65);color:#d9e7ff;cursor:pointer;transition:.18s ease}
+body.worldio-glass-ui .worldio-channel-action:hover{transform:translateY(-1px);background:rgba(28,58,115,.72);border-color:rgba(94,146,249,.45)}
+body.worldio-glass-ui .worldio-channel-composer{max-width:980px;margin:0 auto 12px;display:flex;align-items:center;gap:9px;padding:9px;border:1px solid rgba(90,140,236,.23);border-radius:17px;background:rgba(9,23,49,.68);box-shadow:0 12px 32px rgba(0,0,0,.15);backdrop-filter:blur(14px);animation:glassRise .5s .03s both}
+body.worldio-glass-ui .worldio-channel-composer .composer-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(58,105,206,.18);color:#8bc1ff}
+body.worldio-glass-ui .worldio-channel-composer .composer-text{flex:1;color:#6f86aa;font-size:13px}
+body.worldio-glass-ui .worldio-channel-composer .composer-send{width:36px;height:36px;border-radius:11px;border:0;background:linear-gradient(135deg,#2e7dff,#7050ff);color:#fff;cursor:pointer}
+body.worldio-glass-ui .worldio-post{
+  max-width:980px;margin:0 auto 11px;padding:15px 16px;border-radius:18px;border:1px solid rgba(91,139,236,.18);background:rgba(10,22,46,.66);box-shadow:0 13px 34px rgba(0,0,0,.15);backdrop-filter:blur(16px);animation:glassRise .42s both}
+body.worldio-glass-ui .worldio-post-head{display:flex;align-items:center;gap:9px}.worldio-post-avatar{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#22c9ff,#724eff);overflow:hidden}.worldio-post-avatar img{width:100%;height:100%;object-fit:cover}.worldio-post-meta{min-width:0;flex:1}.worldio-post-author{font-size:12px;font-weight:800;color:#f3f7ff}.worldio-post-time{font-size:10px;color:#6f86ab;margin-top:2px}.worldio-post-title{margin-top:12px;font-size:15px;font-weight:900;color:#fff}.worldio-post-body{margin-top:7px;color:#afbdd3;font-size:13px;line-height:1.55}.worldio-post-reactions{display:flex;gap:7px;margin-top:11px}.worldio-react{border:1px solid rgba(92,137,226,.16);background:rgba(27,53,102,.44);color:#9fb4d3;border-radius:999px;padding:5px 9px;font-size:10px}
+
+/* Right settings panel */
+body.worldio-glass-ui .channel-side-panel{
+  width:330px;flex:0 0 330px;display:none;position:relative;z-index:2;
+  background:linear-gradient(180deg,rgba(7,17,39,.78),rgba(3,10,23,.86));border-left:1px solid rgba(104,145,231,.14);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);overflow:auto;
+}
+body.worldio-glass-ui .channel-side-panel.open{display:block;animation:panelIn .32s cubic-bezier(.16,1,.3,1) both}
+body.worldio-glass-ui .side-panel-head{display:flex;align-items:center;justify-content:space-between;padding:18px;border-bottom:1px solid rgba(107,147,228,.12)}
+body.worldio-glass-ui .side-panel-title{font-size:16px;font-weight:900;color:#fff}.side-panel-sub{font-size:10px;color:#7388ab;margin-top:4px}
+body.worldio-glass-ui .side-close{width:32px;height:32px;border-radius:10px;border:1px solid rgba(107,147,228,.16);background:rgba(15,30,59,.65);color:#98a9c4;cursor:pointer}
+body.worldio-glass-ui .side-content{padding:16px}.side-section-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#7187aa;font-weight:900;margin:5px 0 8px}
+body.worldio-glass-ui .side-channel-preview{padding:12px;border-radius:17px;border:1px solid rgba(90,141,240,.17);background:rgba(11,27,56,.54);margin-bottom:14px}.side-preview-cover{height:72px;border-radius:12px;background:linear-gradient(135deg,#12366d,#312052);overflow:hidden}.side-preview-row{display:flex;align-items:center;gap:10px;margin-top:-18px;padding:0 8px;position:relative}.side-preview-avatar{width:48px;height:48px;border-radius:16px;border:3px solid #0b1833;background:linear-gradient(135deg,#2dc9ff,#7a4dff);display:grid;place-items:center;overflow:hidden}.side-preview-avatar img{width:100%;height:100%;object-fit:cover}.side-preview-name{font-weight:900;color:#fff;font-size:12px}.side-preview-sub{font-size:10px;color:#7890b4;margin-top:2px}
+body.worldio-glass-ui .side-field-label{display:block;font-size:10px;color:#8298bb;margin:11px 0 6px}.side-field{width:100%;padding:10px 11px;border-radius:11px;border:1px solid rgba(100,145,232,.16);background:rgba(10,24,50,.7);color:#eef4ff;outline:none}.side-field:focus{border-color:#4d7dff;box-shadow:0 0 0 3px rgba(77,125,255,.12)}textarea.side-field{resize:vertical;min-height:88px}.side-upload{display:flex;gap:8px}.side-upload button{flex:1;height:36px;border-radius:11px;border:1px solid rgba(100,145,232,.16);background:rgba(16,34,68,.7);color:#c8d8f3;cursor:pointer}.side-upload button:hover{background:rgba(29,59,112,.82);border-color:rgba(87,138,241,.35)}
+body.worldio-glass-ui .side-swatches{display:flex;gap:7px;flex-wrap:wrap}.side-swatch{width:30px;height:30px;border-radius:9px;border:2px solid transparent;cursor:pointer}.side-swatch.active{border-color:#fff;box-shadow:0 0 0 2px #4d7dff}
+body.worldio-glass-ui .side-save{width:100%;margin-top:14px;height:40px;border:0;border-radius:12px;background:linear-gradient(135deg,#2f7fff,#7152ff);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 26px rgba(47,127,255,.20)}.side-save:hover{filter:brightness(1.07);transform:translateY(-1px)}.side-status{min-height:17px;margin-top:8px;color:#65dcac;font-size:10px;text-align:center}
+@keyframes glassRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes panelIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes coverSpin{to{transform:rotate(360deg)}}
+@media(max-width:1200px){body.worldio-glass-ui .sidebar{width:470px;max-width:470px}body.worldio-glass-ui .channel-side-panel{width:300px;flex-basis:300px}}
+@media(max-width:960px){body.worldio-glass-ui .sidebar{width:410px;max-width:410px}body.worldio-glass-ui .worldio-nav{grid-template-columns:1fr}.worldio-nav .nav-label{display:none}.worldio-nav .nav-item span:last-child{display:none}}
+@media(max-width:780px){body.worldio-glass-ui .sidebar{width:78px;max-width:78px}body.worldio-glass-ui .sidebar{display:block}body.worldio-glass-ui .worldio-nav{display:none}body.worldio-glass-ui .sidebar-top{display:flex;padding:10px}.channel-side-panel{display:none!important}}
+
+
+/* ===== WORLDIO PROFILE / SETTINGS OVERHAUL V6 ===== */
+.worldio-tabs{display:flex;gap:6px;padding:5px;background:rgba(255,255,255,.045);border:1px solid rgba(113,145,210,.16);border-radius:16px;margin-bottom:16px;position:relative;overflow:auto;scrollbar-width:none}
+.worldio-tabs::-webkit-scrollbar{display:none}
+.worldio-tab{flex:0 0 auto;border:1px solid transparent;background:transparent;color:#7f90ad;padding:9px 13px;border-radius:11px;font-size:11px;font-weight:800;cursor:pointer;transition:.2s ease}
+.worldio-tab:hover{color:#dce7fb;background:rgba(72,103,165,.12)}
+.worldio-tab.active{color:#fff;background:linear-gradient(135deg,rgba(62,102,235,.72),rgba(119,74,238,.58));border-color:rgba(117,155,255,.3);box-shadow:0 8px 24px rgba(52,91,220,.2),inset 0 1px 0 rgba(255,255,255,.12)}
+.worldio-tab-pane{display:none;animation:wiPaneIn .28s cubic-bezier(.16,1,.3,1)}
+.worldio-tab-pane.active{display:block}
+@keyframes wiPaneIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:none}}
+.worldio-profile-hero-v6{position:relative;overflow:hidden;border-radius:24px;border:1px solid rgba(98,132,198,.24);background:linear-gradient(180deg,rgba(14,23,38,.82),rgba(8,14,24,.98));box-shadow:0 24px 70px rgba(0,0,0,.28)}
+.worldio-profile-hero-v6::after{content:"";position:absolute;inset:auto -10% -40% 10%;height:150px;background:radial-gradient(ellipse,rgba(83,106,255,.22),transparent 70%);filter:blur(25px);pointer-events:none}
+.worldio-profile-main-v6{position:relative;z-index:2;padding:18px 20px 22px}
+.worldio-profile-name-line{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.worldio-profile-name-line .tg-name{letter-spacing:-.035em}
+.worldio-profile-items-inline{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}
+.worldio-item-badge{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:13px;background:linear-gradient(145deg,#17243d,#0f1727);border:1px solid rgba(139,167,225,.24);box-shadow:0 5px 13px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.06);animation:wiItemIn .35s cubic-bezier(.16,1,.3,1) both}
+.worldio-item-badge:hover{transform:translateY(-2px) rotate(-4deg);border-color:#6ea2ff;box-shadow:0 10px 24px rgba(69,112,238,.22)}
+@keyframes wiItemIn{from{opacity:0;transform:scale(.6) rotate(-14deg)}to{opacity:1;transform:none}}
+.worldio-item-section{margin-top:18px}
+.worldio-item-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.worldio-item-card{position:relative;min-height:84px;border:1px solid #263852;background:linear-gradient(145deg,rgba(18,30,49,.94),rgba(10,18,31,.94));border-radius:17px;padding:12px;display:flex;align-items:center;gap:11px;color:#dce7f8;cursor:pointer;transition:.2s ease;overflow:hidden}
+.worldio-item-card::before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle at 30% 20%,rgba(90,130,255,.17),transparent 45%);opacity:0;transition:.22s ease}
+.worldio-item-card:hover{transform:translateY(-2px);border-color:#4262a0;box-shadow:0 13px 30px rgba(0,0,0,.25)}
+.worldio-item-card:hover::before{opacity:1}
+.worldio-item-card.equipped{border-color:#5f8cff;box-shadow:0 0 0 1px rgba(95,140,255,.18),0 12px 30px rgba(42,77,175,.18)}
+.worldio-item-icon{position:relative;z-index:1;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:21px;background:linear-gradient(145deg,#223457,#151f33);border:1px solid rgba(144,170,225,.16)}
+.worldio-item-card.equipped .worldio-item-icon{background:linear-gradient(145deg,#3358cb,#7144d4);box-shadow:0 7px 18px rgba(70,86,221,.25)}
+.worldio-item-copy{position:relative;z-index:1;min-width:0;flex:1}.worldio-item-title{font-weight:850;font-size:12px}.worldio-item-rarity{font-size:10px;color:#7083a1;margin-top:3px}.worldio-item-check{position:relative;z-index:1;font-size:12px;color:#63a8ff}
+.worldio-equip-hint{font-size:10px;color:#6f809b;margin-top:9px;line-height:1.45}
+.worldio-setting-grid{display:grid;gap:9px}
+.worldio-preference{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border:1px solid #22334d;background:linear-gradient(180deg,rgba(17,28,45,.9),rgba(11,19,32,.92));border-radius:15px;transition:.18s ease}
+.worldio-preference:hover{border-color:#38547f;transform:translateY(-1px)}
+.worldio-pref-copy{min-width:0}.worldio-pref-title{font-size:12px;font-weight:800;color:#e7eefb}.worldio-pref-desc{font-size:10px;color:#6f819d;margin-top:3px;line-height:1.35}
+.worldio-select{min-width:145px;border:1px solid #2b3c57;border-radius:11px;background:#0e1828;color:#dce7f8;padding:9px 10px;outline:none;cursor:pointer}
+.worldio-select:focus{border-color:#4e7eff;box-shadow:0 0 0 3px rgba(78,126,255,.12)}
+.worldio-mini-note{padding:10px 12px;border-radius:13px;background:rgba(62,98,176,.08);border:1px solid rgba(92,128,206,.14);color:#7083a1;font-size:10px;line-height:1.5}
+.worldio-save-bar{position:sticky;bottom:0;margin:16px -2px -2px;padding-top:10px;background:linear-gradient(180deg,transparent,rgba(10,16,26,.92) 35%);z-index:3}
+.worldio-save-bar .modal-actions{margin-top:0}
+.worldio-live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#35d07f;box-shadow:0 0 0 4px rgba(53,208,127,.09),0 0 14px rgba(53,208,127,.35);vertical-align:middle}
+.top-profile-items,.header-items,.empty-profile-items{display:inline-flex;gap:4px;align-items:center;margin-left:4px}
+.top-profile-item,.header-item{width:17px;height:17px;border-radius:6px;display:grid;place-items:center;font-size:9px;background:linear-gradient(145deg,#273a60,#18243c);border:1px solid rgba(126,157,220,.22)}
+.empty-profile-items .worldio-item-badge{width:22px;height:22px}
+.worldio-chip-row{display:flex;flex-wrap:wrap;gap:7px}
+.worldio-chip{border:1px solid #2b3b58;background:#111c2e;color:#9db0cd;border-radius:999px;padding:7px 10px;font-size:10px;cursor:pointer;transition:.18s ease}
+.worldio-chip.active{background:#1c3260;border-color:#4e7eff;color:#eef4ff;box-shadow:0 7px 18px rgba(58,96,214,.16)}
+.worldio-chip:hover{transform:translateY(-1px);color:#fff}
+body.worldio-no-animations .worldio-tab-pane,body.worldio-no-animations .worldio-item-badge{animation:none!important}
+body.worldio-compact .message-row{margin-bottom:8px}body.worldio-compact .message{padding:9px 12px;border-radius:13px}
+body.worldio-hide-message-avatars .message-avatar{display:none!important}
+body.worldio-no-message-anim .message-row{animation:none!important}
+.theme-light .worldio-preference,.theme-light .worldio-item-card{background:linear-gradient(180deg,#ffffff,#f6f8fb);border-color:#dbe3ed;color:#1f2a3a}
+.theme-light .worldio-tab{color:#66748a}.theme-light .worldio-tab.active{color:#163266}.theme-light .worldio-select{background:#fff;color:#27344a;border-color:#cbd7e5}
+.theme-light .worldio-profile-hero-v6{background:linear-gradient(180deg,#ffffff,#f5f8fc);border-color:#dbe3ed}
+
+
+
+/* ===== TELEGRAM-STYLE PROFILE SETTINGS V7 ===== */
+#profileModal .worldio-modal{
+  width:min(560px,100%);max-width:560px!important;padding:0;overflow:hidden;
+  background:#0f1724;border:1px solid #253247;border-radius:20px;
+  box-shadow:0 24px 80px rgba(0,0,0,.48);animation:tgModalIn .22s ease both;
+}
+#profileModal .modal-top{padding:16px 18px 13px;margin:0;border-bottom:1px solid #1f2a3b;background:#0f1724;}
+#profileModal .modal-title{font-size:18px;letter-spacing:-.025em;font-weight:800}
+#profileModal .modal-subtitle{font-size:11px;color:#718098}
+#profileModal .modal-close{width:34px;height:34px;border-radius:10px;background:#121c2b;border:1px solid #27364b}
+#profileModal .worldio-tabs{margin:12px 14px 10px;padding:3px;border-radius:11px;background:#141e2d;border:1px solid #253247;gap:2px}
+#profileModal .worldio-tab{padding:8px 12px;border-radius:8px;font-size:11px;font-weight:700;color:#8693a8}
+#profileModal .worldio-tab.active{background:#23385f;border-color:transparent;box-shadow:none;color:#eef4ff}
+#profileModal .worldio-tab-pane{padding:0 14px 14px}
+#profileModal .worldio-profile-hero-v6{
+  border-radius:16px;background:#111b2a;border:1px solid #253247;box-shadow:none;overflow:hidden;
+}
+#profileModal .worldio-profile-hero-v6::after{display:none}
+#profileModal .tg-banner{
+  height:126px;border-radius:0;background-size:cover;background-position:center;
+}
+#profileModal .tg-banner::after{background:linear-gradient(180deg,rgba(0,0,0,.03),rgba(7,12,20,.46));}
+#profileModal .tg-banner-tools{right:10px;top:10px;gap:6px}
+#profileModal .tg-mini-btn{width:32px;height:32px;border-radius:9px;background:rgba(7,12,22,.66);border-color:rgba(255,255,255,.15);font-size:14px}
+#profileModal .worldio-profile-main-v6{padding:0 16px 17px;background:#111b2a}
+#profileModal .tg-avatar-wrap{width:88px;height:88px;margin-top:-44px;margin-bottom:9px}
+#profileModal .tg-big-avatar{width:88px;height:88px;border-radius:26px;border:4px solid #111b2a;box-shadow:0 8px 24px rgba(0,0,0,.32)}
+#profileModal .tg-avatar-edit{width:29px;height:29px;border-radius:9px;border:2px solid #111b2a;font-size:13px}
+#profileModal .tg-name{font-size:20px;font-weight:800;letter-spacing:-.03em}
+#profileModal .tg-username{font-size:12px;color:#7e8ca3;margin-top:2px}
+#profileModal .tg-bio{font-size:12px;color:#b4c0d2;margin-top:9px;line-height:1.45}
+#profileModal .tg-online{margin-top:9px;padding:4px 8px;border-radius:999px;font-size:10px}
+#profileModal .tg-section-title{
+  margin:16px 4px 7px;color:#738199;font-size:10px;font-weight:800;letter-spacing:.07em;
+}
+#profileModal .tg-upload-card{grid-template-columns:1fr 1fr;gap:8px}
+#profileModal .tg-upload-btn{
+  padding:10px 11px;border-radius:12px;background:#111b2a;border:1px solid #253247;box-shadow:none;
+}
+#profileModal .tg-upload-btn:hover{background:#142137;border-color:#36578b;transform:none}
+#profileModal .tg-upload-icon{width:32px;height:32px;border-radius:9px;background:#17243a;font-size:15px}
+#profileModal .tg-upload-title{font-size:11px}.tg-upload-sub{font-size:9px}
+#profileModal .field-label{margin:13px 2px 6px;font-size:10px;color:#76849b;font-weight:700}
+#profileModal .worldio-field{
+  padding:11px 12px;border-radius:11px;background:#101a28;border:1px solid #27364c;color:#edf3fb;font-size:13px;
+}
+#profileModal .worldio-field:focus{border-color:#3e75d8;box-shadow:0 0 0 3px rgba(62,117,216,.10)}
+#profileModal .tg-divider{margin:15px 0 0;background:#202c3d}
+#profileModal .tg-cover-palette{gap:7px}
+#profileModal .tg-cover-choice{width:36px;height:26px;border-radius:8px}
+#profileModal .tg-remove-btn{margin-top:7px;font-size:10px;color:#8290a5}
+#profileModal .save-status{font-size:11px;padding:0 3px;min-height:17px}
+#profileModal .worldio-save-bar{
+  margin:0;padding:10px 14px 14px;background:linear-gradient(180deg,rgba(15,23,36,0),#0f1724 32%);position:sticky;bottom:0;
+}
+#profileModal .modal-actions{margin-top:0;gap:8px}
+#profileModal .modal-button{height:40px;border-radius:11px;font-size:12px;padding:0 14px}
+#profileModal .modal-button.secondary{background:#151f2e;border-color:#29384e;color:#aebbd0}
+#profileModal .modal-button.primary{background:#3478f6;box-shadow:none}
+#profileModal .modal-button.primary:hover{filter:brightness(1.04);transform:none}
+#profileModal .worldio-mini-note{margin-bottom:10px;background:#131e2e;border-color:#25344b;color:#718199}
+#profileModal .worldio-item-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#profileModal .worldio-item-card{min-height:78px;border-radius:13px;padding:10px;background:#111b2a;border-color:#27364d;box-shadow:none}
+#profileModal .worldio-item-card:hover{transform:translateY(-1px);box-shadow:none}
+#profileModal .worldio-item-icon{width:36px;height:36px;border-radius:10px;font-size:19px}
+#profileModal .worldio-item-title{font-size:11px}.worldio-item-rarity{font-size:9px}
+@keyframes tgModalIn{from{opacity:0;transform:translateY(7px) scale(.985)}to{opacity:1;transform:none}}
+@media(max-width:620px){
+  #profileModal .worldio-modal{border-radius:18px}
+  #profileModal .tg-upload-card{grid-template-columns:1fr}
+  #profileModal .worldio-item-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+body.theme-light #profileModal .worldio-modal,
+body.theme-light #profileModal .modal-top{background:#f7f9fc;border-color:#dbe3ed}
+body.theme-light #profileModal .worldio-tabs{background:#eef2f7;border-color:#dbe3ed}
+body.theme-light #profileModal .worldio-tab{color:#637087}
+body.theme-light #profileModal .worldio-tab.active{background:#dce8fb;color:#244b87}
+body.theme-light #profileModal .worldio-profile-hero-v6,
+body.theme-light #profileModal .worldio-profile-main-v6,
+body.theme-light #profileModal .tg-upload-btn,
+body.theme-light #profileModal .worldio-item-card{background:#fff;border-color:#dbe3ed}
+body.theme-light #profileModal .tg-big-avatar{border-color:#fff}
+body.theme-light #profileModal .worldio-field{background:#fff;color:#243247;border-color:#cfd9e5}
+body.theme-light #profileModal .modal-button.secondary{background:#eef2f7;border-color:#d5dee9;color:#52627a}
+body.theme-light #profileModal .worldio-save-bar{background:linear-gradient(180deg,rgba(247,249,252,0),#f7f9fc 32%)}
+
 </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
-<body>
+<body class="worldio-glass-ui">
 
 <!-- WORLDIO 3D LAUNCH SPLASH -->
 <div id="worldioSplash" aria-hidden="true">
@@ -1103,7 +1775,6 @@
         </div>
         <div class="worldio-splash-copy">
             <h1 class="worldio-splash-title">Worldio</h1>
-            <p class="worldio-splash-subtitle">Твой мир общения</p>
             <div class="worldio-splash-loader"><span></span></div>
         </div>
     </div>
@@ -1177,12 +1848,37 @@
     <!-- SIDEBAR -->
 
     <aside class="sidebar">
+        <div class="worldio-nav">
+            <div class="nav-brand"><div class="nav-brand-mark">W</div><span>Worldio</span></div>
+            <button class="nav-item active" type="button" onclick="openGlobalSearch()"><span class="nav-ico">⌕</span><span>Поиск</span></button>
+            <button class="nav-item" type="button" onclick="openGlobalSearch(); setGlobalSearchType('users')"><span class="nav-ico">💬</span><span>Сообщения</span><span class="nav-badge" id="navMessagesBadge" style="display:none">0</span></button>
+            <button class="nav-item" type="button" onclick="openGlobalSearch(); setGlobalSearchType('channels')"><span class="nav-ico">#</span><span>Каналы</span></button>
+            <button class="nav-item" type="button" onclick="openCreateChatModal(); setTimeout(()=>setCreateChatType('group'),20)"><span class="nav-ico">👥</span><span>Группы</span></button>
+            <button class="nav-item" type="button" onclick="openGlobalSearch(); setGlobalSearchType('users')"><span class="nav-ico">◉</span><span>Друзья</span></button>
+            <button class="nav-item" type="button" onclick="openSettings(event)"><span class="nav-ico">⚙</span><span>Настройки</span></button>
+            <div class="nav-divider"></div>
+            <div class="nav-label">Быстрый доступ</div>
+            <button class="nav-item" type="button" onclick="openCreateChatModal(); setTimeout(()=>setCreateChatType('channel'),20)"><span class="nav-ico">＋</span><span>Создать канал</span></button>
+            <button class="nav-item" type="button" onclick="openCreateChatModal(); setTimeout(()=>setCreateChatType('group'),20)"><span class="nav-ico">✦</span><span>Создать группу</span></button>
+            <div class="nav-bottom">
+              <div class="nav-divider"></div>
+              <button class="nav-item" type="button" onclick="openProfile(event)"><span class="nav-ico">👤</span><span>Мой профиль</span></button>
+            </div>
+        </div>
         <div class="sidebar-top">
-            <div class="brand">
-                <span>🌎</span>
-                <strong>Worldio</strong>
+            <div class="brand worldio-topbar">
+                <div class="top-profile-mini" id="topProfileMini" onclick="toggleProfileMenu(event)" role="button" tabindex="0" aria-label="Открыть профиль">
+                    <div class="top-profile-avatar" id="topProfileAvatar">W</div>
+                    <div class="top-profile-copy">
+                        <div class="top-profile-name" id="topProfileName">Пользователь <span class="top-profile-items" id="topProfileItems"></span></div>
+                        <div class="top-profile-status"><span></span><span id="topProfileStatus">в сети</span></div>
+                    </div>
+                </div>
                 <button class="global-search-btn" id="globalSearchButton" type="button" title="Поиск людей, чатов и каналов" onclick="openGlobalSearch()" aria-label="Поиск людей, чатов и каналов">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
+                </button>
+                <button class="top-settings-btn" type="button" onclick="openSettings(event)" title="Настройки" aria-label="Настройки">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"></path><path d="m19.2 13.1 1.1.8-1.5 2.6-1.3-.5a7.9 7.9 0 0 1-1.6.9l-.2 1.4h-3l-.2-1.4a7.8 7.8 0 0 1-1.6-.9l-1.3.5-1.5-2.6 1.1-.8a7.7 7.7 0 0 1 0-1.9l-1.1-.8 1.5-2.6 1.3.5a7.8 7.8 0 0 1 1.6-.9l.2-1.4h3l.2 1.4a7.9 7.9 0 0 1 1.6.9l1.3-.5 1.5 2.6-1.1.8a7.7 7.7 0 0 1 0 1.9Z"></path></svg>
                 </button>
             </div>
 
@@ -1198,7 +1894,10 @@
             </div>
 
             <div class="chats-title worldio-chats-heading">
-                <span>Ваши чаты</span>
+                <div class="chats-heading-main">
+                    <span class="chats-heading-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 7.5h10A3.5 3.5 0 0 1 20.5 11v5A3.5 3.5 0 0 1 17 19.5H7A3.5 3.5 0 0 1 3.5 16v-5A3.5 3.5 0 0 1 7 7.5Z"></path><path d="M8 7.5V5.8A2.8 2.8 0 0 1 10.8 3h2.4A2.8 2.8 0 0 1 16 5.8v1.7"></path></svg></span>
+                    <div><span>Ваши чаты</span><small>Личные и группы</small></div>
+                </div>
                 <div class="worldio-chat-create-actions">
                     <span class="chats-count" id="chatsCount">0</span>
                     <button class="worldio-create-chat-btn" type="button" onclick="openCreateChatModal()" title="Создать группу или канал" aria-label="Создать группу или канал">
@@ -1214,18 +1913,8 @@
                 <span>Найди человека через поиск или создай группу/канал.</span>
                 <button type="button" onclick="openGlobalSearch()">Открыть поиск</button>
             </div>
-            </div>
         </div>
 
-        <!-- PROFILE -->
-        <div class="profile profile-clickable" id="profileBar" onclick="toggleProfileMenu(event)">
-            <div class="profile-avatar" id="profileAvatar">🌎</div>
-            <div class="profile-info">
-                <div class="profile-name" id="profileName">Пользователь</div>
-                <div class="profile-handle" id="profileHandle">@user</div>
-            </div>
-            <button class="settings" onclick="openSettings(event)" title="Настройки">⚙️</button>
-        </div>
         <div class="profile-menu" id="profileMenu">
             <div class="profile-menu-head">
                 <div class="profile-menu-name" id="menuProfileName">Пользователь</div>
@@ -1270,13 +1959,13 @@
             <div class="header-avatar" id="headerAvatar">W</div>
 
             <div class="header-chat-info">
-                <div class="header-name" id="headerName">Worldio</div>
-                <div class="header-status" id="headerStatus">● выбери чат</div>
+                <div class="header-name" id="headerName">Пользователь <span class="header-items" id="headerItems"></span></div>
+                <div class="header-status" id="headerStatus">@user • онлайн</div>
             </div>
 
             <div class="header-actions">
-                <button class="header-action" title="Поиск">⌕</button>
-                <button class="header-action" title="Информация">ⓘ</button>
+                <button class="header-action" type="button" title="Поиск по чату" onclick="openCurrentChatSearch()" aria-label="Поиск по чату">⌕</button>
+                <button class="header-action" type="button" title="Информация о чате" onclick="openChatInfo()" aria-label="Информация о чате">ⓘ</button>
             </div>
 
         </header>
@@ -1286,8 +1975,42 @@
 
         <div class="messages" id="messages">
 
-            <div class="welcome">
-                🌎 Выбери чат или найди пользователя через поиск.
+            <div class="worldio-empty-workspace" id="emptyWorkspace">
+                <div class="empty-visual" aria-hidden="true">
+                    <span class="empty-particle empty-particle-a"></span>
+                    <span class="empty-particle empty-particle-b"></span>
+                    <span class="empty-particle empty-particle-c"></span>
+                    <span class="empty-particle empty-particle-d"></span>
+                    <div class="worldio-globe-wrap">
+                        <div class="worldio-globe-halo"></div>
+                        <div class="worldio-globe">
+                            <div class="worldio-globe-grid"></div>
+                            <div class="worldio-globe-shine"></div>
+                            <div class="worldio-globe-pin p1"></div>
+                            <div class="worldio-globe-pin p2"></div>
+                        </div>
+                        <div class="worldio-globe-orbit o1"><span></span></div>
+                        <div class="worldio-globe-orbit o2"><span></span></div>
+                    </div>
+                </div>
+                <div class="empty-profile-mini">
+                    <div class="empty-profile-avatar" id="emptyProfileAvatar">W</div>
+                    <div class="empty-profile-copy">
+                        <div class="empty-profile-name" id="emptyProfileName">Пользователь <span class="empty-profile-items" id="emptyProfileItems"></span></div>
+                        <div class="empty-profile-handle" id="emptyProfileHandle">@user</div>
+                    </div>
+                    <span class="empty-profile-online"><i></i>онлайн</span>
+                </div>
+                <div class="empty-copy">
+                    <div class="empty-eyebrow">WORLDIO</div>
+                    <h2>Твой мир начинается здесь</h2>
+                    <p>Найди человека, открой личную переписку или создай свою группу и канал.</p>
+                </div>
+                <div class="empty-actions">
+                    <button type="button" class="empty-action primary" onclick="openGlobalSearch()"><span>⌕</span>Найти человека</button>
+                    <button type="button" class="empty-action" onclick="openCreateChatModal()"><span>＋</span>Создать группу</button>
+                    <button type="button" class="empty-action" onclick="openCreateChatModal(); setTimeout(()=>setCreateChatType('channel'), 20)"><span>◉</span>Создать канал</button>
+                </div>
             </div>
 
         </div>
@@ -1301,6 +2024,7 @@
                 class="message-input"
                 id="messageInput"
                 type="text"
+                disabled
                 maxlength="500"
                 placeholder="Напиши сообщение..."
                 autocomplete="off"
@@ -1317,6 +2041,28 @@
         </div>
 
     </main>
+
+    <aside class="channel-side-panel" id="channelSidePanel">
+      <div class="side-panel-head">
+        <div><div class="side-panel-title">Настройки канала</div><div class="side-panel-sub">Оформление и управление публикациями</div></div>
+        <button class="side-close" type="button" onclick="closeChannelPanel()">×</button>
+      </div>
+      <div class="side-content">
+        <div class="side-channel-preview">
+          <div class="side-preview-cover" id="sidePreviewCover"></div>
+          <div class="side-preview-row"><div class="side-preview-avatar" id="sidePreviewAvatar">📡</div><div><div class="side-preview-name" id="sidePreviewName">Канал</div><div class="side-preview-sub" id="sidePreviewSub">Публичный канал</div></div></div>
+        </div>
+        <div class="side-section-label">Канал</div>
+        <label class="side-field-label">Название</label><input class="side-field" id="channelPanelName" maxlength="50">
+        <label class="side-field-label">Описание</label><textarea class="side-field" id="channelPanelDescription" maxlength="200" placeholder="О чём этот канал?"></textarea>
+        <label class="side-field-label">Аватар</label>
+        <div class="side-upload"><button type="button" onclick="document.getElementById('channelPanelAvatarInput').click()">🖼️ Загрузить</button><button type="button" onclick="removeChannelAvatar()">↺ Убрать</button></div>
+        <input id="channelPanelAvatarInput" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="handleChannelAvatarUpload(this)">
+        <label class="side-field-label">Акцент</label><div class="side-swatches" id="channelSideSwatches"></div>
+        <button class="side-save" type="button" onclick="saveChannelPanel()">Сохранить изменения</button>
+        <div class="side-status" id="channelPanelStatus"></div>
+      </div>
+    </aside>
 
 </div>
 
@@ -1361,80 +2107,145 @@
 </div>
 
 <!-- WORLDIO PROFILE MODALS -->
+
 <div class="worldio-modal-backdrop" id="profileModal" onclick="closeModalOnBackdrop(event,'profileModal')">
-    <div class="worldio-modal">
+  <div class="worldio-modal" style="max-width:650px">
+    <div class="modal-top">
+      <div><div class="modal-title">Мой профиль</div><div class="modal-subtitle">Профиль, коллекционные предметы и персонализация</div></div>
+      <button class="modal-close" onclick="closeWorldioModal('profileModal')">×</button>
+    </div>
+
+    <div class="worldio-tabs" id="profileTabs">
+      <button class="worldio-tab active" data-tab="profile" onclick="switchWorldioTab('profile','profileTabs','profilePane')">Профиль</button>
+      <button class="worldio-tab" data-tab="items" onclick="switchWorldioTab('items','profileTabs','profilePane')">Предметы</button>
+    </div>
+
+    <section class="worldio-tab-pane active" data-pane="profile" id="profilePane-profile">
+      <div class="worldio-profile-hero-v6">
+        <div class="tg-banner" id="profileBannerPreview">
+          <div class="tg-banner-tools">
+            <button class="tg-mini-btn" type="button" onclick="document.getElementById('bannerFileInput').click()" title="Изменить баннер">🖼️</button>
+            <button class="tg-mini-btn" type="button" onclick="removeProfileBanner()" title="Убрать баннер">✕</button>
+          </div>
+        </div>
+        <div class="worldio-profile-main-v6">
+          <div class="tg-avatar-wrap">
+            <div class="tg-big-avatar" id="profileModalAvatar">🌎</div>
+            <button class="tg-avatar-edit" type="button" onclick="document.getElementById('avatarFileInput').click()" title="Изменить аватар">✎</button>
+          </div>
+          <div class="worldio-profile-name-line">
+            <div class="tg-name" id="profileModalName">Пользователь</div>
+            <div class="worldio-profile-items-inline" id="profileModalItems"></div>
+          </div>
+          <div class="tg-username" id="profileModalHandle">@user</div>
+          <div class="tg-bio" id="profileModalBioPreview">О себе пока ничего нет.</div>
+          <div class="tg-online"><span class="presence-dot"></span><span>в сети</span></div>
+        </div>
+      </div>
+
+      <input id="avatarFileInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none" onchange="handleAvatarUpload(this)">
+      <input id="bannerFileInput" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="handleBannerUpload(this)">
+      <div class="tg-section-title">Фотографии</div>
+      <div class="tg-upload-card">
+        <button class="tg-upload-btn" type="button" onclick="document.getElementById('avatarFileInput').click()"><span class="tg-upload-icon">👤</span><span><div class="tg-upload-title">Аватар</div><div class="tg-upload-sub">PNG, JPG, WebP или GIF</div></span></button>
+        <button class="tg-upload-btn" type="button" onclick="document.getElementById('bannerFileInput').click()"><span class="tg-upload-icon">🖼️</span><span><div class="tg-upload-title">Баннер</div><div class="tg-upload-sub">Обложка профиля</div></span></button>
+      </div>
+      <div class="tg-preview" id="imageUploadStatus"></div>
+      <label class="field-label">Юзернейм</label>
+      <input class="worldio-field" id="profileUsernameInput" maxlength="20" placeholder="Например, controlbanda">
+      <label class="field-label">О себе</label>
+      <textarea class="worldio-field" id="profileBioInput" maxlength="160" rows="3" placeholder="Расскажи немного о себе" style="resize:vertical"></textarea>
+      <div class="tg-divider"></div>
+      <label class="field-label">Цвет баннера</label>
+      <div class="tg-cover-palette" id="coverPalette"></div>
+      <button class="tg-remove-btn" type="button" onclick="removeProfileBanner()">Удалить свою картинку баннера и вернуть градиент</button>
+    </section>
+
+    <section class="worldio-tab-pane" data-pane="items" id="profilePane-items">
+      <div class="worldio-mini-note">Выбери до 3 предметов. Они будут отображаться рядом с твоим ником в профиле и верхней панели Worldio.</div>
+      <div class="worldio-item-section">
+        <div class="tg-section-title" style="margin-top:14px">Коллекция</div>
+        <div class="worldio-item-grid" id="worldioItemGrid"></div>
+        <div class="worldio-equip-hint">Предметы — визуальные коллекционные аксессуары профиля Worldio. Они не являются криптовалютой или реальными NFT.</div>
+      </div>
+    </section>
+
+    <div class="save-status" id="profileSaveStatus"></div>
+    <div class="worldio-save-bar"><div class="modal-actions"><button class="modal-button secondary" onclick="closeWorldioModal('profileModal')">Отмена</button><button class="modal-button primary" onclick="saveWorldioProfile()">Сохранить профиль</button></div></div>
+  </div>
+</div>
+
+<div class="worldio-modal-backdrop" id="chatInfoModal" onclick="closeModalOnBackdrop(event,'chatInfoModal')">
+    <div class="worldio-modal chat-info-modal">
         <div class="modal-top">
-            <div><div class="modal-title">Мой профиль</div><div class="modal-subtitle">Как в Telegram — аватар, баннер, имя и описание</div></div>
-            <button class="modal-close" onclick="closeWorldioModal('profileModal')">×</button>
+            <div><div class="modal-title">Информация о чате</div><div class="modal-subtitle">Подробности текущей переписки</div></div>
+            <button class="modal-close" onclick="closeWorldioModal('chatInfoModal')">×</button>
         </div>
-
-        <div class="tg-profile-hero">
-            <div class="tg-banner" id="profileBannerPreview">
-                <div class="tg-banner-tools">
-                    <button class="tg-mini-btn" type="button" onclick="document.getElementById('bannerFileInput').click()" title="Изменить баннер">🖼️</button>
-                    <button class="tg-mini-btn" type="button" onclick="removeProfileBanner()" title="Убрать баннер">✕</button>
-                </div>
-            </div>
-            <div class="tg-profile-main">
-                <div class="tg-avatar-wrap">
-                    <div class="tg-big-avatar" id="profileModalAvatar">🌎</div>
-                    <button class="tg-avatar-edit" type="button" onclick="document.getElementById('avatarFileInput').click()" title="Изменить аватар">✎</button>
-                </div>
-                <div class="tg-name-row"><div class="tg-name" id="profileModalName">Пользователь</div></div>
-                <div class="tg-username" id="profileModalHandle">@user</div>
-                <div class="tg-bio" id="profileModalBioPreview">О себе пока ничего нет.</div>
-                <div class="tg-online">● онлайн</div>
+        <div class="chat-info-hero">
+            <div class="chat-info-hero-avatar" id="chatInfoAvatar">W</div>
+            <div class="chat-info-hero-copy">
+                <div class="chat-info-name" id="chatInfoName">Пользователь</div>
+                <div class="chat-info-type" id="chatInfoType">Личная переписка</div>
             </div>
         </div>
-
-        <input id="avatarFileInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none" onchange="handleAvatarUpload(this)">
-        <input id="bannerFileInput" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="handleBannerUpload(this)">
-
-        <div class="tg-section-title">Фотографии</div>
-        <div class="tg-upload-card">
-            <button class="tg-upload-btn" type="button" onclick="document.getElementById('avatarFileInput').click()">
-                <span class="tg-upload-icon">👤</span><span><div class="tg-upload-title">Аватар</div><div class="tg-upload-sub">Своя фотография</div></span>
-            </button>
-            <button class="tg-upload-btn" type="button" onclick="document.getElementById('bannerFileInput').click()">
-                <span class="tg-upload-icon">🖼️</span><span><div class="tg-upload-title">Баннер</div><div class="tg-upload-sub">Обложка профиля</div></span>
-            </button>
+        <div class="chat-info-grid">
+            <div class="chat-info-stat"><span>Тип</span><strong id="chatInfoType2">—</strong></div>
+            <div class="chat-info-stat"><span>Участники</span><strong id="chatInfoMembers">—</strong></div>
         </div>
-        <div class="tg-preview" id="imageUploadStatus"></div>
-
-        <label class="field-label">Юзернейм</label>
-        <input class="worldio-field" id="profileUsernameInput" maxlength="20" placeholder="Например, controlbanda">
-        <label class="field-label">О себе</label>
-        <textarea class="worldio-field" id="profileBioInput" maxlength="160" rows="3" placeholder="Расскажи немного о себе" style="resize:vertical"></textarea>
-
-        <div class="tg-divider"></div>
-        <label class="field-label">Цвет баннера</label>
-        <div class="tg-cover-palette" id="coverPalette"></div>
-        <button class="tg-remove-btn" type="button" onclick="removeProfileBanner()">Удалить свою картинку баннера и вернуть градиент</button>
-
-        <div class="save-status" id="profileSaveStatus"></div>
-        <div class="modal-actions"><button class="modal-button secondary" onclick="closeWorldioModal('profileModal')">Отмена</button><button class="modal-button primary" onclick="saveWorldioProfile()">Сохранить профиль</button></div>
+        <div class="modal-actions"><button class="modal-button secondary" onclick="closeWorldioModal('chatInfoModal')">Закрыть</button></div>
     </div>
 </div>
 
+
 <div class="worldio-modal-backdrop" id="settingsModal" onclick="closeModalOnBackdrop(event,'settingsModal')">
-    <div class="worldio-modal">
-        <div class="modal-top">
-            <div><div class="modal-title">Настройки</div><div class="modal-subtitle">Настрой Worldio под себя</div></div>
-            <button class="modal-close" onclick="closeWorldioModal('settingsModal')">×</button>
-        </div>
-        <div class="settings-section" style="border-top:0;padding-top:0;margin-top:0">
-            <div class="setting-row"><div class="setting-main"><div class="setting-icon">🔔</div><div><div class="setting-title">Уведомления</div><div class="setting-desc">Показывать уведомления о новых сообщениях</div></div></div><label class="switch"><input type="checkbox" id="notificationsToggle" checked onchange="saveSetting('notifications',this.checked)"><span class="slider"></span></label></div>
-            <div class="setting-row"><div class="setting-main"><div class="setting-icon">✨</div><div><div class="setting-title">Анимации</div><div class="setting-desc">Красивые переходы интерфейса Worldio</div></div></div><label class="switch"><input type="checkbox" id="animationsToggle" checked onchange="saveSetting('animations',this.checked)"><span class="slider"></span></label></div>
-            <div class="setting-row"><div class="setting-main"><div class="setting-icon">🔊</div><div><div class="setting-title">Звуки</div><div class="setting-desc">Звуковой сигнал при новых сообщениях</div></div></div><label class="switch"><input type="checkbox" id="soundsToggle" onchange="saveSetting('sounds',this.checked)"><span class="slider"></span></label></div>
-        </div>
-        <div class="settings-section">
-            <div class="setting-row"><div class="setting-main"><div class="setting-icon">👤</div><div><div class="setting-title">Профиль</div><div class="setting-desc">Имя, юзернейм и аватар</div></div></div><button class="modal-button secondary" style="flex:0 0 auto;padding:9px 12px" onclick="openProfile(event)">Изменить</button></div>
-        </div>
-        <div class="settings-section">
-            <div class="setting-row"><div class="setting-main"><div class="setting-icon">🌎</div><div><div class="setting-title">Worldio</div><div class="setting-desc">Твой маленький мир общения</div></div></div><span style="font-size:11px;color:#59677d">v1.0</span></div>
-        </div>
-        <button class="danger-button" onclick="signOutWorldio(event)">Выйти из аккаунта</button>
+  <div class="worldio-modal settings-modal" style="max-width:650px">
+    <div class="modal-top">
+      <div><div class="modal-title">Настройки Worldio</div><div class="modal-subtitle">Персонализация, конфиденциальность и чаты</div></div>
+      <button class="modal-close" onclick="closeWorldioModal('settingsModal')">×</button>
     </div>
+
+    <div class="worldio-tabs" id="settingsTabs">
+      <button class="worldio-tab active" data-tab="general" onclick="switchWorldioSettingsTab('general')">Основное</button>
+      <button class="worldio-tab" data-tab="privacy" onclick="switchWorldioSettingsTab('privacy')">Конфиденциальность</button>
+      <button class="worldio-tab" data-tab="chats" onclick="switchWorldioSettingsTab('chats')">Чаты</button>
+    </div>
+
+    <section class="worldio-tab-pane active" data-settings-pane="general">
+      <div class="settings-group-title">Оформление</div>
+      <div class="settings-section settings-card">
+        <div class="setting-row"><div class="setting-main"><div class="setting-icon">🎨</div><div><div class="setting-title">Фон приложения</div><div class="setting-desc">Переключай тёмное и светлое оформление</div></div></div>
+          <div class="theme-choice"><button type="button" class="theme-btn" data-theme-choice="dark" onclick="setTheme('dark')">● Тёмная</button><button type="button" class="theme-btn" data-theme-choice="light" onclick="setTheme('light')">☼ Светлая</button></div>
+        </div>
+        <div class="setting-row"><div class="setting-main"><div class="setting-icon">✨</div><div><div class="setting-title">Анимации</div><div class="setting-desc">Переходы, нажатия и движения элементов</div></div></div><label class="switch"><input type="checkbox" id="animationsToggle" checked onchange="saveSetting('animations',this.checked)"><span class="slider"></span></label></div>
+        <div class="setting-row"><div class="setting-main"><div class="setting-icon">🔔</div><div><div class="setting-title">Уведомления</div><div class="setting-desc">Уведомления о новых сообщениях</div></div></div><label class="switch"><input type="checkbox" id="notificationsToggle" checked onchange="saveSetting('notifications',this.checked)"><span class="slider"></span></label></div>
+        <div class="setting-row"><div class="setting-main"><div class="setting-icon">🔊</div><div><div class="setting-title">Звуки</div><div class="setting-desc">Звук при новых сообщениях</div></div></div><label class="switch"><input type="checkbox" id="soundsToggle" onchange="saveSetting('sounds',this.checked)"><span class="slider"></span></label></div>
+      </div>
+    </section>
+
+    <section class="worldio-tab-pane" data-settings-pane="privacy">
+      <div class="settings-group-title">Кто может видеть и писать</div>
+      <div class="worldio-setting-grid">
+        <div class="worldio-preference"><div class="worldio-pref-copy"><div class="worldio-pref-title">Статус «в сети»</div><div class="worldio-pref-desc">Управляет отображением твоего онлайна в интерфейсе Worldio</div></div><select class="worldio-select" id="privacyOnline"><option value="everyone">Все</option><option value="contacts">Контакты</option><option value="nobody">Никто</option></select></div>
+        <div class="worldio-preference"><div class="worldio-pref-copy"><div class="worldio-pref-title">Кто может писать первым</div><div class="worldio-pref-desc">Настройка интерфейса запросов на переписку</div></div><select class="worldio-select" id="privacyMessages"><option value="everyone">Все</option><option value="contacts">Контакты</option><option value="nobody">Никто</option></select></div>
+        <div class="worldio-preference"><div class="worldio-pref-copy"><div class="worldio-pref-title">Добавление в группы</div><div class="worldio-pref-desc">Выбери, кто может приглашать тебя в группы</div></div><select class="worldio-select" id="privacyGroups"><option value="everyone">Все</option><option value="contacts">Контакты</option><option value="nobody">Никто</option></select></div>
+        <div class="worldio-preference"><div class="worldio-pref-copy"><div class="worldio-pref-title">Показывать «прочитано»</div><div class="worldio-pref-desc">Сохранение предпочтения для будущей системы статусов</div></div><label class="switch"><input type="checkbox" id="privacyReadReceipts" checked><span class="slider"></span></label></div>
+      </div>
+      <div class="worldio-mini-note" style="margin-top:10px">Права доступа на сервере по этим параметрам пока не меняются автоматически. Для реального ограничения входящих сообщений нужны отдельные RLS-правила Supabase.</div>
+    </section>
+
+    <section class="worldio-tab-pane" data-settings-pane="chats">
+      <div class="settings-group-title">Поведение чатов</div>
+      <div class="worldio-setting-grid">
+        <div class="worldio-preference"><div class="worldio-pref-copy"><div class="worldio-pref-title">Enter отправляет сообщение</div><div class="worldio-pref-desc">Когда выключено, Enter не отправляет текст</div></div><label class="switch"><input type="checkbox" id="chatEnterSend" checked><span class="slider"></span></label></div>
+        <div class="worldio-preference"><div class="worldio-pref-copy"><div class="worldio-pref-title">Показывать аватарки сообщений</div><div class="worldio-pref-desc">Можно освободить место в ленте сообщений</div></div><label class="switch"><input type="checkbox" id="chatShowAvatars" checked><span class="slider"></span></label></div>
+        <div class="worldio-preference"><div class="worldio-pref-copy"><div class="worldio-pref-title">Компактный режим</div><div class="worldio-pref-desc">Меньше отступов между сообщениями</div></div><label class="switch"><input type="checkbox" id="chatCompact"><span class="slider"></span></label></div>
+        <div class="worldio-preference"><div class="worldio-pref-copy"><div class="worldio-pref-title">Анимация сообщений</div><div class="worldio-pref-desc">Плавное появление новых сообщений</div></div><label class="switch"><input type="checkbox" id="chatMessageAnimations" checked><span class="slider"></span></label></div>
+      </div>
+    </section>
+
+    <div class="save-status" id="settingsSaveStatus"></div>
+    <div class="worldio-save-bar"><div class="modal-actions"><button class="modal-button secondary" onclick="closeWorldioModal('settingsModal')">Закрыть</button><button class="modal-button primary" onclick="saveWorldioSettings()">Сохранить настройки</button></div></div>
+  </div>
 </div>
 
 <script>
@@ -1528,7 +2339,8 @@
             avatar: localStorage.getItem("worldio_avatar") || "🌎",
             color: localStorage.getItem("worldio_avatar_color") || "linear-gradient(135deg,#2563eb,#7c3aed)",
             bio: localStorage.getItem("worldio_bio") || "",
-            banner: localStorage.getItem("worldio_banner") || ""
+            banner: localStorage.getItem("worldio_banner") || "",
+            bannerColor: localStorage.getItem("worldio_banner_color") || "linear-gradient(135deg,#2563eb,#7c3aed)"
         };
     }
 
@@ -1560,8 +2372,12 @@
         return "@" + String(name || "user").toLowerCase().replace(/[^a-z0-9а-яё_]/gi, "").slice(0,20);
     }
 
-    function applyProfileUI() {
+    function applyProfileUILegacy() {
         const a = getAvatarData();
+        const topAvatar = document.getElementById("topProfileAvatar");
+        const topName = document.getElementById("topProfileName");
+        if (topAvatar) setAvatarElement(topAvatar, a.avatar || "W", a.color);
+        if (topName) topName.textContent = username || "Пользователь";
         const profileAvatar = document.getElementById("profileAvatar");
         const profileName = document.getElementById("profileName");
         const profileHandle = document.getElementById("profileHandle");
@@ -1580,6 +2396,14 @@
         if (profileHandle) profileHandle.textContent = getHandle();
         if (menuName) menuName.textContent = username || "Пользователь";
         if (menuHandle) menuHandle.textContent = getHandle();
+        applyIdleHeader();
+        const emptyAvatar = document.getElementById("emptyProfileAvatar");
+        if (emptyAvatar) setAvatarElement(emptyAvatar, a.avatar || "W", a.color);
+        const emptyName = document.getElementById("emptyProfileName");
+        const emptyHandle = document.getElementById("emptyProfileHandle");
+        if (emptyName) emptyName.textContent = username || "Пользователь";
+        if (emptyHandle) emptyHandle.textContent = getHandle();
+        applyBannerVisual(a.bannerColor, a.banner);
     }
 
     function loadUser() {
@@ -1595,6 +2419,16 @@
     }
 
 
+    function applyIdleHeader(){
+        const header = document.getElementById("headerAvatar");
+        const a = getAvatarData();
+        if (header) setAvatarElement(header, a.avatar || "W", a.color);
+        const name = document.getElementById("headerName");
+        const status = document.getElementById("headerStatus");
+        if (name) name.textContent = username || "Пользователь";
+        if (status) status.textContent = getHandle() + " • онлайн";
+    }
+
     async function initializeWorldioData() {
         const { data } = await supabaseClient.auth.getSession();
         const user = data.session?.user;
@@ -1602,11 +2436,12 @@
 
         currentUserId = user.id;
         username = user.user_metadata?.username || user.email?.split("@")[0] || "Пользователь";
+        hydrateWorldioPreferencesFromMetadata(user.user_metadata || {});
         localStorage.setItem("worldio_username", username);
 
         const { data: profile } = await supabaseClient
             .from("profiles")
-            .select("id,username,bio,avatar,avatar_color,banner")
+            .select("id,username,bio,avatar,avatar_color,banner,banner_color")
             .eq("id", currentUserId)
             .maybeSingle();
         if (profile?.username) username = profile.username;
@@ -1614,6 +2449,8 @@
         if (profile?.avatar) localStorage.setItem("worldio_avatar", profile.avatar);
         if (profile?.avatar_color) localStorage.setItem("worldio_avatar_color", profile.avatar_color);
         if (profile?.banner != null) localStorage.setItem("worldio_banner", profile.banner);
+        if (profile?.banner_color) localStorage.setItem("worldio_banner_color", profile.banner_color);
+        if (profile?.banner_color) localStorage.setItem("worldio_banner_color", profile.banner_color);
         await supabaseClient
             .from("profiles")
             .upsert({ id: currentUserId, username, bio: localStorage.getItem("worldio_bio") || "", avatar: localStorage.getItem("worldio_avatar") || "🌎", avatar_color: localStorage.getItem("worldio_avatar_color") || "linear-gradient(135deg,#2563eb,#7c3aed)", banner: localStorage.getItem("worldio_banner") || "" }, { onConflict: "id" });
@@ -1631,6 +2468,24 @@
         "linear-gradient(135deg,#14b8a6,#3b82f6)","linear-gradient(135deg,#8b5cf6,#ec4899)"
     ];
 
+    function getSavedTheme(){ return localStorage.getItem("worldio_theme") || "dark"; }
+    function applyTheme(theme){
+        const safe = theme === "light" ? "light" : "dark";
+        document.body.classList.toggle("theme-light", safe === "light");
+        localStorage.setItem("worldio_theme", safe);
+        document.documentElement.style.colorScheme = safe;
+        document.querySelectorAll(".theme-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.themeChoice === safe));
+    }
+    function setTheme(theme){ applyTheme(theme); }
+    function applyMotionSetting(){
+        const enabled=localStorage.getItem("worldio_animations")!=="false";
+        document.body.classList.toggle("worldio-no-animations",!enabled);
+        const toggle=document.getElementById("animationsToggle");
+        if(toggle) toggle.checked=enabled;
+    }
+    applyTheme(getSavedTheme());
+    applyMotionSetting();
+
     function toggleProfileMenu(event){
         if (event) event.stopPropagation();
         document.getElementById("profileMenu")?.classList.toggle("open");
@@ -1643,16 +2498,57 @@
     function fillProfilePickers(){
         const a=getAvatarData();
         const cp=document.getElementById("coverPalette");
-        if(cp) cp.innerHTML=WORLDIO_COVER_COLORS.map(x=>`<button type="button" class="tg-cover-choice ${x===a.color&&!a.banner?'selected':''}" style="background:${x}" onclick="chooseCoverColor(this,'${x.replace(/'/g,"\\'")}')"></button>`).join("");
+        if(cp){
+            cp.innerHTML=WORLDIO_COVER_COLORS.map(x=>{
+                const safe=x.replace(/"/g,"&quot;");
+                const js=x.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+                return `<button type="button" data-value="${safe}" class="tg-cover-choice ${x===a.bannerColor&&!a.banner?'selected':''}" style="--cover-bg:${safe};background:${safe}" onclick="chooseCoverColor(this,'${js}')"></button>`;
+            }).join("");
+        }
+    }
+    function applyBannerVisual(value, image){
+        const preview=document.getElementById("profileBannerPreview");
+        const hero=document.querySelector(".tg-profile-hero");
+        if(!preview || !hero) return;
+        const fallback=value || WORLDIO_COVER_COLORS[0];
+        const hasImage=typeof image === "string" && image.trim() !== "";
+        const target=hasImage ? `url("${image}")` : fallback;
+        preview.style.backgroundImage=target;
+        preview.style.backgroundSize="cover";
+        preview.style.backgroundPosition="center";
+        preview.style.backgroundRepeat="no-repeat";
+        preview.style.backgroundColor="#0d1522";
+        hero.style.setProperty("--tg-banner-bg",target);
+        hero.style.setProperty("--tg-banner-image",target);
     }
 
-    function chooseCoverColor(btn,value){
+    async function chooseCoverColor(btn,value){
         document.querySelectorAll(".tg-cover-choice").forEach(x=>x.classList.remove("selected"));
         btn.classList.add("selected");
-        localStorage.setItem("worldio_avatar_color",value);
+        localStorage.setItem("worldio_banner_color",value);
         localStorage.removeItem("worldio_banner");
-        const preview=document.getElementById("profileBannerPreview");
-        if(preview){preview.style.background=value; preview.style.backgroundImage="none";}
+        applyBannerVisual(value, "");
+        const status=document.getElementById("imageUploadStatus");
+        if(status) status.textContent="Цвет баннера выбран ✓ Сохраняем...";
+        try{
+          const {data:{user}}=await supabaseClient.auth.getUser();
+          if(user){
+            const {error}=await supabaseClient.from("profiles").upsert({
+              id:user.id,
+              username:username||user.user_metadata?.username||user.email?.split("@")[0]||"Пользователь",
+              bio:localStorage.getItem("worldio_bio")||"",
+              avatar:localStorage.getItem("worldio_avatar")||"🌎",
+              avatar_color:localStorage.getItem("worldio_avatar_color")||"linear-gradient(135deg,#2563eb,#7c3aed)",
+              banner:"",
+              banner_color:value
+            },{onConflict:"id"});
+            if(error)throw error;
+          }
+          if(status)status.textContent="Цвет баннера сохранён ✓";
+        }catch(e){
+          console.error("chooseCoverColor",e);
+          if(status)status.textContent="Цвет выбран, но не сохранён в базу";
+        }
     }
 
     function compressImage(file,maxW,maxH,quality=0.82){
@@ -1667,6 +2563,36 @@
                     canvas.height=Math.max(1,Math.round(img.height*scale));
                     const ctx=canvas.getContext("2d");
                     ctx.drawImage(img,0,0,canvas.width,canvas.height);
+                    resolve(canvas.toDataURL("image/jpeg",quality));
+                };
+                img.onerror=reject; img.src=reader.result;
+            };
+            reader.onerror=reject; reader.readAsDataURL(file);
+        });
+    }
+
+    function compressBannerImage(file,width=1400,height=520,quality=0.82){
+        return new Promise((resolve,reject)=>{
+            const reader=new FileReader();
+            reader.onload=()=>{
+                const img=new Image();
+                img.onload=()=>{
+                    const targetRatio=width/height;
+                    const sourceRatio=img.width/img.height;
+                    let cropW=img.width, cropH=img.height, sx=0, sy=0;
+                    if(sourceRatio>targetRatio){
+                        cropW=Math.round(img.height*targetRatio);
+                        sx=Math.round((img.width-cropW)/2);
+                    }else{
+                        cropH=Math.round(img.width/targetRatio);
+                        sy=Math.round((img.height-cropH)/2);
+                    }
+                    const canvas=document.createElement("canvas");
+                    canvas.width=width; canvas.height=height;
+                    const ctx=canvas.getContext("2d");
+                    ctx.imageSmoothingEnabled=true;
+                    ctx.imageSmoothingQuality="high";
+                    ctx.drawImage(img,sx,sy,cropW,cropH,0,0,width,height);
                     resolve(canvas.toDataURL("image/jpeg",quality));
                 };
                 img.onerror=reject; img.src=reader.result;
@@ -1690,25 +2616,72 @@
     }
 
     async function handleBannerUpload(input){
-        const file=input.files?.[0]; if(!file) return;
-        if(file.size>12*1024*1024){ alert("Баннер слишком большой. Выбери файл до 12 МБ."); input.value=""; return; }
-        const status=document.getElementById("imageUploadStatus"); if(status) status.textContent="Обрабатываем баннер...";
-        try{
-            const data=await compressImage(file,1400,500,0.80);
-            localStorage.setItem("worldio_banner",data);
-            const preview=document.getElementById("profileBannerPreview");
-            if(preview){preview.style.background=`url("${data}") center/cover no-repeat`;}
-            if(status) status.textContent="Баннер выбран ✓ Нажми «Сохранить профиль»";
-        }catch(e){ if(status) status.textContent="Не удалось обработать изображение"; }
-        input.value="";
+      const file=input.files?.[0];
+      if(!file) return;
+      if(!file.type.startsWith("image/")){
+        alert("Выбери изображение."); input.value=""; return;
+      }
+      if(file.size>8*1024*1024){
+        alert("Баннер слишком большой. Выбери файл до 8 МБ."); input.value=""; return;
+      }
+      const status=document.getElementById("imageUploadStatus");
+      if(status) status.textContent="Загружаем баннер...";
+
+      const previewUrl=URL.createObjectURL(file);
+      applyBannerVisual(localStorage.getItem("worldio_banner_color")||WORLDIO_COVER_COLORS[0],previewUrl);
+
+      try{
+        const {data:{user}}=await supabaseClient.auth.getUser();
+        if(!user) throw new Error("Сессия пользователя не найдена");
+
+        const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"") || "jpg";
+        const storage=supabaseClient.storage.from("worldio-banners");
+        const path=`${user.id}/banner.${ext}`;
+        const {error:uploadError}=await storage.upload(path,file,{upsert:true,contentType:file.type,cacheControl:"3600"});
+        if(uploadError) throw uploadError;
+        const {data:urlData}=storage.getPublicUrl(path);
+        const publicUrl=urlData?.publicUrl;
+        if(!publicUrl) throw new Error("Не удалось получить URL баннера");
+
+        const color=localStorage.getItem("worldio_banner_color")||WORLDIO_COVER_COLORS[0];
+        const {error:profileError}=await supabaseClient.from("profiles").update({banner:publicUrl,banner_color:color}).eq("id",user.id);
+        if(profileError) throw profileError;
+
+        localStorage.setItem("worldio_banner",publicUrl);
+        localStorage.setItem("worldio_banner_color",color);
+        localStorage.removeItem("worldio_banner_preview");
+        applyBannerVisual(color,publicUrl);
+        if(status) status.textContent="Баннер установлен и сохранён ✓";
+        setTimeout(()=>URL.revokeObjectURL(previewUrl),2000);
+      }catch(e){
+        console.error("handleBannerUpload",e);
+        if(status) status.textContent="Не удалось сохранить баннер: "+(e?.message||"проверь Supabase Storage");
+      }finally{ input.value=""; }
     }
 
-    function removeProfileBanner(){
-        localStorage.removeItem("worldio_banner");
-        const a=getAvatarData();
-        const preview=document.getElementById("profileBannerPreview");
-        if(preview){preview.style.background=a.color;preview.style.backgroundImage="none";}
-        document.querySelectorAll(".tg-cover-choice").forEach(x=>x.classList.toggle("selected",x.style.background===a.color));
+    async function removeProfileBanner(){
+      const a=getAvatarData();
+      const color=a.bannerColor||WORLDIO_COVER_COLORS[0];
+      const status=document.getElementById("imageUploadStatus");
+      localStorage.removeItem("worldio_banner");
+      localStorage.removeItem("worldio_banner_preview");
+      localStorage.setItem("worldio_banner_color",color);
+      applyBannerVisual(color,"");
+      document.querySelectorAll(".tg-cover-choice").forEach(x=>x.classList.remove("selected"));
+      const selected=[...document.querySelectorAll(".tg-cover-choice")].find(x=>x.dataset.value===color);
+      if(selected) selected.classList.add("selected");
+      if(status) status.textContent="Удаляем...";
+      try{
+        const {data:{user}}=await supabaseClient.auth.getUser();
+        if(user){
+          const {error}=await supabaseClient.from("profiles").update({banner:"",banner_color:color}).eq("id",user.id);
+          if(error) throw error;
+        }
+        if(status) status.textContent="Баннер удалён ✓";
+      }catch(e){
+        console.error("removeProfileBanner",e);
+        if(status) status.textContent="Баннер убран, но база не обновилась: "+(e?.message||"");
+      }
     }
 
     function openProfile(event){
@@ -1720,7 +2693,7 @@
         const av=document.getElementById("profileModalAvatar");
         if(a.avatar?.startsWith("data:image")){av.style.background=`url("${a.avatar}") center/cover no-repeat`;av.textContent="";}
         else {av.style.background=a.color;av.textContent=a.avatar;}
-        document.getElementById("profileBannerPreview").style.background=a.banner ? `url("${a.banner}") center/cover no-repeat` : a.color;
+        applyBannerVisual(a.bannerColor, a.banner);
         document.getElementById("profileModalName").textContent=username||"Пользователь";
         document.getElementById("profileModalHandle").textContent=getHandle();
         document.getElementById("profileModalBioPreview").textContent=a.bio||"О себе пока ничего нет.";
@@ -1736,10 +2709,15 @@
         document.getElementById("notificationsToggle").checked=localStorage.getItem("worldio_notifications")!=="false";
         document.getElementById("animationsToggle").checked=localStorage.getItem("worldio_animations")!=="false";
         document.getElementById("soundsToggle").checked=localStorage.getItem("worldio_sounds")==="true";
+        applyTheme(getSavedTheme());
+        applyMotionSetting();
         document.getElementById("settingsModal").classList.add("open");
     }
 
-    function saveSetting(key,value){ localStorage.setItem("worldio_"+key,String(value)); }
+    function saveSetting(key,value){
+        localStorage.setItem("worldio_"+key,String(value));
+        if(key==="animations") document.body.classList.toggle("worldio-no-animations",!value);
+    }
 
     async function saveWorldioProfile(){
         const input=document.getElementById("profileUsernameInput");
@@ -1749,11 +2727,12 @@
         const status=document.getElementById("profileSaveStatus"); status.textContent="Сохраняем...";
         username=newName;
         localStorage.setItem("worldio_username",username); localStorage.setItem("worldio_bio",bio);
+        localStorage.setItem("worldio_banner_color",getAvatarData().bannerColor || WORLDIO_COVER_COLORS[0]);
         const avatar=getAvatarData();
         try{
             const {data:{user}}=await supabaseClient.auth.getUser();
             if(user){
-                const {error}=await supabaseClient.from("profiles").upsert({id:user.id,username,bio,avatar:avatar.avatar,avatar_color:avatar.color,banner:avatar.banner||""},{onConflict:"id"});
+                const {error}=await supabaseClient.from("profiles").upsert({id:user.id,username,bio,avatar:avatar.avatar,avatar_color:avatar.color,banner:avatar.banner||"",banner_color:avatar.bannerColor||WORLDIO_COVER_COLORS[0]||WORLDIO_COVER_COLORS[0]},{onConflict:"id"});
                 if(error) throw error;
                 await supabaseClient.auth.updateUser({data:{username}});
             }
@@ -1764,6 +2743,38 @@
             status.textContent="Профиль сохранён ✓";
             setTimeout(()=>status.textContent="",1800);
         }catch(e){ console.error(e); status.textContent="Не удалось сохранить профиль"; }
+    }
+
+    function openCurrentChatSearch(){
+        if(currentChatId){
+            openGlobalSearch();
+            const input=document.getElementById("globalSearchInput");
+            if(input){input.placeholder="Поиск человека или чата..."; setTimeout(()=>input.focus(),30);}
+        }else{
+            openGlobalSearch();
+        }
+    }
+
+    async function openChatInfo(){
+        const modal=document.getElementById("chatInfoModal");
+        if(!modal) return;
+        const name=document.getElementById("chatInfoName");
+        const type=document.getElementById("chatInfoType");
+        const type2=document.getElementById("chatInfoType2");
+        const members=document.getElementById("chatInfoMembers");
+        const avatar=document.getElementById("chatInfoAvatar");
+        const chat=currentChatId ? chatStore.get(currentChatId) : null;
+        const label=chat ? chatTypeLabel(chat.type) : "Личная область";
+        const memberCount=chat?.member_count || chat?.members_count || chat?.chat_members?.length || (chat?.type === "direct" ? 2 : "—");
+        if(name) name.textContent=currentChatName || "Worldio";
+        if(type) type.textContent=label;
+        if(type2) type2.textContent=label;
+        if(members) members.textContent=memberCount;
+        if(avatar){
+            if(chat && chat.avatar){ setAvatarElement(avatar,chat.avatar,chat.avatar_color); }
+            else { const a=getAvatarData(); setAvatarElement(avatar,a.avatar||"W",a.color); }
+        }
+        modal.classList.add("open");
     }
 
     async function signOutWorldio(event){
@@ -1888,24 +2899,72 @@
         renderChatList();
     }
 
+    function renderEmptyWorkspace() {
+        const messages = document.getElementById("messages");
+        if (!messages) return;
+        const a = getAvatarData();
+        const avatar = document.getElementById("emptyProfileAvatar");
+        const name = document.getElementById("emptyProfileName");
+        const handle = document.getElementById("emptyProfileHandle");
+        if (avatar) setAvatarElement(avatar, a.avatar || "W", a.color);
+        if (name) name.textContent = username || "Пользователь";
+        if (handle) handle.textContent = getHandle();
+        const input = document.getElementById("messageInput");
+        if (input) { input.disabled = true; input.placeholder = "Сначала выбери чат..."; }
+    }
+
     function renderMessages() {
         const messages = document.getElementById("messages");
         if (!messages) return;
         messages.innerHTML = "";
-        const list = messageCache[currentChatId] || [];
-
         if (!currentChatId) {
-            const welcome = document.createElement("div");
-            welcome.className = "welcome";
-            welcome.textContent = "🌎 Выбери чат или найди пользователя через поиск.";
-            messages.appendChild(welcome);
+            const wrapper = document.createElement("div");
+            wrapper.className = "worldio-empty-workspace";
+            wrapper.id = "emptyWorkspace";
+            wrapper.innerHTML = `
+                <div class="empty-visual" aria-hidden="true">
+                    <span class="empty-particle empty-particle-a"></span><span class="empty-particle empty-particle-b"></span><span class="empty-particle empty-particle-c"></span>
+                    <div class="empty-core-orb"><span></span></div>
+                </div>
+                <div class="empty-profile-mini">
+                    <div class="empty-profile-avatar" id="emptyProfileAvatar">W</div>
+                    <div class="empty-profile-copy"><div class="empty-profile-name" id="emptyProfileName">Пользователь</div><div class="empty-profile-handle" id="emptyProfileHandle">@user</div></div>
+                    <span class="empty-profile-online"><i></i>онлайн</span>
+                </div>
+                <div class="empty-copy"><div class="empty-eyebrow">WORLDIO</div><h2>Твой мир начинается здесь</h2><p>Найди человека, открой личную переписку или создай свою группу и канал.</p></div>
+                <div class="empty-actions">
+                    <button type="button" class="empty-action primary" onclick="openGlobalSearch()"><span>⌕</span>Найти человека</button>
+                    <button type="button" class="empty-action" onclick="openCreateChatModal()"><span>＋</span>Создать группу</button>
+                    <button type="button" class="empty-action" onclick="openCreateChatModal(); setTimeout(()=>setCreateChatType('channel'), 20)"><span>◉</span>Создать канал</button>
+                </div>`;
+            messages.appendChild(wrapper);
+            renderEmptyWorkspace();
+            applyIdleHeader();
             return;
         }
 
+        const input = document.getElementById("messageInput");
+        if (input) { input.disabled = false; input.placeholder = currentChatType === "channel" ? "Напиши пост..." : "Напиши сообщение..."; }
+
+        const chat = chatStore.get(currentChatId);
+        const list = messageCache[currentChatId] || [];
+        if (currentChatType === "channel" && chat) {
+            const hero = document.createElement("div");
+            hero.className = "worldio-channel-hero";
+            const avatarHtml = chat.avatar && String(chat.avatar).startsWith("data:image") ? `<img src="${chat.avatar}" alt="">` : (chat.avatar || "📡");
+            hero.innerHTML = `<div class="worldio-channel-cover"></div><div class="worldio-channel-main"><div class="worldio-channel-avatar" style="background:${chat.avatar_color||'linear-gradient(135deg,#21caff,#7b4dff)'}">${avatarHtml}</div><div class="worldio-channel-copy"><div class="worldio-channel-name">${escapeText(chat.name||'Канал')}</div><div class="worldio-channel-sub">${escapeText(chat.description||'Публичный канал')} · ${chat.owner_id===currentUserId?'владелец':'подписка'}</div></div><div class="worldio-channel-actions">${chat.owner_id===currentUserId?'<button class="worldio-channel-action" type="button" onclick="openChannelPanel()">⚙ Настройки</button>':''}</div></div>`;
+            messages.appendChild(hero);
+            if (chat.owner_id === currentUserId) {
+              const composer = document.createElement("div");
+              composer.className = "worldio-channel-composer";
+              composer.innerHTML = `<div class="composer-icon">✦</div><div class="composer-text">Опубликовать пост в ${escapeText(chat.name||'канал')}…</div><button class="composer-send" type="button" onclick="focusMessageComposer()">➤</button>`;
+              messages.appendChild(composer);
+            }
+        }
         if (!list.length) {
             const welcome = document.createElement("div");
             welcome.className = "welcome";
-            welcome.textContent = "💬 Пока сообщений нет. Напиши первым!";
+            welcome.textContent = currentChatType === "channel" ? "Пока нет публикаций. Опубликуй первый пост!" : "💬 Пока сообщений нет. Напиши первым!";
             messages.appendChild(welcome);
             return;
         }
@@ -1913,31 +2972,31 @@
         list.forEach(item => {
             const row = document.createElement("div");
             row.className = "message-row" + (item.user_id === currentUserId ? " me" : "");
-
             const avatar = document.createElement("div");
             avatar.className = "message-avatar";
             const isMe = item.user_id === currentUserId;
             const avatarData = isMe ? getAvatarData() : { avatar: item.profiles?.avatar || "🌎", color: item.profiles?.avatar_color || "linear-gradient(135deg,#2563eb,#7c3aed)" };
             setAvatarElement(avatar, avatarData.avatar, avatarData.color);
-
             const content = document.createElement("div");
             content.className = "message-content";
-
             const sender = document.createElement("div");
             sender.className = "sender";
             sender.textContent = isMe ? username : (item.profiles?.username || "Пользователь");
-
-            const message = document.createElement("div");
-            message.className = "message";
-            message.textContent = escapeText(item.content);
-
-            content.appendChild(sender);
-            content.appendChild(message);
-            row.appendChild(avatar);
-            row.appendChild(content);
-            messages.appendChild(row);
+            if (currentChatType === "channel") {
+                const post = document.createElement("article");
+                post.className = "worldio-post";
+                const img = item.profiles?.avatar && String(item.profiles.avatar).startsWith("data:image") ? `<img src="${item.profiles.avatar}" alt="">` : escapeText(item.profiles?.avatar || "📡");
+                post.innerHTML = `<div class="worldio-post-head"><div class="worldio-post-avatar">${img}</div><div class="worldio-post-meta"><div class="worldio-post-author">${escapeText(item.profiles?.username || username || 'Worldio')}</div><div class="worldio-post-time">${escapeText(formatTime(item.created_at))}</div></div><div class="worldio-direct-badge">ПОСТ</div></div><div class="worldio-post-title">${escapeText(item.content.slice(0,80) || 'Публикация')}</div><div class="worldio-post-body">${escapeText(item.content)}</div><div class="worldio-post-reactions"><span class="worldio-react">❤️ 0</span><span class="worldio-react">💬 0</span><span class="worldio-react">🔥 0</span></div></article>`;
+                messages.appendChild(post);
+            } else {
+                const message = document.createElement("div");
+                message.className = "message";
+                message.textContent = escapeText(item.content);
+                content.append(sender, message);
+                row.append(avatar, content);
+                messages.appendChild(row);
+            }
         });
-
         messages.scrollTop = messages.scrollHeight;
     }
 
@@ -1972,9 +3031,7 @@
             currentChatId = null;
             currentChatName = "";
             currentChatType = null;
-            document.getElementById("headerName").textContent = "Worldio";
-            document.getElementById("headerStatus").textContent = "● выбери чат";
-            document.getElementById("headerAvatar").textContent = "W";
+            applyIdleHeader();
             renderChatList();
             renderMessages();
             subscribeToMessages();
@@ -1983,7 +3040,7 @@
 
         const { data: chats, error } = await supabaseClient
             .from("chats")
-            .select("id,name,type,owner_id,created_at")
+            .select("id,name,type,owner_id,created_at,avatar,avatar_color,description")
             .in("id", ids)
             .order("created_at", { ascending: false });
 
@@ -1993,11 +3050,25 @@
             return;
         }
 
-        for (const chat of chats || []) {
+        const legacyNames = new Set(["Общий чат","Друзья","Игровая комната","Worldio Team","Worldio"]);
+        const visibleChats = (chats || []).filter(chat => !(legacyNames.has(chat.name) && (!chat.owner_id || chat.name === "Worldio")));
+        const lastMessages = new Map();
+        if (visibleChats.length) {
+            const visibleIds = visibleChats.map(chat => chat.id);
+            const { data: recentMessages } = await supabaseClient
+                .from("messages")
+                .select("chat_id,content,created_at")
+                .in("chat_id", visibleIds)
+                .order("created_at", { ascending:false })
+                .limit(Math.min(500, Math.max(visibleIds.length * 20, 100)));
+            for (const msg of recentMessages || []) if (!lastMessages.has(msg.chat_id)) lastMessages.set(msg.chat_id, msg);
+        }
+
+        for (const chat of visibleChats) {
             const hydrated = await hydrateChat(chat);
-            const last = await supabaseClient.from("messages").select("content,created_at").eq("chat_id", chat.id).order("created_at", { ascending:false }).limit(1).maybeSingle();
-            hydrated.last_message = last.data?.content || "";
-            hydrated.last_message_at = last.data?.created_at || null;
+            const last = lastMessages.get(chat.id);
+            hydrated.last_message = last?.content || "";
+            hydrated.last_message_at = last?.created_at || null;
             chatStore.set(chat.id, hydrated);
         }
 
@@ -2042,7 +3113,7 @@
 
         document.getElementById("headerName").textContent = currentChatName;
         document.getElementById("headerStatus").textContent = chat.type === "direct" ? getHandle(chat.peer_username || currentChatName) : `● ${chatTypeLabel(chat.type).toLowerCase()}`;
-        document.getElementById("headerAvatar").textContent = chatIcon(chat);
+        setAvatarElement(document.getElementById("headerAvatar"), chat.avatar || chatIcon(chat), chat.avatar_color);
         const input = document.getElementById("messageInput");
         input.disabled = false;
         input.placeholder = chat.type === "channel" ? "Напиши пост..." : "Напиши сообщение...";
@@ -2101,12 +3172,16 @@
             .subscribe(status => console.log("Worldio realtime:", status));
     }
 
+    let chatSearchTimer = null;
     function searchChats() {
-        const search = document.getElementById("searchInput").value.toLowerCase().trim();
-        document.querySelectorAll("#chatList .chat-item").forEach(chat => {
-            const name = (chat.dataset.name || "").toLowerCase();
-            chat.style.display = name.includes(search) ? "flex" : "none";
-        });
+        clearTimeout(chatSearchTimer);
+        chatSearchTimer = setTimeout(() => {
+            const search = document.getElementById("searchInput").value.toLowerCase().trim();
+            document.querySelectorAll("#chatList .chat-item").forEach(chat => {
+                const name = (chat.dataset.name || "").toLowerCase();
+                chat.style.display = name.includes(search) ? "flex" : "none";
+            });
+        }, 70);
     }
 
     function setCreateChatType(type) {
@@ -2285,11 +3360,11 @@
             if (globalSearchType === "all" || globalSearchType === "channels") {
                 const { data: channels } = await supabaseClient
                     .from("chats")
-                    .select("id,name,type,owner_id")
+                    .select("id,name,type,owner_id,avatar,avatar_color,description")
                     .eq("type", "channel")
                     .ilike("name", `%${q}%`)
                     .limit(20);
-                (channels || []).forEach(chat => results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Публичный канал", type:"Канал", avatar:"📡", avatar_color:"linear-gradient(135deg,#0f766e,#0891b2)"}));
+                (channels || []).forEach(chat => results.push({kind:"chat", id:chat.id, title:chat.name, sub:chat.description || "Публичный канал", type:"Канал", avatar:chat.avatar || "📡", avatar_color:chat.avatar_color || "linear-gradient(135deg,#21caff,#7b4dff)"}));
             }
 
             if (!results.length) { renderGlobalSearchEmpty("Ничего не найдено"); return; }
@@ -2404,6 +3479,331 @@
     }
 
     restoreSession();
+
+
+
+// ===== GLASS CHANNEL PANEL =====
+let channelPanelAvatarDraft = null;
+let channelPanelAccent = null;
+const CHANNEL_ACCENTS = [
+  'linear-gradient(135deg,#18cfff,#6b54ff)',
+  'linear-gradient(135deg,#2d7dff,#5139ef)',
+  'linear-gradient(135deg,#7d54ff,#d84fff)',
+  'linear-gradient(135deg,#10c8a2,#1c93ff)',
+  'linear-gradient(135deg,#ff7a2f,#f43d6d)',
+  'linear-gradient(135deg,#1689ff,#1736a5)'
+];
+function openChannelPanel(){
+  if(currentChatType!=='channel') return;
+  const chat=chatStore.get(currentChatId); if(!chat) return;
+  const panel=document.getElementById('channelSidePanel'); if(!panel) return;
+  panel.classList.add('open');
+  document.getElementById('channelPanelName').value=chat.name||'';
+  document.getElementById('channelPanelDescription').value=chat.description||'';
+  channelPanelAvatarDraft=chat.avatar||null;
+  channelPanelAccent=chat.avatar_color||CHANNEL_ACCENTS[0];
+  renderChannelPanelPreview();
+  renderChannelSwatches();
+}
+function closeChannelPanel(){document.getElementById('channelSidePanel')?.classList.remove('open');}
+function renderChannelSwatches(){
+  const box=document.getElementById('channelSideSwatches'); if(!box) return;
+  box.innerHTML='';
+  CHANNEL_ACCENTS.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='side-swatch'+(c===channelPanelAccent?' active':'');b.style.background=c;b.onclick=()=>{channelPanelAccent=c;renderChannelSwatches();renderChannelPanelPreview();};box.appendChild(b);});
+}
+function renderChannelPanelPreview(){
+  const chat=chatStore.get(currentChatId); if(!chat) return;
+  const cover=document.getElementById('sidePreviewCover'); if(cover) cover.style.background=channelPanelAccent||CHANNEL_ACCENTS[0];
+  const av=document.getElementById('sidePreviewAvatar'); if(av){av.style.background=channelPanelAccent||CHANNEL_ACCENTS[0];av.innerHTML=channelPanelAvatarDraft&&String(channelPanelAvatarDraft).startsWith('data:image')?`<img src="${channelPanelAvatarDraft}" alt="">`:(chat.avatar||'📡');}
+  const n=document.getElementById('sidePreviewName'); if(n)n.textContent=document.getElementById('channelPanelName')?.value||chat.name||'Канал';
+  const s=document.getElementById('sidePreviewSub'); if(s)s.textContent=document.getElementById('channelPanelDescription')?.value||'Публичный канал';
+}
+function focusMessageComposer(){document.getElementById('messageInput')?.focus();}
+async function handleChannelAvatarUpload(input){
+  const file=input.files?.[0]; if(!file) return;
+  try{channelPanelAvatarDraft=await resizeImageToDataUrl(file,512,0.78);renderChannelPanelPreview();}catch(e){console.error(e);alert('Не удалось обработать изображение.');}
+  input.value='';
+}
+function removeChannelAvatar(){channelPanelAvatarDraft=null;renderChannelPanelPreview();}
+function resizeImageToDataUrl(file,maxSize=512,quality=.78){
+  return new Promise((resolve,reject)=>{
+    const img=new Image(); const url=URL.createObjectURL(file);
+    img.onload=()=>{let w=img.naturalWidth,h=img.naturalHeight;const s=Math.min(1,maxSize/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(img,0,0,w,h);URL.revokeObjectURL(url);resolve(c.toDataURL('image/jpeg',quality));};
+    img.onerror=reject;img.src=url;
+  });
+}
+async function saveChannelPanel(){
+  if(!currentChatId || currentChatType!=='channel' || currentChatOwnerId!==currentUserId) return;
+  const status=document.getElementById('channelPanelStatus');
+  const name=document.getElementById('channelPanelName').value.trim().slice(0,50); const description=document.getElementById('channelPanelDescription').value.trim().slice(0,200);
+  if(!name){if(status)status.textContent='Введите название';return;}
+  if(status)status.textContent='Сохраняем…';
+  try{
+    const payload={name,description,avatar:channelPanelAvatarDraft||'',avatar_color:channelPanelAccent||CHANNEL_ACCENTS[0]};
+    const {data,error}=await supabaseClient.from('chats').update(payload).eq('id',currentChatId).eq('owner_id',currentUserId).select('id,name,type,owner_id,created_at,avatar,avatar_color,description').single();
+    if(error) throw error;
+    Object.assign(chatStore.get(currentChatId),data);
+    currentChatName=data.name;
+    document.getElementById('headerName').textContent=data.name;
+    setAvatarElement(document.getElementById('headerAvatar'),data.avatar||'📡',data.avatar_color);
+    renderChatList(); renderMessages(); renderChannelPanelPreview();
+    if(status)status.textContent='Сохранено ✓';
+    setTimeout(()=>{if(status)status.textContent='';},1800);
+  }catch(e){console.error(e);if(status)status.textContent='Не удалось сохранить. Проверь поля chats (avatar, description, avatar_color).';}
+}
+const _selectChatByIdOriginal=selectChatById;
+selectChatById=async function(id){
+  await _selectChatByIdOriginal(id);
+  const chat=chatStore.get(id);
+  const panel=document.getElementById('channelSidePanel');
+  if(chat?.type==='channel' && chat.owner_id===currentUserId){openChannelPanel();}
+  else panel?.classList.remove('open');
+};
+document.getElementById('channelPanelName')?.addEventListener('input',renderChannelPanelPreview);
+document.getElementById('channelPanelDescription')?.addEventListener('input',renderChannelPanelPreview);
+
+
+    // ===== WORLDIO PROFILE / PREFERENCES V6 =====
+    const WORLDIO_COLLECTIBLES = [
+      {id:"crown",emoji:"👑",name:"Корона",rarity:"Легендарный"},
+      {id:"planet",emoji:"🪐",name:"Орбита",rarity:"Редкий"},
+      {id:"spark",emoji:"✨",name:"Искра",rarity:"Эпический"},
+      {id:"flame",emoji:"🔥",name:"Пламя",rarity:"Редкий"},
+      {id:"rocket",emoji:"🚀",name:"Ракета",rarity:"Эпический"},
+      {id:"diamond",emoji:"💎",name:"Кристалл",rarity:"Легендарный"},
+      {id:"star",emoji:"⭐",name:"Звезда",rarity:"Особый"},
+      {id:"ghost",emoji:"👻",name:"Призрак",rarity:"Особый"},
+      {id:"gamepad",emoji:"🎮",name:"Игрок",rarity:"Редкий"},
+      {id:"bolt",emoji:"⚡",name:"Разряд",rarity:"Эпический"},
+      {id:"comet",emoji:"☄️",name:"Комета",rarity:"Легендарный"},
+      {id:"gem",emoji:"🔮",name:"Артефакт",rarity:"Мистический"}
+    ];
+    const WORLDIO_DEFAULT_PRIVACY = {online:"everyone", messages:"everyone", groups:"everyone", readReceipts:true};
+    const WORLDIO_DEFAULT_CHAT_SETTINGS = {enterSend:true, showAvatars:true, compact:false, messageAnimations:true};
+
+    function getWorldioItems(){
+      try { const v=JSON.parse(localStorage.getItem("worldio_items")||"[]"); return Array.isArray(v)?v.filter(Boolean).slice(0,3):[]; } catch(_){ return []; }
+    }
+    function getWorldioPrivacy(){
+      try { return {...WORLDIO_DEFAULT_PRIVACY,...(JSON.parse(localStorage.getItem("worldio_privacy")||"{}")||{})}; } catch(_){ return {...WORLDIO_DEFAULT_PRIVACY}; }
+    }
+    function getWorldioChatSettings(){
+      try { return {...WORLDIO_DEFAULT_CHAT_SETTINGS,...(JSON.parse(localStorage.getItem("worldio_chat_settings")||"{}")||{})}; } catch(_){ return {...WORLDIO_DEFAULT_CHAT_SETTINGS}; }
+    }
+    function setWorldioItems(items){ localStorage.setItem("worldio_items",JSON.stringify(items.slice(0,3))); applyEquippedItemsUI(); }
+    function collectibleById(id){ return WORLDIO_COLLECTIBLES.find(x=>x.id===id); }
+    function renderCollectibleGrid(){
+      const grid=document.getElementById("worldioItemGrid"); if(!grid) return;
+      const equipped=new Set(getWorldioItems());
+      grid.innerHTML=WORLDIO_COLLECTIBLES.map(item=>`<button type="button" class="worldio-item-card ${equipped.has(item.id)?"equipped":""}" onclick="toggleWorldioCollectible('${item.id}')"><span class="worldio-item-icon">${item.emoji}</span><span class="worldio-item-copy"><span class="worldio-item-title">${item.name}</span><span class="worldio-item-rarity">${item.rarity}</span></span><span class="worldio-item-check">${equipped.has(item.id)?"✓":"+"}</span></button>`).join("");
+    }
+    function collectibleMarkup(type){
+      const item=collectibleById(type); return item ? `<span class="worldio-item-badge" title="${item.name}">${item.emoji}</span>` : "";
+    }
+    function equippedMarkup(compact=false){ return getWorldioItems().map(collectibleMarkup).join(""); }
+    function applyEquippedItemsUI(){
+      const ensureInline=(parentId,spanId,cls="")=>{const p=document.getElementById(parentId); if(!p)return null; let s=document.getElementById(spanId); if(!s){s=document.createElement("span");s.id=spanId;if(cls)s.className=cls;p.appendChild(s);} return s;};
+      ensureInline("topProfileName","topProfileItems","top-profile-items"); ensureInline("headerName","headerItems","header-items"); ensureInline("emptyProfileName","emptyProfileItems","empty-profile-items");
+      const targets=["profileModalItems","topProfileItems","headerItems","emptyProfileItems"];
+      const html=equippedMarkup();
+      targets.forEach(id=>{const el=document.getElementById(id);if(el) el.innerHTML=html;});
+      const nameEls=[document.getElementById("topProfileName"),document.getElementById("headerName"),document.getElementById("emptyProfileName")];
+      nameEls.forEach(el=>{if(el && el.dataset.baseName) el.textContent=el.dataset.baseName;});
+    }
+    function toggleWorldioCollectible(id){
+      const current=getWorldioItems();
+      const next=current.includes(id)?current.filter(x=>x!==id):(current.length<3?[...current,id]:[...current.slice(1),id]);
+      setWorldioItems(next); renderCollectibleGrid();
+      const s=document.getElementById("profileSaveStatus"); if(s) s.textContent=next.includes(id)?"Предмет экипирован · до 3 слотов":"Предмет снят";
+    }
+    function switchWorldioTab(tab, tabsId, panePrefix){
+      document.querySelectorAll(`#${tabsId} .worldio-tab`).forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+      document.querySelectorAll(`[id^="${panePrefix}-"]`).forEach(p=>p.classList.toggle("active",p.id===`${panePrefix}-${tab}`));
+      if(tab==="items") renderCollectibleGrid();
+    }
+    function switchWorldioSettingsTab(tab){
+      document.querySelectorAll("#settingsTabs .worldio-tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+      document.querySelectorAll("[data-settings-pane]").forEach(p=>p.classList.toggle("active",p.dataset.settingsPane===tab));
+    }
+    function syncThemeButtonState(){ document.querySelectorAll(".theme-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.themeChoice===getSavedTheme())); }
+
+    function hydrateWorldioPreferencesFromMetadata(meta){
+      if(Array.isArray(meta.worldio_items)) localStorage.setItem("worldio_items",JSON.stringify(meta.worldio_items.slice(0,3)));
+      if(meta.worldio_privacy && typeof meta.worldio_privacy === "object") localStorage.setItem("worldio_privacy",JSON.stringify({...WORLDIO_DEFAULT_PRIVACY,...meta.worldio_privacy}));
+      if(meta.worldio_chat_settings && typeof meta.worldio_chat_settings === "object") localStorage.setItem("worldio_chat_settings",JSON.stringify({...WORLDIO_DEFAULT_CHAT_SETTINGS,...meta.worldio_chat_settings}));
+    }
+
+    function applyPrivacyVisibility(){
+      const p=getWorldioPrivacy();
+      const visible=p.online!=="nobody";
+      ["topProfileStatus","headerStatus"].forEach(id=>{const el=document.getElementById(id); if(el) el.style.opacity=visible?"1":".55";});
+      const onlinePills=document.querySelectorAll(".tg-online,.empty-profile-online");
+      onlinePills.forEach(el=>{el.style.display=visible?"inline-flex":"none";});
+    }
+
+    function applyChatSettings(){
+      const c=getWorldioChatSettings();
+      document.body.classList.toggle("worldio-compact",!!c.compact);
+      document.body.classList.toggle("worldio-hide-message-avatars",!c.showAvatars);
+      document.body.classList.toggle("worldio-no-message-anim",!c.messageAnimations);
+      const input=document.getElementById("messageInput"); if(input) input.dataset.enterSend=String(c.enterSend);
+    }
+
+    // Last-in-source declaration intentionally supersedes the legacy profile renderer.
+    function applyProfileUI() {
+      const a=getAvatarData();
+      const topAvatar=document.getElementById("topProfileAvatar"); if(topAvatar) setAvatarElement(topAvatar,a.avatar||"W",a.color);
+      const setName=(id)=>{const el=document.getElementById(id);if(el){el.textContent=username||"Пользователь";el.dataset.baseName=el.textContent;}};
+      setName("topProfileName"); setName("headerName"); setName("emptyProfileName");
+      const profileAvatar=document.getElementById("profileAvatar");
+      if(profileAvatar){if(a.avatar?.startsWith("data:image")){profileAvatar.style.background=`url("${a.avatar}") center/cover no-repeat`;profileAvatar.textContent=""}else{profileAvatar.style.background=a.color;profileAvatar.textContent=a.avatar}}
+      const ph=document.getElementById("profileHandle");if(ph)ph.textContent=getHandle();
+      const mn=document.getElementById("menuProfileName");if(mn)mn.textContent=username||"Пользователь";
+      const mh=document.getElementById("menuProfileHandle");if(mh)mh.textContent=getHandle();
+      const emptyAvatar=document.getElementById("emptyProfileAvatar"); if(emptyAvatar)setAvatarElement(emptyAvatar,a.avatar||"W",a.color);
+      const emptyHandle=document.getElementById("emptyProfileHandle"); if(emptyHandle)emptyHandle.textContent=getHandle();
+      applyIdleHeader(); applyBannerVisual(a.bannerColor,a.banner); applyEquippedItemsUI(); applyPrivacyVisibility(); applyChatSettings();
+    }
+
+    function openProfile(event){
+      if(event) event.stopPropagation();
+      document.getElementById("profileMenu")?.classList.remove("open");
+      const a=getAvatarData();
+      const userInput=document.getElementById("profileUsernameInput"); if(userInput) userInput.value=username||"";
+      const bioInput=document.getElementById("profileBioInput"); if(bioInput)bioInput.value=a.bio||"";
+      const av=document.getElementById("profileModalAvatar");
+      if(av){ if(a.avatar?.startsWith("data:image")){av.style.background=`url("${a.avatar}") center/cover no-repeat`;av.textContent="";} else {av.style.background=a.color;av.textContent=a.avatar;} }
+      applyBannerVisual(a.bannerColor,a.banner);
+      const nm=document.getElementById("profileModalName");if(nm)nm.textContent=username||"Пользователь";
+      const hn=document.getElementById("profileModalHandle");if(hn)hn.textContent=getHandle();
+      const bp=document.getElementById("profileModalBioPreview");if(bp)bp.textContent=a.bio||"О себе пока ничего нет.";
+      document.getElementById("profileSaveStatus").textContent=""; document.getElementById("imageUploadStatus").textContent="";
+      fillProfilePickers(); renderCollectibleGrid(); applyEquippedItemsUI();
+      switchWorldioTab("profile","profileTabs","profilePane");
+      document.getElementById("profileModal").classList.add("open");
+    }
+
+    function openSettings(event){
+      if(event) event.stopPropagation();
+      document.getElementById("profileMenu")?.classList.remove("open");
+      const p=getWorldioPrivacy(), c=getWorldioChatSettings();
+      document.getElementById("notificationsToggle").checked=localStorage.getItem("worldio_notifications")!=="false";
+      document.getElementById("animationsToggle").checked=localStorage.getItem("worldio_animations")!=="false";
+      document.getElementById("soundsToggle").checked=localStorage.getItem("worldio_sounds")==="true";
+      document.getElementById("privacyOnline").value=p.online; document.getElementById("privacyMessages").value=p.messages; document.getElementById("privacyGroups").value=p.groups; document.getElementById("privacyReadReceipts").checked=!!p.readReceipts;
+      document.getElementById("chatEnterSend").checked=!!c.enterSend; document.getElementById("chatShowAvatars").checked=!!c.showAvatars; document.getElementById("chatCompact").checked=!!c.compact; document.getElementById("chatMessageAnimations").checked=!!c.messageAnimations;
+      applyTheme(getSavedTheme()); applyMotionSetting(); syncThemeButtonState(); applyChatSettings(); applyPrivacyVisibility(); switchWorldioSettingsTab("general");
+      document.getElementById("settingsSaveStatus").textContent="";
+      document.getElementById("settingsModal").classList.add("open");
+    }
+
+    function saveSetting(key,value){
+      localStorage.setItem("worldio_"+key,String(value));
+      if(key==="animations") document.body.classList.toggle("worldio-no-animations",!value);
+      if(key==="notifications") document.documentElement.dataset.notifications=String(value);
+      if(key==="sounds") document.documentElement.dataset.sounds=String(value);
+    }
+
+    async function syncWorldioPreferencesToSupabase(){
+      try{
+        const {data:{user}}=await supabaseClient.auth.getUser();
+        if(user){
+          await supabaseClient.auth.updateUser({data:{username,worldio_items:getWorldioItems(),worldio_privacy:getWorldioPrivacy(),worldio_chat_settings:getWorldioChatSettings()}});
+        }
+      }catch(e){ console.warn("Worldio preferences sync:",e); }
+    }
+
+    async function saveWorldioSettings(){
+      const privacy={online:document.getElementById("privacyOnline").value,messages:document.getElementById("privacyMessages").value,groups:document.getElementById("privacyGroups").value,readReceipts:document.getElementById("privacyReadReceipts").checked};
+      const chats={enterSend:document.getElementById("chatEnterSend").checked,showAvatars:document.getElementById("chatShowAvatars").checked,compact:document.getElementById("chatCompact").checked,messageAnimations:document.getElementById("chatMessageAnimations").checked};
+      localStorage.setItem("worldio_privacy",JSON.stringify(privacy)); localStorage.setItem("worldio_chat_settings",JSON.stringify(chats));
+      applyChatSettings(); applyPrivacyVisibility();
+      const st=document.getElementById("settingsSaveStatus"); if(st)st.textContent="Настройки сохранены ✓";
+      await syncWorldioPreferencesToSupabase(); setTimeout(()=>{if(st)st.textContent=""},1800);
+    }
+
+    async function saveWorldioProfile(){
+      const input=document.getElementById("profileUsernameInput");
+      const bio=document.getElementById("profileBioInput").value.trim().slice(0,160);
+      const newName=input.value.trim().replace(/\s+/g,"_").slice(0,20);
+      const status=document.getElementById("profileSaveStatus");
+      if(!newName){status.textContent="Введите юзернейм";return;}
+      status.textContent="Сохраняем...";
+      username=newName;
+      localStorage.setItem("worldio_username",username);
+      localStorage.setItem("worldio_bio",bio);
+
+      const avatar=getAvatarData();
+      const banner=localStorage.getItem("worldio_banner")||"";
+      const bannerColor=localStorage.getItem("worldio_banner_color")||WORLDIO_COVER_COLORS[0];
+
+      try{
+        const {data:{user}}=await supabaseClient.auth.getUser();
+        if(user){
+          const payload={
+            id:user.id, username, bio,
+            avatar:avatar.avatar,
+            avatar_color:avatar.color,
+            banner,
+            banner_color:bannerColor
+          };
+          const {error}=await supabaseClient.from("profiles").upsert(payload,{onConflict:"id"});
+          if(error) throw error;
+          await supabaseClient.auth.updateUser({
+            data:{
+              username,
+              worldio_items:getWorldioItems(),
+              worldio_privacy:getWorldioPrivacy(),
+              worldio_chat_settings:getWorldioChatSettings()
+            }
+          });
+        }
+        applyProfileUI();
+        renderCollectibleGrid();
+        applyBannerVisual(bannerColor,banner);
+        document.getElementById("profileModalName").textContent=username;
+        document.getElementById("profileModalHandle").textContent=getHandle();
+        document.getElementById("profileModalBioPreview").textContent=bio||"О себе пока ничего нет.";
+        status.textContent="Профиль сохранён ✓";
+        setTimeout(()=>status.textContent="",1800);
+      }catch(e){
+        console.error("saveWorldioProfile",e);
+        const msg=String(e?.message||"");
+        status.textContent=msg.toLowerCase().includes("banner_color")
+          ? "Почти готово: добавь banner_color в profiles через SQL"
+          : "Не удалось сохранить профиль";
+      }
+    }
+
+    // GIF avatars: preserve animated GIFs instead of flattening them to JPEG.
+    async function handleAvatarUpload(input){
+      const file=input.files?.[0]; if(!file)return;
+      if(file.size>8*1024*1024){alert("Аватар слишком большой. Выбери файл до 8 МБ.");input.value="";return;}
+      const status=document.getElementById("imageUploadStatus"); if(status)status.textContent="Обрабатываем аватар...";
+      try{
+        let data;
+        if(file.type==="image/gif"){
+          if(file.size>3.8*1024*1024){alert("GIF лучше использовать до 3.8 МБ, чтобы он стабильно сохранялся в профиле.");input.value="";return;}
+          data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});
+        }else data=await compressImage(file,700,700,0.84);
+        localStorage.setItem("worldio_avatar",data);
+        const a=document.getElementById("profileModalAvatar"); if(a){a.style.background=`url("${data}") center/cover no-repeat`;a.textContent="";}
+        const topAvatar=document.getElementById("topProfileAvatar"); if(topAvatar)setAvatarElement(topAvatar,data,getAvatarData().color);
+        if(status)status.textContent=file.type==="image/gif"?"GIF-аватар выбран ✓ Нажми «Сохранить профиль»":"Аватар выбран ✓ Нажми «Сохранить профиль»";
+      }catch(e){console.error(e);if(status)status.textContent="Не удалось обработать изображение";}
+      input.value="";
+    }
+
+    // Enter-to-send preference: stop the legacy listener when disabled.
+    document.addEventListener("keydown",function(e){
+      if(e.key!=="Enter")return;
+      const input=e.target?.closest?.("#messageInput"); if(!input)return;
+      if(!getWorldioChatSettings().enterSend){e.preventDefault();e.stopImmediatePropagation();}
+    },true);
+
+    syncThemeButtonState();
+    applyChatSettings();
+    applyPrivacyVisibility();
 
 </script>
 
