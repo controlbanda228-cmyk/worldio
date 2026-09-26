@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
     <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-    <script type="text/javascript" src="https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=RyhZf6C0JyKvMW-Q3M6o1HKLmpzPExEoTsek5mUlGvsIKXkaMB2udHbKYu80zVpt1JaoQFbXXaXN6h1ny-SO05TO670v3whpK9JlJsWb7Gw4EOtmQpKBeAVu3OgiSy24BbDImaFoOuwI-JqNZdrdR5ra0vzkj9IlZfxuOx1IF9GQoU-tY4hXYcN3D2JgCypBCoDz7CcRPRScmv_3Jzb6j32plTND5UKx73iLo3Wwnofg3nhmQlnttPMFAXjzozyoaa3WY5DiHc7B9VAT6fI4bM0Mnl1ju8XJWye7sQOkHY6FFQtevFRm4337i5LG4fjX" charset="UTF-8"></script><style>
+    <style>
         * {
             box-sizing: border-box;
         }
@@ -1045,6 +1045,31 @@
 
         @media(max-width:700px){.tg-banner{height:125px}.tg-avatar-wrap,.tg-big-avatar{width:82px;height:82px}.tg-avatar-wrap{margin-top:-41px}.tg-upload-card{grid-template-columns:1fr}.tg-profile-main{padding:0 15px 16px}}
 
+
+        /* WORLDIO SOCIAL CHAT SYSTEM */
+        .worldio-chats-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+        .worldio-chat-create-actions{display:flex;align-items:center;gap:8px;}
+        .worldio-create-chat-btn{width:28px;height:28px;border-radius:9px;border:1px solid #2c3b54;background:#111a2a;color:#dce8ff;display:grid;place-items:center;cursor:pointer;transition:.18s ease;}
+        .worldio-create-chat-btn:hover{transform:translateY(-1px);border-color:#4e79c7;background:#17243a;}
+        .worldio-create-chat-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;}
+        .worldio-chat-empty{display:flex;flex-direction:column;align-items:center;gap:8px;padding:42px 18px;text-align:center;color:#7f8da5;}
+        .worldio-chat-empty strong{font-size:14px;color:#dbe6f7;}
+        .worldio-chat-empty span{font-size:12px;line-height:1.5;max-width:210px;}
+        .worldio-chat-empty button{margin-top:8px;border:1px solid #2b5fb7;background:#122341;color:#8eb7ff;border-radius:10px;padding:8px 12px;cursor:pointer;}
+        .worldio-empty-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#1e3a8a,#312e81);color:#a8c6ff;box-shadow:0 10px 24px rgba(37,99,235,.2);}
+        .worldio-create-modal{max-width:520px;}
+        .worldio-create-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 18px;}
+        .worldio-create-tabs button{border:1px solid #26344a;background:#101927;color:#8594aa;padding:11px 12px;border-radius:12px;cursor:pointer;font-weight:800;}
+        .worldio-create-tabs button.active{border-color:#3d6fd0;background:#142544;color:#fff;box-shadow:inset 0 0 0 1px rgba(96,165,250,.12);}
+        .worldio-member-input-row{display:flex;gap:8px;}
+        .worldio-create-hint{font-size:12px;line-height:1.45;color:#64748b;margin-top:8px;}
+        .worldio-chat-kind{font-size:10px;color:#6f82a2;margin-top:2px;}
+        .worldio-result-avatar-img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;}
+        .worldio-direct-badge{font-size:9px;color:#7ea6f5;}
+        .chat-item.worldio-dynamic{cursor:pointer;}
+        .chat-item.worldio-dynamic .avatar{background:linear-gradient(135deg,#2563eb,#7c3aed);}
+        .chat-item.worldio-dynamic:hover{transform:translateX(2px);}
+        body.modal-open .sidebar{pointer-events:auto;}
 </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -1172,75 +1197,23 @@
                 <button class="chat-tab">Группы</button>
             </div>
 
-            <div class="chats-title">
+            <div class="chats-title worldio-chats-heading">
                 <span>Ваши чаты</span>
-                <span class="chats-count">4</span>
+                <div class="worldio-chat-create-actions">
+                    <span class="chats-count" id="chatsCount">0</span>
+                    <button class="worldio-create-chat-btn" type="button" onclick="openCreateChatModal()" title="Создать группу или канал" aria-label="Создать группу или канал">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                    </button>
+                </div>
             </div>
 
-            <div class="chat-list" id="chatList">
-                <div class="chat-item active" id="generalChat" data-name="Общий чат" onclick="selectChat(this)">
-                    <div class="chat-avatar-wrap">
-                        <div class="avatar">🌎</div>
-                        <span class="chat-online-dot"></span>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-topline">
-                            <div class="chat-name">Общий чат</div>
-                            <div class="chat-time">сейчас</div>
-                        </div>
-                        <div class="chat-preview-row">
-                            <div class="chat-preview" id="preview">Добро пожаловать в Worldio!</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chat-item" data-name="Друзья" onclick="selectChat(this)">
-                    <div class="chat-avatar-wrap">
-                        <div class="avatar" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">👥</div>
-                        <span class="chat-online-dot"></span>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-topline">
-                            <div class="chat-name">Друзья</div>
-                            <div class="chat-time">12:48</div>
-                        </div>
-                        <div class="chat-preview-row">
-                            <div class="chat-preview">Кто сегодня в игре?</div>
-                            <span class="unread-badge">3</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chat-item" data-name="Игровая комната" onclick="selectChat(this)">
-                    <div class="chat-avatar-wrap">
-                        <div class="avatar" style="background:linear-gradient(135deg,#06b6d4,#2563eb)">🎮</div>
-                        <span class="chat-online-dot"></span>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-topline">
-                            <div class="chat-name">Игровая комната</div>
-                            <div class="chat-time">11:22</div>
-                        </div>
-                        <div class="chat-preview-row">
-                            <div class="chat-preview">Алекс: залетаем через 10 минут</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chat-item" data-name="Worldio Team" onclick="selectChat(this)">
-                    <div class="chat-avatar-wrap">
-                        <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">W</div>
-                    </div>
-                    <div class="chat-info">
-                        <div class="chat-topline">
-                            <div class="chat-name">Worldio Team</div>
-                            <div class="chat-time">вчера</div>
-                        </div>
-                        <div class="chat-preview-row">
-                            <div class="chat-preview">Добро пожаловать 👋</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="chat-list" id="chatList"></div>
+            <div class="worldio-chat-empty" id="chatEmptyState">
+                <div class="worldio-empty-icon">✦</div>
+                <strong>Пока здесь пусто</strong>
+                <span>Найди человека через поиск или создай группу/канал.</span>
+                <button type="button" onclick="openGlobalSearch()">Открыть поиск</button>
+            </div>
             </div>
         </div>
 
@@ -1282,7 +1255,7 @@
                 </div>
             </div>
             <div class="global-search-results" id="globalSearchResults">
-                <div class="global-search-empty"><strong>Начни поиск</strong>Введи имя, название чата или канала</div>
+                <div class="global-search-empty"><strong>Начни поиск</strong>Введи @username, название чата или канала</div>
             </div>
             <div class="global-search-shortcut">Enter — открыть результат · Esc — закрыть</div>
         </div>
@@ -1294,11 +1267,11 @@
 
         <header class="chat-header">
 
-            <div class="header-avatar" id="headerAvatar">🌎</div>
+            <div class="header-avatar" id="headerAvatar">W</div>
 
             <div class="header-chat-info">
-                <div class="header-name" id="headerName">Общий чат</div>
-                <div class="header-status" id="headerStatus">● 12 участников онлайн</div>
+                <div class="header-name" id="headerName">Worldio</div>
+                <div class="header-status" id="headerStatus">● выбери чат</div>
             </div>
 
             <div class="header-actions">
@@ -1314,7 +1287,7 @@
         <div class="messages" id="messages">
 
             <div class="welcome">
-                🌎 Добро пожаловать в Worldio!
+                🌎 Выбери чат или найди пользователя через поиск.
             </div>
 
         </div>
@@ -1349,6 +1322,43 @@
 
 
 
+
+<!-- WORLDIO CREATE CHAT -->
+<div class="worldio-modal-backdrop" id="createChatModal" onclick="closeModalOnBackdrop(event,'createChatModal')">
+    <div class="worldio-modal worldio-create-modal">
+        <div class="modal-top">
+            <div>
+                <div class="modal-title">Создать</div>
+                <div class="modal-subtitle">Группа для общения или публичный канал</div>
+            </div>
+            <button class="modal-close" onclick="closeWorldioModal('createChatModal')">×</button>
+        </div>
+
+        <div class="worldio-create-tabs" id="createChatTabs">
+            <button class="active" type="button" data-create-type="group" onclick="setCreateChatType('group')">👥 Группа</button>
+            <button type="button" data-create-type="channel" onclick="setCreateChatType('channel')">📡 Канал</button>
+        </div>
+
+        <label class="field-label">Название</label>
+        <input class="worldio-field" id="createChatName" maxlength="40" placeholder="Например, Вечерняя катка">
+
+        <div id="createGroupMembersBlock">
+            <label class="field-label">Участники</label>
+            <div class="worldio-member-input-row">
+                <input class="worldio-field" id="createGroupMembers" placeholder="@username1, @username2">
+            </div>
+            <div class="worldio-create-hint">Можно указать юзернеймы через запятую. Ты автоматически станешь владельцем группы.</div>
+        </div>
+
+        <div id="createChannelHint" class="worldio-create-hint" style="display:none">Канал будет виден в глобальном поиске. Сейчас его владельцем будешь только ты.</div>
+
+        <div class="save-status" id="createChatStatus"></div>
+        <div class="modal-actions">
+            <button class="modal-button secondary" onclick="closeWorldioModal('createChatModal')">Отмена</button>
+            <button class="modal-button primary" onclick="createWorldioChat()">Создать</button>
+        </div>
+    </div>
+</div>
 
 <!-- WORLDIO PROFILE MODALS -->
 <div class="worldio-modal-backdrop" id="profileModal" onclick="closeModalOnBackdrop(event,'profileModal')">
@@ -1769,41 +1779,128 @@
 
 
     // =============================
-    // REAL CHATS — SUPABASE
+    // WORLDIO CHATS — SUPABASE
     // =============================
 
-    const CHAT_META = {
-        "Общий чат": { avatar: "🌎", status: "● общий чат" },
-        "Друзья": { avatar: "👥", status: "● группа" },
-        "Игровая комната": { avatar: "🎮", status: "● группа" },
-        "Worldio Team": { avatar: "W", status: "● группа" }
-    };
-
-    let currentChatName = "Общий чат";
+    let currentChatName = "";
     let currentChatId = null;
+    let currentChatType = null;
+    let currentChatOwnerId = null;
     let currentUserId = null;
     let realtimeChannel = null;
-    const chatIds = {};
     const messageCache = {};
+    const chatStore = new Map();
+    let createChatType = "group";
 
     function escapeText(value) {
         return String(value ?? "");
     }
 
-    function updateChatPreview(chatName, text, timeText = "сейчас") {
-        const chat = [...document.querySelectorAll(".chat-item")]
-            .find(item => item.dataset.name === chatName);
+    function chatTypeLabel(type) {
+        return type === "channel" ? "Канал" : type === "direct" ? "Личная переписка" : "Группа";
+    }
+
+    function chatIcon(chat) {
+        if (chat.type === "channel") return "📡";
+        if (chat.type === "direct") return "👤";
+        return "👥";
+    }
+
+    function chatTitle(chat) {
+        return chat.display_name || chat.name || "Без названия";
+    }
+
+    function chatSubtitle(chat) {
+        return chat.last_message || (chat.type === "direct" ? getHandle(chat.peer_username || "user") : (chat.type === "channel" ? "Публичный канал" : "Новая группа"));
+    }
+
+    function setAvatarElement(el, avatar, color) {
+        if (!el) return;
+        if (avatar && avatar.startsWith("data:image")) {
+            el.innerHTML = `<img src="${avatar}" alt="" class="worldio-result-avatar-img">`;
+            el.style.background = "#182234";
+        } else {
+            el.textContent = avatar || "💬";
+            el.style.background = color || "linear-gradient(135deg,#2563eb,#7c3aed)";
+        }
+    }
+
+    function renderChatList() {
+        const list = document.getElementById("chatList");
+        const empty = document.getElementById("chatEmptyState");
+        const count = document.getElementById("chatsCount");
+        if (!list) return;
+
+        const chats = [...chatStore.values()].sort((a,b) => new Date(b.last_message_at || b.created_at) - new Date(a.last_message_at || a.created_at));
+        list.innerHTML = "";
+        if (count) count.textContent = String(chats.length);
+        if (empty) empty.style.display = chats.length ? "none" : "flex";
+
+        chats.forEach(chat => {
+            const item = document.createElement("div");
+            item.className = "chat-item worldio-dynamic" + (chat.id === currentChatId ? " active" : "");
+            item.dataset.name = chatTitle(chat);
+            item.dataset.chatId = chat.id;
+            item.onclick = () => selectChatById(chat.id);
+
+            const avatarWrap = document.createElement("div");
+            avatarWrap.className = "chat-avatar-wrap";
+            const avatar = document.createElement("div");
+            avatar.className = "avatar";
+            setAvatarElement(avatar, chat.avatar || chatIcon(chat), chat.avatar_color);
+            avatarWrap.appendChild(avatar);
+            if (chat.type === "direct") {
+                const dot = document.createElement("span");
+                dot.className = "chat-online-dot";
+                avatarWrap.appendChild(dot);
+            }
+
+            const info = document.createElement("div");
+            info.className = "chat-info";
+            const top = document.createElement("div");
+            top.className = "chat-topline";
+            const name = document.createElement("div");
+            name.className = "chat-name";
+            name.textContent = chatTitle(chat);
+            const time = document.createElement("div");
+            time.className = "chat-time";
+            time.textContent = chat.last_message_at ? formatTime(chat.last_message_at) : "";
+            top.append(name,time);
+
+            const previewRow = document.createElement("div");
+            previewRow.className = "chat-preview-row";
+            const preview = document.createElement("div");
+            preview.className = "chat-preview";
+            preview.textContent = chatSubtitle(chat);
+            previewRow.appendChild(preview);
+
+            info.append(top,previewRow);
+            item.append(avatarWrap,info);
+            list.appendChild(item);
+        });
+    }
+
+    function updateChatPreview(chatId, text, timeText = "сейчас", iso = null) {
+        const chat = chatStore.get(chatId);
         if (!chat) return;
-        const preview = chat.querySelector(".chat-preview");
-        const time = chat.querySelector(".chat-time");
-        if (preview) preview.textContent = text || "Нет сообщений";
-        if (time) time.textContent = timeText;
+        chat.last_message = text || "Нет сообщений";
+        chat.last_message_at = iso || new Date().toISOString();
+        renderChatList();
     }
 
     function renderMessages() {
         const messages = document.getElementById("messages");
+        if (!messages) return;
         messages.innerHTML = "";
-        const list = messageCache[currentChatName] || [];
+        const list = messageCache[currentChatId] || [];
+
+        if (!currentChatId) {
+            const welcome = document.createElement("div");
+            welcome.className = "welcome";
+            welcome.textContent = "🌎 Выбери чат или найди пользователя через поиск.";
+            messages.appendChild(welcome);
+            return;
+        }
 
         if (!list.length) {
             const welcome = document.createElement("div");
@@ -1819,16 +1916,16 @@
 
             const avatar = document.createElement("div");
             avatar.className = "message-avatar";
-            const avatarData = item.user_id === currentUserId ? getAvatarData() : { avatar: item.profiles?.avatar || "🌎", color: item.profiles?.avatar_color || "linear-gradient(135deg,#2563eb,#7c3aed)" };
-            avatar.textContent = avatarData.avatar;
-            avatar.style.background = avatarData.color;
+            const isMe = item.user_id === currentUserId;
+            const avatarData = isMe ? getAvatarData() : { avatar: item.profiles?.avatar || "🌎", color: item.profiles?.avatar_color || "linear-gradient(135deg,#2563eb,#7c3aed)" };
+            setAvatarElement(avatar, avatarData.avatar, avatarData.color);
 
             const content = document.createElement("div");
             content.className = "message-content";
 
             const sender = document.createElement("div");
             sender.className = "sender";
-            sender.textContent = item.user_id === currentUserId ? username : (item.profiles?.username || "Пользователь");
+            sender.textContent = isMe ? username : (item.profiles?.username || "Пользователь");
 
             const message = document.createElement("div");
             message.className = "message";
@@ -1844,57 +1941,87 @@
         messages.scrollTop = messages.scrollHeight;
     }
 
+    async function getMyChatIds() {
+        const { data, error } = await supabaseClient.from("chat_members").select("chat_id").eq("user_id", currentUserId);
+        if (error) { console.error(error); return []; }
+        return (data || []).map(x => x.chat_id);
+    }
+
+    async function hydrateChat(chat) {
+        const row = { ...chat, display_name: chat.name, avatar: chat.type === "direct" ? "👤" : (chat.type === "channel" ? "📡" : "👥"), avatar_color: chat.type === "channel" ? "linear-gradient(135deg,#0f766e,#0891b2)" : "linear-gradient(135deg,#2563eb,#7c3aed)" };
+        if (chat.type === "direct") {
+            const { data: members } = await supabaseClient.from("chat_members").select("user_id").eq("chat_id", chat.id);
+            const peerId = (members || []).map(m => m.user_id).find(id => id !== currentUserId);
+            if (peerId) {
+                const { data: peer } = await supabaseClient.from("profiles").select("username,avatar,avatar_color").eq("id", peerId).maybeSingle();
+                row.peer_id = peerId;
+                row.peer_username = peer?.username || "Пользователь";
+                row.display_name = row.peer_username;
+                row.avatar = peer?.avatar || "👤";
+                row.avatar_color = peer?.avatar_color || row.avatar_color;
+            }
+        }
+        return row;
+    }
+
     async function loadChatsFromSupabase() {
         if (!currentUserId) return;
+        const ids = await getMyChatIds();
+        chatStore.clear();
+        if (!ids.length) {
+            currentChatId = null;
+            currentChatName = "";
+            currentChatType = null;
+            document.getElementById("headerName").textContent = "Worldio";
+            document.getElementById("headerStatus").textContent = "● выбери чат";
+            document.getElementById("headerAvatar").textContent = "W";
+            renderChatList();
+            renderMessages();
+            subscribeToMessages();
+            return;
+        }
 
-        const { data: chats, error: chatsError } = await supabaseClient
+        const { data: chats, error } = await supabaseClient
             .from("chats")
-            .select("id,name,created_at")
-            .order("created_at", { ascending: true });
+            .select("id,name,type,owner_id,created_at")
+            .in("id", ids)
+            .order("created_at", { ascending: false });
 
-        if (chatsError) {
-            console.error(chatsError);
-            showAuthError("Не удалось загрузить чаты. Проверь настройки Supabase.");
+        if (error) {
+            console.error(error);
+            alert("Не удалось загрузить чаты. Проверь таблицу chats в Supabase.");
             return;
         }
 
         for (const chat of chats || []) {
-            chatIds[chat.name] = chat.id;
-            await supabaseClient
-                .from("chat_members")
-                .upsert({ chat_id: chat.id, user_id: currentUserId }, { onConflict: "chat_id,user_id", ignoreDuplicates: true });
+            const hydrated = await hydrateChat(chat);
+            const last = await supabaseClient.from("messages").select("content,created_at").eq("chat_id", chat.id).order("created_at", { ascending:false }).limit(1).maybeSingle();
+            hydrated.last_message = last.data?.content || "";
+            hydrated.last_message_at = last.data?.created_at || null;
+            chatStore.set(chat.id, hydrated);
         }
 
-        for (const name of Object.keys(CHAT_META)) {
-            if (chatIds[name]) {
-                await loadMessages(name);
-            }
+        renderChatList();
+        if (!currentChatId || !chatStore.has(currentChatId)) {
+            const first = [...chatStore.values()][0];
+            if (first) await selectChatById(first.id);
+        } else {
+            await selectChatById(currentChatId);
         }
-
-        await selectChatByName("Общий чат");
         subscribeToMessages();
     }
 
-    async function loadMessages(chatName) {
-        const chatId = chatIds[chatName];
+    async function loadMessages(chatId) {
         if (!chatId) return;
-
         const { data, error } = await supabaseClient
             .from("messages")
             .select("id,chat_id,user_id,content,created_at,profiles(username,avatar,avatar_color)")
             .eq("chat_id", chatId)
             .order("created_at", { ascending: true });
-
-        if (error) {
-            console.error("loadMessages", error);
-            return;
-        }
-
-        messageCache[chatName] = data || [];
-        const last = messageCache[chatName].at(-1);
-        if (last) {
-            updateChatPreview(chatName, last.content, formatTime(last.created_at));
-        }
+        if (error) { console.error("loadMessages", error); return; }
+        messageCache[chatId] = data || [];
+        const last = messageCache[chatId].at(-1);
+        if (last) updateChatPreview(chatId, last.content, formatTime(last.created_at), last.created_at);
     }
 
     function formatTime(value) {
@@ -1903,110 +2030,177 @@
         return date.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
     }
 
-    async function selectChatByName(name) {
-        const chat = [...document.querySelectorAll(".chat-item")]
-            .find(item => item.dataset.name === name);
-        if (chat) await selectChat(chat);
+    async function selectChatById(id) {
+        const chat = chatStore.get(id);
+        if (!chat) return;
+        currentChatId = id;
+        currentChatName = chatTitle(chat);
+        currentChatType = chat.type;
+        currentChatOwnerId = chat.owner_id;
+
+        document.querySelectorAll(".chat-item").forEach(item => item.classList.toggle("active", item.dataset.chatId === id));
+
+        document.getElementById("headerName").textContent = currentChatName;
+        document.getElementById("headerStatus").textContent = chat.type === "direct" ? getHandle(chat.peer_username || currentChatName) : `● ${chatTypeLabel(chat.type).toLowerCase()}`;
+        document.getElementById("headerAvatar").textContent = chatIcon(chat);
+        const input = document.getElementById("messageInput");
+        input.disabled = false;
+        input.placeholder = chat.type === "channel" ? "Напиши пост..." : "Напиши сообщение...";
+
+        if (!messageCache[id]) await loadMessages(id);
+        renderMessages();
     }
 
     async function selectChat(chat) {
-        document.querySelectorAll(".chat-item").forEach(item => item.classList.remove("active"));
-        chat.classList.add("active");
-
-        currentChatName = chat.dataset.name || "Общий чат";
-        currentChatId = chatIds[currentChatName] || null;
-        const meta = CHAT_META[currentChatName] || { avatar: "💬", status: "● онлайн" };
-
-        document.getElementById("headerName").textContent = currentChatName;
-        document.getElementById("headerStatus").textContent = meta.status;
-        document.getElementById("headerAvatar").textContent = meta.avatar;
-
-        if (!messageCache[currentChatName]) {
-            await loadMessages(currentChatName);
-        }
-        renderMessages();
-
-        const badge = chat.querySelector(".unread-badge");
-        if (badge) badge.remove();
+        const id = chat?.dataset?.chatId;
+        if (id) await selectChatById(id);
     }
 
     async function sendMessage() {
         const input = document.getElementById("messageInput");
         const text = input.value.trim();
         if (!text || !currentChatId || !currentUserId) return;
-
         input.disabled = true;
-
         const { data, error } = await supabaseClient
             .from("messages")
-            .insert({
-                chat_id: currentChatId,
-                user_id: currentUserId,
-                content: text
-            })
+            .insert({ chat_id: currentChatId, user_id: currentUserId, content: text })
             .select("id,chat_id,user_id,content,created_at,profiles(username,avatar,avatar_color)")
             .single();
-
         input.disabled = false;
-
         if (error) {
             console.error(error);
             alert("Не удалось отправить сообщение. Проверь RLS в Supabase.");
             return;
         }
-
         input.value = "";
-        // Realtime обычно добавит сообщение сам. Добавляем сразу, если событие ещё не пришло.
-        if (!messageCache[currentChatName].some(m => m.id === data.id)) {
-            messageCache[currentChatName].push(data);
-            renderMessages();
-        }
-        updateChatPreview(currentChatName, text, "сейчас");
+        if (!messageCache[currentChatId]) messageCache[currentChatId] = [];
+        if (!messageCache[currentChatId].some(m => m.id === data.id)) messageCache[currentChatId].push(data);
+        updateChatPreview(currentChatId, text, "сейчас", data.created_at);
+        renderMessages();
     }
 
     function subscribeToMessages() {
-        if (realtimeChannel) {
-            supabaseClient.removeChannel(realtimeChannel);
-        }
-
+        if (realtimeChannel) supabaseClient.removeChannel(realtimeChannel);
         realtimeChannel = supabaseClient
             .channel("worldio-messages")
-            .on(
-                "postgres_changes",
-                { event: "INSERT", schema: "public", table: "messages" },
-                async payload => {
-                    const row = payload.new;
-                    const chatName = Object.keys(chatIds).find(name => chatIds[name] === row.chat_id);
-                    if (!chatName) return;
-
-                    const { data: fullMessage } = await supabaseClient
-                        .from("messages")
-                        .select("id,chat_id,user_id,content,created_at,profiles(username,avatar,avatar_color)")
-                        .eq("id", row.id)
-                        .single();
-
-                    if (!fullMessage) return;
-                    if (!messageCache[chatName]) messageCache[chatName] = [];
-                    if (!messageCache[chatName].some(m => m.id === fullMessage.id)) {
-                        messageCache[chatName].push(fullMessage);
-                    }
-
-                    updateChatPreview(chatName, fullMessage.content, formatTime(fullMessage.created_at));
-
-                    if (chatName === currentChatName) {
-                        renderMessages();
-                    }
-                }
-            )
+            .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, async payload => {
+                const row = payload.new;
+                const chat = chatStore.get(row.chat_id);
+                if (!chat) return;
+                const { data: fullMessage } = await supabaseClient
+                    .from("messages")
+                    .select("id,chat_id,user_id,content,created_at,profiles(username,avatar,avatar_color)")
+                    .eq("id", row.id)
+                    .single();
+                if (!fullMessage) return;
+                if (!messageCache[row.chat_id]) messageCache[row.chat_id] = [];
+                if (!messageCache[row.chat_id].some(m => m.id === row.id)) messageCache[row.chat_id].push(fullMessage);
+                updateChatPreview(row.chat_id, fullMessage.content, formatTime(fullMessage.created_at), fullMessage.created_at);
+                if (row.chat_id === currentChatId) renderMessages();
+            })
             .subscribe(status => console.log("Worldio realtime:", status));
     }
 
     function searchChats() {
         const search = document.getElementById("searchInput").value.toLowerCase().trim();
-        document.querySelectorAll(".chat-item").forEach(chat => {
+        document.querySelectorAll("#chatList .chat-item").forEach(chat => {
             const name = (chat.dataset.name || "").toLowerCase();
             chat.style.display = name.includes(search) ? "flex" : "none";
         });
+    }
+
+    function setCreateChatType(type) {
+        createChatType = type;
+        document.querySelectorAll("#createChatTabs button").forEach(btn => btn.classList.toggle("active", btn.dataset.createType === type));
+        const group = document.getElementById("createGroupMembersBlock");
+        const hint = document.getElementById("createChannelHint");
+        if (group) group.style.display = type === "group" ? "block" : "none";
+        if (hint) hint.style.display = type === "channel" ? "block" : "none";
+    }
+
+    function openCreateChatModal() {
+        document.getElementById("createChatName").value = "";
+        document.getElementById("createGroupMembers").value = "";
+        document.getElementById("createChatStatus").textContent = "";
+        setCreateChatType("group");
+        document.getElementById("createChatModal").classList.add("open");
+    }
+
+    async function findProfilesByUsernames(raw) {
+        const names = [...new Set(String(raw || "").split(",").map(x => x.trim().replace(/^@/, "").toLowerCase()).filter(Boolean))];
+        if (!names.length) return [];
+        const { data, error } = await supabaseClient.from("profiles").select("id,username").in("username", names);
+        if (error) throw error;
+        return data || [];
+    }
+
+    async function createWorldioChat() {
+        const status = document.getElementById("createChatStatus");
+        const name = document.getElementById("createChatName").value.trim().slice(0,40);
+        if (!name) { status.textContent = "Введите название."; return; }
+        status.textContent = "Создаём...";
+        try {
+            let members = [currentUserId];
+            if (createChatType === "group") {
+                const rawMembers = document.getElementById("createGroupMembers").value.trim();
+                const users = await findProfilesByUsernames(rawMembers);
+                if (rawMembers && !users.length) throw new Error("Ни одного такого юзернейма не найдено.");
+                members = [...new Set([currentUserId, ...users.map(u => u.id)])];
+            }
+            const { data: chat, error: chatError } = await supabaseClient
+                .from("chats")
+                .insert({ name, type: createChatType, owner_id: currentUserId })
+                .select("id,name,type,owner_id,created_at")
+                .single();
+            if (chatError) throw chatError;
+            const { error: memberError } = await supabaseClient.from("chat_members").insert(members.map(user_id => ({ chat_id: chat.id, user_id })));
+            if (memberError) throw memberError;
+            closeWorldioModal("createChatModal");
+            await loadChatsFromSupabase();
+            await selectChatById(chat.id);
+        } catch (error) {
+            console.error(error);
+            status.textContent = error.message || "Не удалось создать чат.";
+        }
+    }
+
+    async function openDirectChatWithUser(user) {
+        if (!user || !user.id || user.id === currentUserId) return;
+        renderGlobalSearchEmpty("Открываем переписку...");
+        try {
+            const ids = await getMyChatIds();
+            if (ids.length) {
+                const { data: directChats } = await supabaseClient.from("chats").select("id,name,type,owner_id,created_at").in("id", ids).eq("type", "direct");
+                for (const chat of directChats || []) {
+                    const { data: members } = await supabaseClient.from("chat_members").select("user_id").eq("chat_id", chat.id);
+                    const memberIds = new Set((members || []).map(m => m.user_id));
+                    if (memberIds.has(currentUserId) && memberIds.has(user.id)) {
+                        await loadChatsFromSupabase();
+                        await selectChatById(chat.id);
+                        closeGlobalSearch();
+                        return;
+                    }
+                }
+            }
+
+            const { data: chat, error: chatError } = await supabaseClient.from("chats")
+                .insert({ name: "Личная переписка", type: "direct", owner_id: currentUserId })
+                .select("id,name,type,owner_id,created_at")
+                .single();
+            if (chatError) throw chatError;
+            const { error: memberError } = await supabaseClient.from("chat_members").insert([
+                { chat_id: chat.id, user_id: currentUserId },
+                { chat_id: chat.id, user_id: user.id }
+            ]);
+            if (memberError) throw memberError;
+
+            await loadChatsFromSupabase();
+            await selectChatById(chat.id);
+            closeGlobalSearch();
+        } catch (error) {
+            console.error(error);
+            renderGlobalSearchEmpty("Не удалось открыть переписку");
+        }
     }
 
     let globalSearchType = "all";
@@ -2055,47 +2249,77 @@
         const q = input.value.trim();
         clearTimeout(globalSearchTimer);
         if (!q) { renderGlobalSearchEmpty(); return; }
-
         renderGlobalSearchEmpty("Ищем...");
         globalSearchTimer = setTimeout(async () => {
             const results = [];
-            const needle = q.toLowerCase();
-
-            if (globalSearchType === "all" || globalSearchType === "chats" || globalSearchType === "channels") {
-                const { data: chats } = await supabaseClient.from("chats").select("id,name").ilike("name", `%${q}%`).limit(12);
-                (chats || []).forEach(chat => {
-                    results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Общий чат / группа", type:globalSearchType === "channels" ? "Канал" : "Чат", avatar:CHAT_META[chat.name]?.avatar || "💬"});
-                });
-            }
 
             if (globalSearchType === "all" || globalSearchType === "users") {
-                const { data: users } = await supabaseClient.from("profiles").select("id,username,avatar,avatar_color").ilike("username", `%${q}%`).limit(12);
+                const normalized = q.replace(/^@/, "");
+                const { data: users } = await supabaseClient
+                    .from("profiles")
+                    .select("id,username,avatar,avatar_color")
+                    .ilike("username", `%${normalized}%`)
+                    .limit(20);
                 (users || []).forEach(user => {
-                    const isMe = user.id === currentUserId;
-                    results.push({kind:"user", id:user.id, title:user.username || "Пользователь", sub:isMe ? "Это ты · профиль Worldio" : getHandle(user.username), type:"Пользователь", avatar:user.avatar || "👤"});
+                    results.push({kind:"user", id:user.id, title:user.username || "Пользователь", sub:user.id === currentUserId ? "Это ты · профиль" : getHandle(user.username), type:"Пользователь", avatar:user.avatar || "👤", avatar_color:user.avatar_color});
                 });
             }
 
-            // Каналы пока используют записи из chats: отдельной таблицы каналов в текущем проекте нет.
-            if (globalSearchType === "channels") {
-                for (const r of results) r.type = "Канал";
+            if (globalSearchType === "all" || globalSearchType === "chats") {
+                const { data: chats } = await supabaseClient
+                    .from("chats")
+                    .select("id,name,type,owner_id")
+                    .ilike("name", `%${q}%`)
+                    .in("type", ["group","direct"])
+                    .limit(20);
+                for (const chat of chats || []) {
+                    if (chat.type === "direct") {
+                        const hydrated = await hydrateChat(chat);
+                        results.push({kind:"chat", id:chat.id, title:hydrated.display_name, sub:getHandle(hydrated.peer_username || "user"), type:"Личная переписка", avatar:hydrated.avatar, avatar_color:hydrated.avatar_color});
+                    } else {
+                        results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Группа", type:"Группа", avatar:"👥", avatar_color:"linear-gradient(135deg,#2563eb,#7c3aed)"});
+                    }
+                }
+            }
+
+            if (globalSearchType === "all" || globalSearchType === "channels") {
+                const { data: channels } = await supabaseClient
+                    .from("chats")
+                    .select("id,name,type,owner_id")
+                    .eq("type", "channel")
+                    .ilike("name", `%${q}%`)
+                    .limit(20);
+                (channels || []).forEach(chat => results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Публичный канал", type:"Канал", avatar:"📡", avatar_color:"linear-gradient(135deg,#0f766e,#0891b2)"}));
             }
 
             if (!results.length) { renderGlobalSearchEmpty("Ничего не найдено"); return; }
 
             const groups = {};
-            results.forEach(r => { const key = r.kind === "user" ? "Пользователи" : (globalSearchType === "channels" ? "Каналы" : "Чаты"); (groups[key] ||= []).push(r); });
-            box.innerHTML = Object.entries(groups).map(([label, items]) => `<div class="global-search-section">${label}</div>` + items.map(r => `<div class="global-search-result" data-result-kind="${r.kind}" data-result-id="${r.id}" data-chat-name="${escapeText(r.title).replace(/"/g,'&quot;')}"><div class="global-search-result-avatar" style="background:${r.avatar?.startsWith?.('linear-gradient') ? r.avatar : (CHAT_META[r.title]?.avatar ? 'linear-gradient(135deg,#2563eb,#7c3aed)' : 'linear-gradient(135deg,#1f2937,#334155)')}">${r.avatar?.startsWith?.('data:image') ? `<img src="${r.avatar}" alt="">` : escapeText(r.avatar || (r.kind === "user" ? "👤" : "💬"))}</div><div class="global-search-result-info"><div class="global-search-result-title">${escapeText(r.title)}</div><div class="global-search-result-sub">${escapeText(r.sub)}</div></div><div class="global-search-result-type">${escapeText(r.type)}</div></div>`).join("")).join("");
+            results.forEach(r => {
+                const key = r.kind === "user" ? "Пользователи" : (r.type === "Канал" ? "Каналы" : "Чаты");
+                (groups[key] ||= []).push(r);
+            });
 
-            box.querySelectorAll(".global-search-result").forEach(item => item.addEventListener("click", () => {
+            box.innerHTML = Object.entries(groups).map(([label, items]) => `<div class="global-search-section">${escapeText(label)}</div>` + items.map(r => {
+                const avatarHtml = r.avatar?.startsWith?.("data:image") ? `<img src="${r.avatar}" alt="" class="worldio-result-avatar-img">` : escapeText(r.avatar || "💬");
+                return `<div class="global-search-result" data-result-kind="${r.kind}" data-result-id="${r.id}"><div class="global-search-result-avatar" style="background:${r.avatar_color || "linear-gradient(135deg,#1f2937,#334155)"}">${avatarHtml}</div><div class="global-search-result-info"><div class="global-search-result-title">${escapeText(r.title)}</div><div class="global-search-result-sub">${escapeText(r.sub)}</div></div><div class="global-search-result-type">${escapeText(r.type)}</div></div>`;
+            }).join("" )).join("");
+
+            box.querySelectorAll(".global-search-result").forEach(item => item.addEventListener("click", async () => {
                 const kind = item.dataset.resultKind;
                 if (kind === "chat") {
-                    const name = item.dataset.chatName;
+                    const chatId = item.dataset.resultId;
+                    const { data: foundChat } = await supabaseClient.from("chats").select("id,name,type,owner_id,created_at").eq("id", chatId).maybeSingle();
+                    if (!foundChat) return;
+                    if (foundChat.type === "channel") {
+                        await supabaseClient.from("chat_members").upsert({ chat_id: chatId, user_id: currentUserId }, { onConflict: "chat_id,user_id", ignoreDuplicates: true });
+                    }
                     closeGlobalSearch();
-                    selectChatByName(name);
+                    await loadChatsFromSupabase();
+                    await selectChatById(chatId);
                 } else if (kind === "user") {
-                    closeGlobalSearch();
-                    alert("Профили пользователей добавим в следующем шаге 👤");
+                    const { data: user } = await supabaseClient.from("profiles").select("id,username,avatar,avatar_color").eq("id", item.dataset.resultId).maybeSingle();
+                    if (user) await openDirectChatWithUser(user);
                 }
             }));
         }, 180);
