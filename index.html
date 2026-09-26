@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
     <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-    <style>
+    <script type="text/javascript" src="https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=RyhZf6C0JyKvMW-Q3M6o1HKLmpzPExEoTsek5mUlGvsIKXkaMB2udHbKYu80zVpt1JaoQFbXXaXN6h1ny-SO05TO670v3whpK9JlJsWb7Gw4EOtmQpKBeAVu3OgiSy24BbDImaFoOuwI-JqNZdrdR5ra0vzkj9IlZfxuOx1IF9GQoU-tY4hXYcN3D2JgCypBCoDz7CcRPRScmv_3Jzb6j32plTND5UKx73iLo3Wwnofg3nhmQlnttPMFAXjzozyoaa3WY5DiHc7B9VAT6fI4bM0Mnl1ju8XJWye7sQOkHY6FFQtevFRm4337i5LG4fjX" charset="UTF-8"></script><style>
         * {
             box-sizing: border-box;
         }
@@ -351,6 +351,88 @@
             color: #fff;
             background: #17233a;
         }
+
+        /* WORLDIO GLOBAL SEARCH BUTTON */
+        .global-search-btn{
+            margin-left:auto;
+            width:38px;
+            height:38px;
+            border:1px solid #27344a;
+            border-radius:12px;
+            background:linear-gradient(180deg,#141d2c,#101725);
+            color:#dbe7ff;
+            display:grid;
+            place-items:center;
+            cursor:pointer;
+            position:relative;
+            overflow:hidden;
+            transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;
+            box-shadow:0 6px 18px rgba(0,0,0,.18);
+        }
+        .global-search-btn::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:radial-gradient(circle at 30% 20%,rgba(96,165,250,.18),transparent 55%);
+            opacity:.9;
+        }
+        .global-search-btn svg{position:relative;z-index:1;width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+        .global-search-btn:hover{transform:translateY(-1px) scale(1.02);border-color:#3b82f6;box-shadow:0 10px 28px rgba(37,99,235,.22);background:linear-gradient(180deg,#17233a,#111a29)}
+        .global-search-btn:active{transform:scale(.97)}
+
+        body.modal-open{overflow:hidden}
+        .global-search-backdrop{
+            position:fixed;
+            inset:0;
+            background:rgba(3,7,15,.66);
+            backdrop-filter:blur(12px);
+            -webkit-backdrop-filter:blur(12px);
+            z-index:1000;
+            display:none;
+            align-items:flex-start;
+            justify-content:center;
+            padding:10vh 18px 30px;
+        }
+        .global-search-backdrop.open{display:flex;animation:worldioFade .16s ease both}
+        .global-search-panel{
+            width:min(720px,100%);
+            background:linear-gradient(180deg,rgba(15,23,37,.98),rgba(9,15,25,.99));
+            border:1px solid #293852;
+            border-radius:22px;
+            box-shadow:0 30px 90px rgba(0,0,0,.58),0 0 0 1px rgba(59,130,246,.05) inset;
+            overflow:hidden;
+            transform:translateY(-8px) scale(.985);
+            animation:globalSearchIn .24s cubic-bezier(.16,1,.3,1) both;
+        }
+        .global-search-top{padding:16px 16px 12px;border-bottom:1px solid #202d42}
+        .global-search-input-wrap{position:relative;display:flex;align-items:center}
+        .global-search-input-icon{position:absolute;left:15px;color:#64748b;display:grid;place-items:center;pointer-events:none}
+        .global-search-input-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .global-search-input{width:100%;height:52px;padding:0 50px 0 48px;border:1px solid #2a3951;border-radius:15px;background:#0d1625;color:#f8fbff;outline:none;font-size:15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.02);transition:.18s ease}
+        .global-search-input::placeholder{color:#6b7a92}
+        .global-search-input:focus{border-color:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.12),inset 0 1px 0 rgba(255,255,255,.02)}
+        .global-search-esc{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:#172238;color:#8392aa;border-radius:8px;padding:5px 7px;font-size:11px;cursor:pointer}
+        .global-search-esc:hover{color:#fff;background:#20304b}
+        .global-search-tabs{display:flex;gap:6px;margin-top:12px;overflow:auto;scrollbar-width:none}
+        .global-search-tabs::-webkit-scrollbar{display:none}
+        .global-search-tab{border:0;background:transparent;color:#7f8da5;padding:8px 11px;border-radius:10px;cursor:pointer;font-size:12px;white-space:nowrap;transition:.18s ease}
+        .global-search-tab:hover{background:#142036;color:#cdd9ee}
+        .global-search-tab.active{background:#1c2f52;color:#edf4ff;box-shadow:inset 0 0 0 1px rgba(59,130,246,.18)}
+        .global-search-results{max-height:56vh;overflow:auto;padding:8px}
+        .global-search-results::-webkit-scrollbar{width:8px}.global-search-results::-webkit-scrollbar-thumb{background:#26344a;border-radius:20px}
+        .global-search-empty{padding:36px 18px;text-align:center;color:#6e7e97;font-size:13px}
+        .global-search-empty strong{display:block;color:#b9c7db;font-size:15px;margin-bottom:6px}
+        .global-search-section{padding:8px 8px 4px;color:#6f7f97;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+        .global-search-result{display:flex;align-items:center;gap:12px;padding:10px;border-radius:14px;cursor:pointer;transition:.16s ease}
+        .global-search-result:hover{background:#142137;transform:translateX(2px)}
+        .global-search-result-avatar{width:44px;height:44px;flex:0 0 auto;border-radius:14px;display:grid;place-items:center;font-size:19px;overflow:hidden;background:linear-gradient(135deg,#2563eb,#7c3aed);border:1px solid #2b3b55;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+        .global-search-result-avatar img{width:100%;height:100%;object-fit:cover}
+        .global-search-result-info{min-width:0;flex:1}
+        .global-search-result-title{font-weight:800;color:#edf3ff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .global-search-result-sub{color:#72819a;font-size:11px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .global-search-result-type{font-size:10px;color:#7790b1;background:#111c2d;border:1px solid #23324a;padding:5px 7px;border-radius:8px}
+        .global-search-shortcut{padding:10px 16px;color:#5f6f87;font-size:10px;border-top:1px solid #202d42;text-align:right}
+        @keyframes globalSearchIn{from{opacity:0;transform:translateY(-12px) scale(.97)}to{opacity:1;transform:none}}
 
         .search-wrap {
             position: relative;
@@ -1074,7 +1156,9 @@
             <div class="brand">
                 <span>🌎</span>
                 <strong>Worldio</strong>
-                <button class="new-chat-btn" title="Новый чат" onclick="alert('Новые чаты подключим следующим шагом ✨')">＋</button>
+                <button class="global-search-btn" id="globalSearchButton" type="button" title="Поиск людей, чатов и каналов" onclick="openGlobalSearch()" aria-label="Поиск людей, чатов и каналов">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
+                </button>
             </div>
 
             <div class="search-wrap">
@@ -1180,6 +1264,29 @@
             <button class="profile-menu-item" onclick="signOutWorldio(event)"><span class="mi">↪</span><span>Выйти из аккаунта</span></button>
         </div>
     </aside>
+
+    <!-- GLOBAL SEARCH -->
+    <div class="global-search-backdrop" id="globalSearch" onclick="closeGlobalSearch(event)">
+        <div class="global-search-panel" role="dialog" aria-modal="true" aria-label="Глобальный поиск" onclick="event.stopPropagation()">
+            <div class="global-search-top">
+                <div class="global-search-input-wrap">
+                    <span class="global-search-input-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg></span>
+                    <input class="global-search-input" id="globalSearchInput" type="search" placeholder="Найти человека, чат или канал..." autocomplete="off" />
+                    <button class="global-search-esc" type="button" onclick="closeGlobalSearch()">Esc</button>
+                </div>
+                <div class="global-search-tabs" id="globalSearchTabs">
+                    <button class="global-search-tab active" type="button" data-search-type="all" onclick="setGlobalSearchType('all')">Все</button>
+                    <button class="global-search-tab" type="button" data-search-type="chats" onclick="setGlobalSearchType('chats')">Чаты</button>
+                    <button class="global-search-tab" type="button" data-search-type="users" onclick="setGlobalSearchType('users')">Пользователи</button>
+                    <button class="global-search-tab" type="button" data-search-type="channels" onclick="setGlobalSearchType('channels')">Каналы</button>
+                </div>
+            </div>
+            <div class="global-search-results" id="globalSearchResults">
+                <div class="global-search-empty"><strong>Начни поиск</strong>Введи имя, название чата или канала</div>
+            </div>
+            <div class="global-search-shortcut">Enter — открыть результат · Esc — закрыть</div>
+        </div>
+    </div>
 
     <!-- CHAT -->
 
@@ -1901,6 +2008,105 @@
             chat.style.display = name.includes(search) ? "flex" : "none";
         });
     }
+
+    let globalSearchType = "all";
+    let globalSearchTimer = null;
+
+    function openGlobalSearch() {
+        const modal = document.getElementById("globalSearch");
+        const input = document.getElementById("globalSearchInput");
+        if (!modal || !input) return;
+        modal.classList.add("open");
+        document.body.classList.add("modal-open");
+        setTimeout(() => input.focus(), 30);
+        renderGlobalSearchEmpty();
+    }
+
+    function closeGlobalSearch(event) {
+        if (event && event.target !== document.getElementById("globalSearch")) return;
+        const modal = document.getElementById("globalSearch");
+        if (modal) modal.classList.remove("open");
+        document.body.classList.remove("modal-open");
+    }
+
+    function setGlobalSearchType(type) {
+        globalSearchType = type;
+        document.querySelectorAll(".global-search-tab").forEach(btn => btn.classList.toggle("active", btn.dataset.searchType === type));
+        runGlobalSearch();
+    }
+
+    function renderGlobalSearchEmpty(message = "Введи имя, название чата или канала") {
+        const box = document.getElementById("globalSearchResults");
+        if (!box) return;
+        box.innerHTML = `<div class="global-search-empty"><strong>Начни поиск</strong>${message}</div>`;
+    }
+
+    function searchResultHtml({title, sub, type, avatar, image, onClick}) {
+        const safeTitle = escapeText(title).replace(/</g, "&lt;");
+        const safeSub = escapeText(sub).replace(/</g, "&lt;");
+        const avatarHtml = image ? `<img src="${image}" alt="">` : escapeText(avatar || "💬");
+        return `<div class="global-search-result" data-action="${encodeURIComponent(onClick || "")}"><div class="global-search-result-avatar">${avatarHtml}</div><div class="global-search-result-info"><div class="global-search-result-title">${safeTitle}</div><div class="global-search-result-sub">${safeSub}</div></div><div class="global-search-result-type">${escapeText(type || "")}</div></div>`;
+    }
+
+    async function runGlobalSearch() {
+        const input = document.getElementById("globalSearchInput");
+        const box = document.getElementById("globalSearchResults");
+        if (!input || !box) return;
+        const q = input.value.trim();
+        clearTimeout(globalSearchTimer);
+        if (!q) { renderGlobalSearchEmpty(); return; }
+
+        renderGlobalSearchEmpty("Ищем...");
+        globalSearchTimer = setTimeout(async () => {
+            const results = [];
+            const needle = q.toLowerCase();
+
+            if (globalSearchType === "all" || globalSearchType === "chats" || globalSearchType === "channels") {
+                const { data: chats } = await supabaseClient.from("chats").select("id,name").ilike("name", `%${q}%`).limit(12);
+                (chats || []).forEach(chat => {
+                    results.push({kind:"chat", id:chat.id, title:chat.name, sub:"Общий чат / группа", type:globalSearchType === "channels" ? "Канал" : "Чат", avatar:CHAT_META[chat.name]?.avatar || "💬"});
+                });
+            }
+
+            if (globalSearchType === "all" || globalSearchType === "users") {
+                const { data: users } = await supabaseClient.from("profiles").select("id,username,avatar,avatar_color").ilike("username", `%${q}%`).limit(12);
+                (users || []).forEach(user => {
+                    const isMe = user.id === currentUserId;
+                    results.push({kind:"user", id:user.id, title:user.username || "Пользователь", sub:isMe ? "Это ты · профиль Worldio" : getHandle(user.username), type:"Пользователь", avatar:user.avatar || "👤"});
+                });
+            }
+
+            // Каналы пока используют записи из chats: отдельной таблицы каналов в текущем проекте нет.
+            if (globalSearchType === "channels") {
+                for (const r of results) r.type = "Канал";
+            }
+
+            if (!results.length) { renderGlobalSearchEmpty("Ничего не найдено"); return; }
+
+            const groups = {};
+            results.forEach(r => { const key = r.kind === "user" ? "Пользователи" : (globalSearchType === "channels" ? "Каналы" : "Чаты"); (groups[key] ||= []).push(r); });
+            box.innerHTML = Object.entries(groups).map(([label, items]) => `<div class="global-search-section">${label}</div>` + items.map(r => `<div class="global-search-result" data-result-kind="${r.kind}" data-result-id="${r.id}" data-chat-name="${escapeText(r.title).replace(/"/g,'&quot;')}"><div class="global-search-result-avatar" style="background:${r.avatar?.startsWith?.('linear-gradient') ? r.avatar : (CHAT_META[r.title]?.avatar ? 'linear-gradient(135deg,#2563eb,#7c3aed)' : 'linear-gradient(135deg,#1f2937,#334155)')}">${r.avatar?.startsWith?.('data:image') ? `<img src="${r.avatar}" alt="">` : escapeText(r.avatar || (r.kind === "user" ? "👤" : "💬"))}</div><div class="global-search-result-info"><div class="global-search-result-title">${escapeText(r.title)}</div><div class="global-search-result-sub">${escapeText(r.sub)}</div></div><div class="global-search-result-type">${escapeText(r.type)}</div></div>`).join("")).join("");
+
+            box.querySelectorAll(".global-search-result").forEach(item => item.addEventListener("click", () => {
+                const kind = item.dataset.resultKind;
+                if (kind === "chat") {
+                    const name = item.dataset.chatName;
+                    closeGlobalSearch();
+                    selectChatByName(name);
+                } else if (kind === "user") {
+                    closeGlobalSearch();
+                    alert("Профили пользователей добавим в следующем шаге 👤");
+                }
+            }));
+        }, 180);
+    }
+
+    document.getElementById("globalSearchInput")?.addEventListener("input", runGlobalSearch);
+    document.addEventListener("keydown", function(event){
+        const modal = document.getElementById("globalSearch");
+        if (!modal?.classList.contains("open")) return;
+        if (event.key === "Escape") { closeGlobalSearch(); return; }
+    });
 
     document
         .getElementById("messageInput")
